@@ -13,10 +13,17 @@
       "start": "next start"
    },
    "dependencies": {
+      "@apollo/react-hooks": "^3.1.5",
       "@fullhuman/postcss-purgecss": "^2.1.2",
+      "apollo-cache-inmemory": "^1.6.5",
+      "apollo-client": "^2.6.8",
+      "apollo-link": "^1.2.14",
+      "apollo-link-http": "^1.5.17",
       "autoprefixer": "^9.7.6",
       "dotenv": "^8.2.0",
+      "graphql": "^15.0.0",
       "next": "^9.3.5",
+      "node-fetch": "^2.6.0",
       "react": "^16.13.1",
       "react-dom": "^16.13.1",
       "tailwindcss": "^1.2.0"
