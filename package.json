@@ -1,0 +1,25 @@
+{
+   "name": "expenses",
+   "version": "0.1.0",
+   "description": "my expenses repository",
+   "main": "index.js",
+   "repository": "https://github.com/prvnbist/expenses",
+   "author": "Praveen Bisht",
+   "license": "MIT",
+   "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "export": "next export",
+      "start": "next start"
+   },
+   "dependencies": {
+      "@fullhuman/postcss-purgecss": "^2.1.2",
+      "autoprefixer": "^9.7.6",
+      "dotenv": "^8.2.0",
+      "next": "^9.3.5",
+      "react": "^16.13.1",
+      "react-dom": "^16.13.1",
+      "tailwindcss": "^1.2.0"
+   },
+   "devDependencies": {}
+}
