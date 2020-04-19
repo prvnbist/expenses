@@ -31,8 +31,8 @@ export const Expenses = () => {
       },
    ]
 
-   if (loading) <div>Loading...</div>
-   if (error) <div>{error.message}</div>
+   if (loading) return <div>Loading...</div>
+   if (error) return <div>{error.message}</div>
    return (
       <table className="w-full table-auto">
          <thead>

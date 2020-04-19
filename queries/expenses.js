@@ -8,7 +8,6 @@ export const EXPENSES = gql`
          title
          amount
          category
-         description
          payment_method
       }
    }
