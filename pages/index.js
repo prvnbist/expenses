@@ -15,7 +15,7 @@ export default () => {
    return (
       <div>
          <Header />
-         <div>
+         <div className="rounded-lg border">
             <Tab type="expenses" tab={tab} onClick={() => setTab('expenses')}>
                Expenses
             </Tab>
