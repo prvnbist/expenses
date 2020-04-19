@@ -5,6 +5,8 @@ import { EARNINGS } from '../queries'
 
 import { formatDate, formatCurrency } from '../utils'
 
+import { Table } from '../components'
+
 export const Earnings = () => {
    const { loading, error, data: { earnings = [] } = {} } = useQuery(EARNINGS)
 
@@ -30,38 +32,34 @@ export const Earnings = () => {
    if (loading) return <div>Loading...</div>
    if (error) return <div>{error.message}</div>
    return (
-      <table className="w-full table-auto">
-         <thead>
-            <tr>
+      <Table>
+         <Table.Head>
+            <Table.Row>
                {columns.map((column, index) => (
-                  <th
-                     key={index}
-                     className={`px-4 py-2 uppercase text-gray-600 font-medium text-sm tracking-wider ${
-                        column.type === 'String' ? 'text-left' : 'text-right'
-                     }`}
-                  >
+                  <Table.Cell as="th" key={index} type={column.type}>
                      {column.key}
-                  </th>
+                  </Table.Cell>
                ))}
-            </tr>
-         </thead>
-         <tbody>
+            </Table.Row>
+         </Table.Head>
+         <Table.Body>
             {earnings.map((earning, index) => (
-               <tr
+               <Table.Row
                   key={earning.id}
+                  isEven={(index & 1) === 1}
                   className={`${(index & 1) === 1 ? 'bg-gray-100' : ''}`}
                >
-                  <td className="border px-4 py-2">{earning.source}</td>
-                  <td className="border px-4 py-2 text-right">
+                  <Table.Cell as="td">{earning.source}</Table.Cell>
+                  <Table.Cell as="td" align="right">
                      {formatCurrency(earning.amount)}
-                  </td>
-                  <td className="border px-4 py-2">{earning.category}</td>
-                  <td className="border px-4 py-2 text-right">
+                  </Table.Cell>
+                  <Table.Cell as="td">{earning.category}</Table.Cell>
+                  <Table.Cell as="td" align="right">
                      {formatDate(earning.date)}
-                  </td>
-               </tr>
+                  </Table.Cell>
+               </Table.Row>
             ))}
-         </tbody>
-      </table>
+         </Table.Body>
+      </Table>
    )
 }

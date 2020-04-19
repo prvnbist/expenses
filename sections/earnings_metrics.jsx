@@ -3,6 +3,8 @@ import { useQuery } from '@apollo/react-hooks'
 import { TOTAL_EARNINGS } from '../queries'
 import { formatCurrency } from '../utils'
 
+import { Table } from '../components'
+
 export const EarningsMetrics = () => {
    const { data, loading } = useQuery(TOTAL_EARNINGS)
 
@@ -17,53 +19,48 @@ export const EarningsMetrics = () => {
       },
    ]
    return (
-      <table className="w-full table-auto">
-         <thead>
-            <tr>
+      <Table>
+         <Table.Head>
+            <Table.Row>
                {columns.map((column, index) => (
-                  <th
-                     key={index}
-                     className={`px-4 py-2 uppercase text-gray-600 font-medium text-sm tracking-wider ${
-                        column.type === 'String' ? 'text-left' : 'text-right'
-                     }`}
-                  >
+                  <Table.Cell as="th" key={index} type={column.type}>
                      {column.key}
-                  </th>
+                  </Table.Cell>
                ))}
-            </tr>
-         </thead>
-         <tbody>
-            <tr>
-               <td className="border px-4 py-2">Earnings Count</td>
-               <td className="border px-4 py-2 text-right">
+            </Table.Row>
+         </Table.Head>
+         <Table.Body>
+            <Table.Row>
+               <Table.Cell as="td">Earnings Count</Table.Cell>
+               <Table.Cell as="td" align="right">
                   {data?.total_earnings.aggregate.count}
-               </td>
-            </tr>
-            <tr className="bg-gray-100">
-               <td className="border px-4 py-2">Average Spending</td>
-               <td className="border px-4 py-2 text-right">
+               </Table.Cell>
+            </Table.Row>
+            <Table.Row isEven={true}>
+               <Table.Cell as="td">Average Spending</Table.Cell>
+               <Table.Cell as="td" align="right">
                   {formatCurrency(
                      data?.total_earnings.aggregate.avg.amount.toFixed(2)
                   )}
-               </td>
-            </tr>
-            <tr>
-               <td className="border px-4 py-2">Maximum Spending</td>
-               <td className="border px-4 py-2 text-right">
+               </Table.Cell>
+            </Table.Row>
+            <Table.Row>
+               <Table.Cell as="td">Maximum Spending</Table.Cell>
+               <Table.Cell as="td" align="right">
                   {formatCurrency(
                      data?.total_earnings.aggregate.max.amount.toFixed(2)
                   )}
-               </td>
-            </tr>
-            <tr>
-               <td className="border px-4 py-2">Minimum Spending</td>
-               <td className="border px-4 py-2 text-right">
+               </Table.Cell>
+            </Table.Row>
+            <Table.Row isEven={true}>
+               <Table.Cell as="td">Minimum Spending</Table.Cell>
+               <Table.Cell as="td" align="right">
                   {formatCurrency(
                      data?.total_earnings.aggregate.min.amount.toFixed(2)
                   )}
-               </td>
-            </tr>
-         </tbody>
-      </table>
+               </Table.Cell>
+            </Table.Row>
+         </Table.Body>
+      </Table>
    )
 }

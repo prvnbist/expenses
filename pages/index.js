@@ -12,7 +12,7 @@ import {
 import { Tab } from '../components'
 
 export default () => {
-   const [tab, setTab] = React.useState('analytics')
+   const [tab, setTab] = React.useState('expenses')
    const [categories] = React.useState([
       'Accessories',
       'Clothing & Footwears',

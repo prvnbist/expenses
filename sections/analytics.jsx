@@ -5,6 +5,8 @@ import { EXPENSES } from '../queries'
 
 import { formatCurrency } from '../utils'
 
+import { Table } from '../components'
+
 export const Analytics = () => {
    const [categories, setCategories] = React.useState([])
    const { loading, error, data: { expenses = [] } = {} } = useQuery(EXPENSES)
@@ -40,40 +42,30 @@ export const Analytics = () => {
             <h2 className="border-b pb-2 text-lg mt-3 mb-2 text-teal-700">
                Spendings by categories
             </h2>
-            <table className="w-full table-auto">
-               <thead>
-                  <tr>
+            <Table>
+               <Table.Head>
+                  <Table.Row>
                      {columns.map((column, index) => (
-                        <th
-                           key={index}
-                           className={`px-4 py-2 uppercase text-gray-600 font-medium text-sm tracking-wider ${
-                              column.type === 'String'
-                                 ? 'text-left'
-                                 : 'text-right'
-                           }`}
-                        >
+                        <Table.Cell as="th" key={index} type={column.type}>
                            {column.key}
-                        </th>
+                        </Table.Cell>
                      ))}
-                  </tr>
-               </thead>
-               <tbody>
+                  </Table.Row>
+               </Table.Head>
+               <Table.Body>
                   {categories.map((category, index) => (
-                     <tr
-                        key={index}
-                        className={`${(index & 1) === 1 ? 'bg-gray-100' : ''}`}
-                     >
-                        <td className="border px-4 py-2">{category.title}</td>
-                        <td className="border px-4 py-2 text-right">
+                     <Table.Row key={index} isEven={(index & 1) === 1}>
+                        <Table.Cell as="td">{category.title}</Table.Cell>
+                        <Table.Cell as="td" align="right">
                            {formatCurrency(category.amount)}
-                        </td>
-                        <td className="border px-4 py-2 text-right">
+                        </Table.Cell>
+                        <Table.Cell as="td" align="right">
                            {category.expenses}
-                        </td>
-                     </tr>
+                        </Table.Cell>
+                     </Table.Row>
                   ))}
-               </tbody>
-            </table>
+               </Table.Body>
+            </Table>
          </div>
       </div>
    )
