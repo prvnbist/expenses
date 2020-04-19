@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { User, Expenses } from '../sections'
+import { Header, Expenses } from '../sections'
 
 import { Tab } from '../components'
 
@@ -8,7 +8,7 @@ export default () => {
    const [tab, setTab] = React.useState('expenses')
    return (
       <div>
-         <User />
+         <Header />
          <div>
             <Tab type="expenses" tab={tab} onClick={() => setTab('expenses')}>
                Expenses
