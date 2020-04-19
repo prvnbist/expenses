@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/react-hooks'
 
 import { EXPENSES } from '../../queries'
 
-import { ByCategories, ByYears } from './tables'
+import { ByCategories, ByYears, ByMonths } from './tables'
 
 export const Analytics = () => {
    const { loading, error, data: { expenses = [] } = {} } = useQuery(EXPENSES)
@@ -19,10 +19,18 @@ export const Analytics = () => {
                <ByCategories expenses={expenses} />
             </div>
             <div className="w-6/12">
-               <h2 className="border-b pb-2 text-lg mt-3 mb-2 text-teal-700">
-                  Spendings by Years
-               </h2>
-               <ByYears expenses={expenses} />
+               <div className="w-full">
+                  <h2 className="border-b pb-2 text-lg mt-3 mb-2 text-teal-700">
+                     Spendings by Years
+                  </h2>
+                  <ByYears expenses={expenses} />
+               </div>
+               <div className="w-full">
+                  <h2 className="border-b pb-2 text-lg mt-5 mb-2 text-teal-700">
+                     Spendings by Months
+                  </h2>
+                  <ByMonths expenses={expenses} />
+               </div>
             </div>
          </div>
       </div>
