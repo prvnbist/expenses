@@ -37,7 +37,7 @@ export const EarningsMetrics = () => {
                </Table.Cell>
             </Table.Row>
             <Table.Row isEven={true}>
-               <Table.Cell as="td">Average Spending</Table.Cell>
+               <Table.Cell as="td">Average Earning</Table.Cell>
                <Table.Cell as="td" align="right">
                   {formatCurrency(
                      data?.total_earnings.aggregate.avg.amount.toFixed(2)
@@ -45,7 +45,7 @@ export const EarningsMetrics = () => {
                </Table.Cell>
             </Table.Row>
             <Table.Row>
-               <Table.Cell as="td">Maximum Spending</Table.Cell>
+               <Table.Cell as="td">Maximum Earning</Table.Cell>
                <Table.Cell as="td" align="right">
                   {formatCurrency(
                      data?.total_earnings.aggregate.max.amount.toFixed(2)
@@ -53,7 +53,7 @@ export const EarningsMetrics = () => {
                </Table.Cell>
             </Table.Row>
             <Table.Row isEven={true}>
-               <Table.Cell as="td">Minimum Spending</Table.Cell>
+               <Table.Cell as="td">Minimum Earning</Table.Cell>
                <Table.Cell as="td" align="right">
                   {formatCurrency(
                      data?.total_earnings.aggregate.min.amount.toFixed(2)
