@@ -1,3 +1,5 @@
 export * from './expenses'
 export * from './total_expenses'
-export * from './totat_earnings'
+export * from './expenses_count'
+export * from './total_earnings'
+export * from './earnings_count'

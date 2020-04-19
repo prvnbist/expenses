@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Header, Expenses } from '../sections'
+import { Header, Expenses, Metrics } from '../sections'
 
 import { Tab } from '../components'
 
@@ -9,6 +9,7 @@ export default () => {
    return (
       <div>
          <Header />
+         <Metrics />
          <div>
             <Tab type="expenses" tab={tab} onClick={() => setTab('expenses')}>
                Expenses

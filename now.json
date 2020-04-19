@@ -3,7 +3,7 @@
    "build": {
       "env": {
          "HASURA_KEY": "@expenses-hasura-key",
-         "GRAPHQL_ENDPOINT": "@expense-graphql-endpoint"
+         "GRAPHQL_ENDPOINT": "@expenses-graphql-endpoint"
       }
    }
 }
