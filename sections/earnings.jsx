@@ -1,16 +1,16 @@
 import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 
-import { EXPENSES } from '../queries'
+import { EARNINGS } from '../queries'
 
 import { formatDate, formatCurrency } from '../utils'
 
-export const Expenses = () => {
-   const { loading, error, data: { expenses = [] } = {} } = useQuery(EXPENSES)
+export const Earnings = () => {
+   const { loading, error, data: { earnings = [] } = {} } = useQuery(EARNINGS)
 
    const columns = [
       {
-         key: 'Title',
+         key: 'Source',
          type: 'String',
       },
       {
@@ -24,10 +24,6 @@ export const Expenses = () => {
       {
          key: 'Date',
          type: 'Date',
-      },
-      {
-         key: 'Payment Method',
-         type: 'String',
       },
    ]
 
@@ -50,20 +46,19 @@ export const Expenses = () => {
             </tr>
          </thead>
          <tbody>
-            {expenses.map((expense, index) => (
+            {earnings.map((earning, index) => (
                <tr
-                  key={expense.id}
+                  key={earning.id}
                   className={`${(index & 1) === 1 ? 'bg-gray-100' : ''}`}
                >
-                  <td className="border px-4 py-2">{expense.title}</td>
+                  <td className="border px-4 py-2">{earning.source}</td>
                   <td className="border px-4 py-2 text-right">
-                     {formatCurrency(expense.amount)}
+                     {formatCurrency(earning.amount)}
                   </td>
-                  <td className="border px-4 py-2">{expense.category}</td>
+                  <td className="border px-4 py-2">{earning.category}</td>
                   <td className="border px-4 py-2 text-right">
-                     {formatDate(expense.date)}
+                     {formatDate(earning.date)}
                   </td>
-                  <td className="border px-4 py-2">{expense.payment_method}</td>
                </tr>
             ))}
          </tbody>

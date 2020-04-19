@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Header, Expenses, Metrics } from '../sections'
+import { Header, Expenses, Metrics, Earnings } from '../sections'
 
 import { Tab } from '../components'
 
@@ -19,7 +19,7 @@ export default () => {
             </Tab>
          </div>
          {tab === 'expenses' && <Expenses />}
-         {tab === 'earnings' && <div>earnings</div>}
+         {tab === 'earnings' && <Earnings />}
       </div>
    )
 }
