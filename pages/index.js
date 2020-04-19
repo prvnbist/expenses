@@ -6,12 +6,13 @@ import {
    Earnings,
    EarningsMetrics,
    ExpensesMetrics,
+   Analytics,
 } from '../sections'
 
 import { Tab } from '../components'
 
 export default () => {
-   const [tab, setTab] = React.useState('expenses')
+   const [tab, setTab] = React.useState('analytics')
    const [categories] = React.useState([
       'Accessories',
       'Clothing & Footwears',
@@ -40,6 +41,9 @@ export default () => {
             </Tab>
             <Tab type="earnings" tab={tab} onClick={() => setTab('earnings')}>
                Earning
+            </Tab>
+            <Tab type="analytics" tab={tab} onClick={() => setTab('analytics')}>
+               Analytics
             </Tab>
          </div>
          {tab === 'expenses' && (
@@ -87,6 +91,7 @@ export default () => {
                </div>
             </div>
          )}
+         {tab === 'analytics' && <Analytics />}
       </div>
    )
 }

@@ -23,6 +23,7 @@
       "dotenv": "^8.2.0",
       "graphql": "^15.0.0",
       "graphql-tag": "^2.10.3",
+      "lodash.groupby": "^4.6.0",
       "next": "^9.3.5",
       "node-fetch": "^2.6.0",
       "react": "^16.13.1",
