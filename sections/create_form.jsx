@@ -3,6 +3,8 @@ import { useMutation } from '@apollo/react-hooks'
 
 import { CREATE_EXPENSE, CREATE_EARNING } from '../queries'
 
+import { Field, Label, Input, Select } from '../components'
+
 const CreateExpense = () => {
    const [createExpense] = useMutation(CREATE_EXPENSE)
    const [categories] = React.useState([
@@ -47,89 +49,40 @@ const CreateExpense = () => {
          <h1 className="text-xl mt-4 mb-3 text-teal-600">Create Expense</h1>
          <form onSubmit={handleSubmit}>
             <div className="flex">
-               <fieldset className="fmb-4 mr-4" style={{ flex: '70%' }}>
-                  <label
-                     htmlFor="title"
-                     className="uppercase text-gray-500 tracking-wider"
-                  >
-                     Title
-                  </label>
-                  <input
-                     type="text"
-                     name="title"
-                     placeholder="Enter title"
-                     className="w-full mt-2 mr-3  border rounded h-12 px-3"
-                  />
-               </fieldset>
-               <fieldset className="mb-4">
-                  <label
-                     htmlFor="amount"
-                     className="uppercase text-gray-500 tracking-wider"
-                  >
-                     Amount
-                  </label>
-                  <input
-                     type="number"
-                     name="amount"
-                     placeholder="Enter amount"
-                     className="w-full mt-2 mr-3  border rounded h-12 px-3"
-                  />
-               </fieldset>
+               <Field>
+                  <Label htmlFor="title">Title</Label>
+                  <Input type="text" name="title" placeholder="Enter title" />
+               </Field>
             </div>
 
             <div className="flex">
-               <fieldset className="flex flex-col flex-1 mr-4">
-                  <label
-                     htmlFor="category"
-                     className="uppercase text-gray-500 tracking-wider"
-                  >
-                     Categories
-                  </label>
-                  <select
-                     name="category"
-                     id="category"
-                     className="w-full mt-2 border rounded h-12 px-3"
-                  >
-                     {categories.map((category, index) => (
-                        <option key={index} value={category}>
-                           {category}
-                        </option>
-                     ))}
-                  </select>
-               </fieldset>
-               <fieldset className="flex flex-col flex-1">
-                  <label
-                     htmlFor="date"
-                     className="uppercase text-gray-500 tracking-wider"
-                  >
-                     Date
-                  </label>
-                  <input
-                     type="date"
-                     name="date"
-                     className="w-full mt-2 mr-3 mb-6 border rounded h-12 px-3"
-                  />
-               </fieldset>
+               <Field>
+                  <Label htmlFor="category">Categories</Label>
+                  <Select id="category" name="category" list={categories} />
+               </Field>
+               <Field>
+                  <Label htmlFor="date">Date</Label>
+                  <Input type="date" name="date" />
+               </Field>
             </div>
-            <fieldset className="flex flex-col">
-               <label
-                  htmlFor="payment_method"
-                  className="uppercase text-gray-500 tracking-wider"
-               >
-                  Payment Options
-               </label>
-               <select
-                  name="payment_method"
-                  id="payment_method"
-                  className="w-full mt-2 border rounded h-12 px-3"
-               >
-                  {paymentOptions.map((category, index) => (
-                     <option key={index} value={category}>
-                        {category}
-                     </option>
-                  ))}
-               </select>
-            </fieldset>
+            <div className="flex">
+               <Field>
+                  <Label htmlFor="amount">Amount</Label>
+                  <Input
+                     type="number"
+                     name="amount"
+                     placeholder="Enter amount"
+                  />
+               </Field>
+               <Field>
+                  <Label htmlFor="payment_method">Payment Options</Label>
+                  <Select
+                     id="payment_method"
+                     name="payment_method"
+                     list={paymentOptions}
+                  />
+               </Field>
+            </div>
             <button
                type="submit"
                className="h-10 w-auto px-3 bg-teal-500 text-white rounded mt-4"
@@ -160,69 +113,29 @@ const CreateEarning = () => {
          <h1 className="text-xl mt-4 mb-3 text-teal-600">Create Expense</h1>
          <form onSubmit={handleSubmit}>
             <div className="flex">
-               <fieldset className="fmb-4 mr-4" style={{ flex: '70%' }}>
-                  <label
-                     htmlFor="source"
-                     className="uppercase text-gray-500 tracking-wider"
-                  >
-                     Source
-                  </label>
-                  <input
-                     type="text"
-                     name="source"
-                     placeholder="Enter source"
-                     className="w-full mt-2 mr-3  border rounded h-12 px-3"
-                  />
-               </fieldset>
-               <fieldset className="mb-4">
-                  <label
-                     htmlFor="amount"
-                     className="uppercase text-gray-500 tracking-wider"
-                  >
-                     Amount
-                  </label>
-                  <input
+               <Field>
+                  <Label htmlFor="source">Source</Label>
+                  <Input type="text" name="source" placeholder="Enter source" />
+               </Field>
+               <Field>
+                  <Label htmlFor="amount">Amount</Label>
+                  <Input
                      type="number"
                      name="amount"
                      placeholder="Enter amount"
-                     className="w-full mt-2 mr-3  border rounded h-12 px-3"
                   />
-               </fieldset>
+               </Field>
             </div>
 
             <div className="flex">
-               <fieldset className="flex flex-col flex-1 mr-4">
-                  <label
-                     htmlFor="category"
-                     className="uppercase text-gray-500 tracking-wider"
-                  >
-                     Categories
-                  </label>
-                  <select
-                     name="category"
-                     id="category"
-                     className="w-full mt-2 border rounded h-12 px-3"
-                  >
-                     {categories.map((category, index) => (
-                        <option key={index} value={category}>
-                           {category}
-                        </option>
-                     ))}
-                  </select>
-               </fieldset>
-               <fieldset className="flex flex-col flex-1">
-                  <label
-                     htmlFor="date"
-                     className="uppercase text-gray-500 tracking-wider"
-                  >
-                     Date
-                  </label>
-                  <input
-                     type="date"
-                     name="date"
-                     className="w-full mt-2 mr-3 border rounded h-12 px-3"
-                  />
-               </fieldset>
+               <Field>
+                  <Label htmlFor="category">Categories</Label>
+                  <Select id="category" name="category" list={categories} />
+               </Field>
+               <Field>
+                  <Label htmlFor="date">Date</Label>
+                  <Input type="date" name="date" />
+               </Field>
             </div>
             <button
                type="submit"
