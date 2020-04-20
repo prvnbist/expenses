@@ -96,7 +96,7 @@ export default () => {
          {tab === 'analytics' && <Analytics />}
          <button
             onClick={() => setIsFormVisible(!isFormVisible)}
-            className="h-16 w-16 text-white fixed right-0 bottom-0 mr-6 mb-6 rounded-full bg-teal-600 hover:bg-teal-700"
+            className="h-16 w-16 text-white fixed right-0 top-0 mr-6 mt-6 rounded-full bg-teal-600 hover:bg-teal-700"
          >
             Add
          </button>
