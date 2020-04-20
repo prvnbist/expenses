@@ -7,11 +7,13 @@ import {
    EarningsMetrics,
    ExpensesMetrics,
    Analytics,
+   Form,
 } from '../sections'
 
 import { Tab } from '../components'
 
 export default () => {
+   const [isFormVisible, setIsFormVisible] = React.useState(false)
    const [tab, setTab] = React.useState('expenses')
    const [categories] = React.useState([
       'Accessories',
@@ -92,6 +94,13 @@ export default () => {
             </div>
          )}
          {tab === 'analytics' && <Analytics />}
+         <button
+            onClick={() => setIsFormVisible(!isFormVisible)}
+            className="h-16 w-16 text-white fixed right-0 bottom-0 mr-6 mb-6 rounded-full bg-teal-600 hover:bg-teal-700"
+         >
+            Add
+         </button>
+         {isFormVisible && <Form setIsFormVisible={setIsFormVisible} />}
       </div>
    )
 }
