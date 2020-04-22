@@ -17,31 +17,50 @@ export const Expenses = () => {
 
    React.useEffect(() => {
       if (total_expenses.aggregate) {
-         const total_pages = Math.ceil(total_expenses.aggregate.count / limit)
+         const total_pages = Math.floor(total_expenses.aggregate.count / limit)
          setPages(total_pages)
       }
    }, [total_expenses, limit])
 
    return (
-      <div className="flex">
-         <div className="w-9/12 mr-4">
+      <div className="flex space-x-4">
+         <div className="w-9/12">
             <div className="flex items-center justify-between mt-4 border-b pb-1">
                <h1 className="text-xl text-teal-600">Expenses</h1>
-               <section className="flex items-center">
-                  <span>Pages:</span>
-                  <select
-                     onChange={e => setOffset(e.target.value * limit)}
-                     className="border"
-                  >
-                     {Array(pages)
-                        .fill()
-                        .map((_, index) => (
-                           <option key={index} value={index + 1}>
-                              {index + 1}
-                           </option>
-                        ))}
-                  </select>
-               </section>
+               <div className="flex items-center space-x-4">
+                  <section className="flex items-center">
+                     <span>Rows Per Page:</span>
+                     <select
+                        value={limit}
+                        className="border"
+                        onChange={e => {
+                           setOffset(0)
+                           setLimit(Number(e.target.value))
+                        }}
+                     >
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                     </select>
+                  </section>
+                  <section className="flex items-center">
+                     <span>Pages:</span>
+                     <select
+                        value={offset}
+                        className="border"
+                        onChange={e => setOffset(e.target.value * limit)}
+                     >
+                        {Array(pages)
+                           .fill()
+                           .map((_, index) => (
+                              <option key={index} value={index + 1}>
+                                 {index + 1}
+                              </option>
+                           ))}
+                     </select>
+                  </section>
+               </div>
             </div>
 
             <Listing loading={loading} expenses={expenses} />
