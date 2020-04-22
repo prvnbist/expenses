@@ -33,9 +33,15 @@ export default () => {
          {tab === 'expenses' && (
             <div className="flex">
                <div className="w-9/12 mr-4">
+                  <h1 className="mt-4 text-xl text-teal-600 border-b pb-1">
+                     Expenses
+                  </h1>
                   <Expenses />
                </div>
                <div className="w-3/12">
+                  <h1 className="mt-4 text-xl text-teal-600 border-b pb-1">
+                     Analytics
+                  </h1>
                   <ExpensesMetrics />
                </div>
             </div>
@@ -43,9 +49,15 @@ export default () => {
          {tab === 'earnings' && (
             <div className="flex">
                <div className="w-9/12 mr-4">
+                  <h1 className="mt-4 text-xl text-teal-600 border-b pb-1">
+                     Earnings
+                  </h1>
                   <Earnings />
                </div>
                <div className="w-3/12">
+                  <h1 className="mt-4 text-xl text-teal-600 border-b pb-1">
+                     Analytics
+                  </h1>
                   <EarningsMetrics />
                </div>
             </div>

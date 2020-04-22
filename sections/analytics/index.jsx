@@ -10,23 +10,22 @@ export const Analytics = () => {
    if (loading) return <div>Loading...</div>
    return (
       <div>
-         <h1 className="mt-4 text-2xl">Analytics</h1>
          <div className="flex">
             <div className="w-6/12 mr-6">
-               <h2 className="border-b pb-2 text-lg mt-3 mb-2 text-teal-700">
+               <h2 className="border-b pb-2 text-lg mt-3 text-teal-700">
                   Spendings by categories
                </h2>
                <ByCategories expenses={expenses} />
             </div>
             <div className="w-6/12">
                <div className="w-full">
-                  <h2 className="border-b pb-2 text-lg mt-3 mb-2 text-teal-700">
+                  <h2 className="border-b pb-2 text-lg mt-3 text-teal-700">
                      Spendings by Years
                   </h2>
                   <ByYears expenses={expenses} />
                </div>
                <div className="w-full">
-                  <h2 className="border-b pb-2 text-lg mt-5 mb-2 text-teal-700">
+                  <h2 className="border-b pb-2 text-lg mt-5 text-teal-700">
                      Spendings by Months
                   </h2>
                   <ByMonths expenses={expenses} />
