@@ -1,13 +1,13 @@
 import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 
-import { EXPENSES } from '../queries'
+import { EXPENSES } from '../../../queries'
 
-import { formatDate, formatCurrency } from '../utils'
+import { formatDate, formatCurrency } from '../../../utils'
 
-import { Table } from '../components'
+import { Table } from '../../../components'
 
-export const Expenses = () => {
+export const Listing = () => {
    const { loading, error, data: { expenses = [] } = {} } = useQuery(EXPENSES)
 
    const columns = [

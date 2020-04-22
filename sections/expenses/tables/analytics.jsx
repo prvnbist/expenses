@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/react-hooks'
 
-import { TOTAL_EXPENSES } from '../queries'
-import { formatCurrency } from '../utils'
+import { TOTAL_EXPENSES } from '../../../queries'
+import { formatCurrency } from '../../../utils'
 
-import { Table } from '../components'
+import { Table } from '../../../components'
 
-export const ExpensesMetrics = () => {
+export const Analytics = () => {
    const { data, loading } = useQuery(TOTAL_EXPENSES)
 
    const columns = [
