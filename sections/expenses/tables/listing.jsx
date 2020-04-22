@@ -1,15 +1,10 @@
 import React from 'react'
-import { useQuery } from '@apollo/react-hooks'
-
-import { EXPENSES } from '../../../queries'
 
 import { formatDate, formatCurrency } from '../../../utils'
 
 import { Table } from '../../../components'
 
-export const Listing = () => {
-   const { loading, error, data: { expenses = [] } = {} } = useQuery(EXPENSES)
-
+export const Listing = ({ loading, expenses }) => {
    const columns = [
       {
          key: 'Title',
@@ -34,7 +29,6 @@ export const Listing = () => {
    ]
 
    if (loading) return <div>Loading...</div>
-   if (error) return <div>{error.message}</div>
    return (
       <Table>
          <Table.Head>
