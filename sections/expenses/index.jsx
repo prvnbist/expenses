@@ -17,7 +17,7 @@ export const Expenses = () => {
 
    React.useEffect(() => {
       if (total_expenses.aggregate) {
-         const total_pages = Math.floor(total_expenses.aggregate.count / limit)
+         const total_pages = Math.ceil(total_expenses.aggregate.count / limit)
          setPages(total_pages)
       }
    }, [total_expenses, limit])
@@ -54,7 +54,7 @@ export const Expenses = () => {
                         {Array(pages)
                            .fill()
                            .map((_, index) => (
-                              <option key={index} value={index + 1}>
+                              <option key={index} value={index}>
                                  {index + 1}
                               </option>
                            ))}
