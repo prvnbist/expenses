@@ -1,20 +1,12 @@
 import React from 'react'
 
-import {
-   Header,
-   Expenses,
-   Earnings,
-   EarningsMetrics,
-   ExpensesMetrics,
-   Analytics,
-   Form,
-} from '../sections'
+import { Header, Expenses, Earnings, Analytics, Form } from '../sections'
 
 import { Tab } from '../components'
 
 export default () => {
    const [isFormVisible, setIsFormVisible] = React.useState(false)
-   const [tab, setTab] = React.useState('expenses')
+   const [tab, setTab] = React.useState('earnings')
 
    return (
       <div>
@@ -31,22 +23,7 @@ export default () => {
             </Tab>
          </div>
          {tab === 'expenses' && <Expenses />}
-         {tab === 'earnings' && (
-            <div className="flex">
-               <div className="w-9/12 mr-4">
-                  <h1 className="mt-4 text-xl text-teal-600 border-b pb-1">
-                     Earnings
-                  </h1>
-                  <Earnings />
-               </div>
-               <div className="w-3/12">
-                  <h1 className="mt-4 text-xl text-teal-600 border-b pb-1">
-                     Analytics
-                  </h1>
-                  <EarningsMetrics />
-               </div>
-            </div>
-         )}
+         {tab === 'earnings' && <Earnings />}
          {tab === 'analytics' && <Analytics />}
          <button
             onClick={() => setIsFormVisible(!isFormVisible)}
