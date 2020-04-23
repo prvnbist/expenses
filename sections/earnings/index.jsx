@@ -2,8 +2,12 @@ import { useQuery } from '@apollo/react-hooks'
 
 import { EARNINGS, TOTAL_EARNINGS } from '../../queries'
 import { Listing, Analytics } from './tables'
+import { Cards } from './cards'
+
+import { useWindowSize } from '../../utils'
 
 export const Earnings = () => {
+   const { width } = useWindowSize()
    const [limit, setLimit] = React.useState(10)
    const [offset, setOffset] = React.useState(0)
    const [pages, setPages] = React.useState(0)
@@ -23,8 +27,8 @@ export const Earnings = () => {
    }, [total_earnings, limit])
 
    return (
-      <div className="flex space-x-4">
-         <div className="w-9/12">
+      <div className="flex lg:space-x-4 flex-col lg:flex-row">
+         <div className="w-full lg:w-9/12">
             <div className="flex items-center justify-between mt-4 border-b pb-1">
                <h1 className="text-xl text-teal-600">Earnings</h1>
                <div className="flex items-center space-x-4">
@@ -62,10 +66,10 @@ export const Earnings = () => {
                   </section>
                </div>
             </div>
-
-            <Listing loading={loading} earnings={earnings} />
+            {width >= 768 && <Listing loading={loading} earnings={earnings} />}
+            {width < 768 && <Cards loading={loading} earnings={earnings} />}
          </div>
-         <div className="w-3/12">
+         <div className="w-full lg:w-3/12">
             <h1 className="mt-4 text-xl text-teal-600 border-b pb-1">
                Analytics
             </h1>

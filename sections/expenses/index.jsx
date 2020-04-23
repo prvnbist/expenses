@@ -1,9 +1,13 @@
 import { useQuery } from '@apollo/react-hooks'
 
 import { Listing, Analytics } from './tables'
+import { Cards } from './cards'
 import { EXPENSES, TOTAL_EXPENSES } from '../../queries'
 
+import { useWindowSize } from '../../utils'
+
 export const Expenses = () => {
+   const { width } = useWindowSize()
    const [limit, setLimit] = React.useState(10)
    const [offset, setOffset] = React.useState(0)
    const [pages, setPages] = React.useState(0)
@@ -47,7 +51,6 @@ export const Expenses = () => {
                   <section className="flex items-center">
                      <span>Pages:</span>
                      <select
-                        value={offset}
                         className="border"
                         onChange={e => setOffset(e.target.value * limit)}
                      >
@@ -62,8 +65,8 @@ export const Expenses = () => {
                   </section>
                </div>
             </div>
-
-            <Listing loading={loading} expenses={expenses} />
+            {width >= 768 && <Listing loading={loading} expenses={expenses} />}
+            {width < 768 && <Cards loading={loading} expenses={expenses} />}
          </div>
          <div className="w-full lg:w-3/12">
             <h1 className="mt-4 text-xl text-teal-600 border-b pb-1">
