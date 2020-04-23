@@ -6,7 +6,7 @@ import { Tab } from '../components'
 
 export default () => {
    const [isFormVisible, setIsFormVisible] = React.useState(false)
-   const [tab, setTab] = React.useState('earnings')
+   const [tab, setTab] = React.useState('expenses')
 
    return (
       <div>
