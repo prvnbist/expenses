@@ -9,7 +9,7 @@ export default () => {
    const [tab, setTab] = React.useState('expenses')
 
    return (
-      <div>
+      <div className="m-6">
          <Header />
          <div className="rounded-lg border">
             <Tab type="expenses" tab={tab} onClick={() => setTab('expenses')}>
