@@ -29,9 +29,9 @@ export const Earnings = () => {
    return (
       <div className="flex lg:space-x-4 flex-col lg:flex-row">
          <div className="w-full lg:w-9/12">
-            <div className="flex items-center justify-between mt-4 border-b pb-1">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-4 border-b pb-1">
                <h1 className="text-xl text-teal-600">Earnings</h1>
-               <div className="flex items-center space-x-4">
+               <div className="mt-2 mb-3 sm:my-0 flex items-center space-x-4">
                   <section className="flex items-center">
                      <span>Rows Per Page:</span>
                      <select
