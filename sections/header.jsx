@@ -15,7 +15,7 @@ export const Header = () => {
       TOTAL_EARNINGS
    )
    return (
-      <section className="flex mb-4">
+      <section className="grid gap-3 sm:grid-cols-2 lg:flex lg:space-x-3 mb-6">
          <Stat loading={expensesLoading} type="expenses" label="Total Expenses">
             {formatCurrency(expensesData?.total_expenses.aggregate.sum.amount)}
          </Stat>
