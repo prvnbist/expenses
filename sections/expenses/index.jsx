@@ -23,8 +23,8 @@ export const Expenses = () => {
    }, [total_expenses, limit])
 
    return (
-      <div className="flex space-x-4">
-         <div className="w-9/12">
+      <div className="flex lg:space-x-4 flex-col lg:flex-row">
+         <div className="w-full lg:w-9/12">
             <div className="flex items-center justify-between mt-4 border-b pb-1">
                <h1 className="text-xl text-teal-600">Expenses</h1>
                <div className="flex items-center space-x-4">
@@ -65,7 +65,7 @@ export const Expenses = () => {
 
             <Listing loading={loading} expenses={expenses} />
          </div>
-         <div className="w-3/12">
+         <div className="w-full lg:w-3/12">
             <h1 className="mt-4 text-xl text-teal-600 border-b pb-1">
                Analytics
             </h1>
