@@ -152,7 +152,7 @@ export const Form = ({ setIsFormVisible }) => {
    const [tab, setTab] = React.useState('expense')
    return (
       <div className="fixed inset-0 bg-tint pt-40 flex items-start justify-center">
-         <div className="bg-white w-5/12 p-5 rounded-lg">
+         <div className="w-11/12 bg-white lg:w-7/12 xl:w-4/12  p-5 rounded-lg">
             <div className="flex">
                <div className="flex-1 rounded-lg border mr-3">
                   <Tab
