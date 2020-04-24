@@ -16,13 +16,13 @@
     - [x] List
     - [x] Limit
     - [x] Pagination
-    - [ ] Sort
+    - [x] Sort
     - [ ] Search
   - [ ] Earnings
     - [x] List
     - [x] Limit
     - [x] Pagination
-    - [ ] Sort
+    - [x] Sort
     - [ ] Search
 - [x] Analytics
   - [x] Total Spent

@@ -10,12 +10,19 @@ export const Expenses = () => {
    const { width } = useWindowSize()
    const [limit, setLimit] = React.useState(10)
    const [offset, setOffset] = React.useState(0)
+   const [sortBy, setSortBy] = React.useState({
+      key: 'date',
+      value: 'desc_nulls_last',
+   })
    const [pages, setPages] = React.useState(0)
    const { data: { total_expenses = {} } = {} } = useQuery(TOTAL_EXPENSES)
    const { loading, data: { expenses = [] } = {} } = useQuery(EXPENSES, {
       variables: {
          limit,
          offset,
+         order_by: {
+            [sortBy.key]: sortBy.value,
+         },
       },
    })
 
@@ -31,7 +38,28 @@ export const Expenses = () => {
          <div className="w-full lg:w-9/12">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-4 border-b pb-1">
                <h1 className="text-xl text-teal-600">Expenses</h1>
-               <div className="mt-2 mb-3 sm:my-0 flex items-center space-x-4">
+               <div className="mt-2 mb-3 sm:my-0 flex items-start flex-wrap sm:items-center sm:flex-row sm:space-x-4">
+                  <section>
+                     <span>Sort By: </span>
+                     <select
+                        className="border"
+                        onChange={e => {
+                           const { label } = e.target.options[
+                              e.target.options.selectedIndex
+                           ]
+                           setOffset(0)
+                           setSortBy({
+                              key: label,
+                              value: e.target.value,
+                           })
+                        }}
+                     >
+                        <option value="desc_nulls_last">date</option>
+                        <option value="asc">title</option>
+                        <option value="desc">amount</option>
+                        <option value="asc_nulls_last">category</option>
+                     </select>
+                  </section>
                   <section className="flex items-center">
                      <span>Rows Per Page:</span>
                      <select
