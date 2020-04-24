@@ -85,7 +85,7 @@ const CreateExpense = () => {
             </div>
             <button
                type="submit"
-               className="h-10 w-auto px-3 bg-teal-500 text-white rounded mt-4"
+               className="h-10 w-auto px-3 bg-teal-500 text-white rounded"
             >
                Create Expense
             </button>
@@ -139,7 +139,7 @@ const CreateEarning = () => {
             </div>
             <button
                type="submit"
-               className="h-10 w-auto px-3 bg-teal-500 text-white rounded mt-4"
+               className="h-10 w-auto px-3 bg-teal-500 text-white rounded"
             >
                Create Earning
             </button>
@@ -151,8 +151,8 @@ const CreateEarning = () => {
 export const Form = ({ setIsFormVisible }) => {
    const [tab, setTab] = React.useState('expense')
    return (
-      <div className="fixed inset-0 bg-tint pt-12 sm:pt-40 flex items-start justify-center">
-         <div className="w-11/12 bg-white lg:w-7/12 xl:w-4/12  p-5 rounded-lg">
+      <div className="fixed inset-0 bg-tint sm:pt-40 flex items-start justify-center">
+         <div className="w-full h-full bg-white sm:w-11/12 sm:h-auto lg:w-7/12 xl:w-4/12  p-5 rounded-lg">
             <div className="flex">
                <div className="flex-1 rounded-lg border mr-3">
                   <Tab
