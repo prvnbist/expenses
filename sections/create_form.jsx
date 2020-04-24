@@ -1,11 +1,11 @@
 import { Tab } from '../components'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 
-import { CREATE_EXPENSE, CREATE_EARNING } from '../queries'
+import { CREATE_EXPENSE, CREATE_EARNING, PAYMENT_METHODS } from '../queries'
 
 import { Field, Label, Input, Select } from '../components'
 
-const CreateExpense = () => {
+const CreateExpense = ({ methods }) => {
    const [createExpense] = useMutation(CREATE_EXPENSE)
    const [categories] = React.useState([
       'Accessories',
@@ -24,14 +24,6 @@ const CreateExpense = () => {
       'Transportation',
       'Trip',
       'Vehicle',
-   ])
-   const [paymentOptions] = React.useState([
-      'PayTM',
-      'GPay',
-      'PhonePe',
-      'Net Banking',
-      'Card',
-      'Cash',
    ])
 
    const handleSubmit = e => {
@@ -79,7 +71,7 @@ const CreateExpense = () => {
                   <Select
                      id="payment_method"
                      name="payment_method"
-                     list={paymentOptions}
+                     list={methods.map(method => method.title)}
                   />
                </Field>
             </div>
@@ -150,6 +142,8 @@ const CreateEarning = () => {
 
 export const Form = ({ setIsFormVisible }) => {
    const [tab, setTab] = React.useState('expense')
+   const { data: { payment_methods = [] } = {} } = useQuery(PAYMENT_METHODS)
+
    return (
       <div className="fixed inset-0 bg-tint sm:pt-40 flex items-start justify-center">
          <div className="w-full h-full bg-white sm:w-11/12 sm:h-auto lg:w-7/12 xl:w-4/12  p-5 rounded-lg">
@@ -179,7 +173,7 @@ export const Form = ({ setIsFormVisible }) => {
                   &times;
                </button>
             </div>
-            {tab === 'expense' && <CreateExpense />}
+            {tab === 'expense' && <CreateExpense methods={payment_methods} />}
             {tab === 'earning' && <CreateEarning />}
          </div>
       </div>
