@@ -8,7 +8,10 @@ export const Label = ({ htmlFor, children }) => (
 )
 
 export const Input = props => (
-   <input {...props} className="w-full mt-2 border rounded h-12 px-3" />
+   <input
+      {...props}
+      className="w-full bg-white mt-2 border rounded h-12 px-3"
+   />
 )
 
 export const Field = ({ children, ...props }) => (
@@ -18,7 +21,7 @@ export const Field = ({ children, ...props }) => (
 )
 
 export const Select = ({ list, ...props }) => (
-   <select className="w-full mt-2 border rounded h-12 px-3" {...props}>
+   <select className="w-full mt-2 border rounded h-12 px-3 bg-white" {...props}>
       {list.map((item, index) => (
          <option key={index} value={item}>
             {item}
