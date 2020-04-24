@@ -52,7 +52,9 @@ export const ByYears = ({ expenses }) => {
                <Table.Row key={index} isEven={(index & 1) === 1}>
                   <Table.Cell as="td">{category.year}</Table.Cell>
                   <Table.Cell as="td" align="right">
-                     {formatCurrency(category.amount)}
+                     <span className="font-medium text-red-600">
+                        - {formatCurrency(category.amount)}
+                     </span>
                   </Table.Cell>
                   <Table.Cell as="td" align="right">
                      {category.expenses}

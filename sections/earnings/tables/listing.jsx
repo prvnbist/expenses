@@ -45,9 +45,15 @@ export const Listing = ({ loading, earnings }) => {
                >
                   <Table.Cell as="td">{earning.source}</Table.Cell>
                   <Table.Cell as="td" align="right">
-                     {formatCurrency(earning.amount)}
+                     <span className="font-medium text-blue-600">
+                        + {formatCurrency(earning.amount)}
+                     </span>
                   </Table.Cell>
-                  <Table.Cell as="td">{earning.category}</Table.Cell>
+                  <Table.Cell as="td">
+                     <span className="border border-teal-300 bg-teal-200 text-teal-600 px-1 text-sm rounded">
+                        {earning.category}
+                     </span>
+                  </Table.Cell>
                   <Table.Cell as="td" align="right">
                      {formatDate(earning.date)}
                   </Table.Cell>

@@ -18,7 +18,7 @@ export const Cards = ({ loading, earnings }) => {
                   </h2>
                   <div>
                      <span className="font-medium text-blue-600">
-                        {formatCurrency(earning.amount)}
+                        + {formatCurrency(earning.amount)}
                      </span>
                   </div>
                </header>
