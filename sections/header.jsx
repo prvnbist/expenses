@@ -22,6 +22,12 @@ export const Header = () => {
          <Stat loading={earningsLoading} type="earnings" label="Total Earning">
             {formatCurrency(earningsData?.total_earnings.aggregate.sum.amount)}
          </Stat>
+         <Stat type="neutral" label="Balance">
+            {formatCurrency(
+               earningsData?.total_earnings.aggregate.sum.amount -
+                  expensesData?.total_expenses.aggregate.sum.amount
+            )}
+         </Stat>
       </section>
    )
 }

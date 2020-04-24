@@ -1,13 +1,22 @@
+const typePicker = type => {
+   switch (type) {
+      case 'expenses':
+         return ['bg-red-400', 'text-red-800']
+      case 'earnings':
+         return ['bg-indigo-400', 'text-indigo-800']
+      case 'neutral':
+         return ['bg-gray-400', 'text-gray-600']
+      default:
+         return ['bg-red-400', 'text-red-800']
+   }
+}
+
 export const Stat = ({ type, loading, label, children }) => {
    return (
-      <main
-         className={`flex flex-col p-3 rounded-lg ${
-            type === 'expenses' ? 'bg-red-400' : 'bg-indigo-400'
-         }`}
-      >
+      <main className={`flex flex-col p-3 rounded-lg ${typePicker(type)[0]}`}>
          <h3
             className={`text-sm font-bold sm:font-normal sm:text-base uppercase tracking-wider ${
-               type === 'expenses' ? 'text-red-800' : 'text-indigo-800'
+               typePicker(type)[1]
             }`}
          >
             {label}
