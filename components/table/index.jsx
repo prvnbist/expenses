@@ -18,7 +18,9 @@ const Cell = ({ as, align = 'left', type, children }) => {
    if (as === 'th') {
       return (
          <th
-            align={type === 'String' ? 'left' : 'right'}
+            align={
+               ['Number', 'Date', 'Actions'].includes(type) ? 'right' : 'left'
+            }
             className="px-4 py-2 uppercase text-gray-600 font-medium text-sm tracking-wider"
          >
             {children}
