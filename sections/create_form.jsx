@@ -5,8 +5,10 @@ import { CREATE_EXPENSE, CREATE_EARNING, PAYMENT_METHODS } from '../queries'
 
 import { Field, Label, Input, Select } from '../components'
 
-const CreateExpense = ({ methods }) => {
-   const [createExpense] = useMutation(CREATE_EXPENSE)
+const CreateExpense = ({ methods, setIsFormVisible }) => {
+   const [createExpense] = useMutation(CREATE_EXPENSE, {
+      refetchQueries: () => ['expenses', 'total_expenses'],
+   })
    const [categories] = React.useState([
       'Accessories',
       'Clothing & Footwears',
@@ -24,6 +26,7 @@ const CreateExpense = ({ methods }) => {
       'Transportation',
       'Trip',
       'Vehicle',
+      'Electronic/Hardware',
    ])
 
    const handleSubmit = e => {
@@ -35,6 +38,7 @@ const CreateExpense = ({ methods }) => {
             date: new Date(data.date).toISOString(),
          },
       })
+      setIsFormVisible(isFormVisible => !isFormVisible)
    }
    return (
       <div>
@@ -86,8 +90,10 @@ const CreateExpense = ({ methods }) => {
    )
 }
 
-const CreateEarning = () => {
-   const [createEarning] = useMutation(CREATE_EARNING)
+const CreateEarning = ({ setIsFormVisible }) => {
+   const [createEarning] = useMutation(CREATE_EARNING, {
+      refetchQueries: () => ['earnings', 'total_earnings'],
+   })
    const [categories] = React.useState(['Job', 'Freelance', 'Internship'])
 
    const handleSubmit = e => {
@@ -99,6 +105,7 @@ const CreateEarning = () => {
             date: new Date(data.date).toISOString(),
          },
       })
+      setIsFormVisible(isFormVisible => !isFormVisible)
    }
    return (
       <div>
@@ -173,8 +180,15 @@ export const Form = ({ setIsFormVisible }) => {
                   &times;
                </button>
             </div>
-            {tab === 'expense' && <CreateExpense methods={payment_methods} />}
-            {tab === 'earning' && <CreateEarning />}
+            {tab === 'expense' && (
+               <CreateExpense
+                  methods={payment_methods}
+                  setIsFormVisible={setIsFormVisible}
+               />
+            )}
+            {tab === 'earning' && (
+               <CreateEarning setIsFormVisible={setIsFormVisible} />
+            )}
          </div>
       </div>
    )

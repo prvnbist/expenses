@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 export const EARNINGS = gql`
-   query expenses(
+   query earnings(
       $limit: Int
       $offset: Int
       $where: earnings_bool_exp
