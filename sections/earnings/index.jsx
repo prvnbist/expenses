@@ -40,7 +40,7 @@ export const Earnings = () => {
    return (
       <div className="flex lg:space-x-4 flex-col lg:flex-row">
          <div className="w-full lg:w-9/12">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-4 border-b pb-1">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-4 border-b pb-2">
                <div className="flex justify-between sm:justify-start">
                   <h1 className="text-xl text-teal-600">Earnings</h1>
                   <input

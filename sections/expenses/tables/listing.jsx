@@ -29,6 +29,9 @@ export const Listing = ({ loading, expenses }) => {
    ]
 
    if (loading) return <div>Loading...</div>
+   if (expenses.length === 0)
+      return <h3 className="text-center my-3">No data</h3>
+
    return (
       <Table>
          <Table.Head>
