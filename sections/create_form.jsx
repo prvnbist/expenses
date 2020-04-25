@@ -5,7 +5,7 @@ import { CREATE_EXPENSE, CREATE_EARNING, PAYMENT_METHODS } from '../queries'
 
 import { Field, Label, Input, Select } from '../components'
 
-const CreateExpense = ({ methods, setIsFormVisible }) => {
+const ExpenseForm = ({ type = 'create', methods, setIsFormVisible }) => {
    const [createExpense] = useMutation(CREATE_EXPENSE, {
       refetchQueries: () => ['expenses', 'total_expenses'],
    })
@@ -32,12 +32,14 @@ const CreateExpense = ({ methods, setIsFormVisible }) => {
    const handleSubmit = e => {
       e.preventDefault()
       const data = Object.fromEntries(new FormData(e.target))
-      createExpense({
-         variables: {
-            ...data,
-            date: new Date(data.date).toISOString(),
-         },
-      })
+      if (type === 'create') {
+         createExpense({
+            variables: {
+               ...data,
+               date: new Date(data.date).toISOString(),
+            },
+         })
+      }
       setIsFormVisible(isFormVisible => !isFormVisible)
    }
    return (
@@ -83,14 +85,14 @@ const CreateExpense = ({ methods, setIsFormVisible }) => {
                type="submit"
                className="h-10 w-auto px-3 bg-teal-500 text-white rounded"
             >
-               Create Expense
+               {type === 'create' ? 'Create' : 'Update'} Expense
             </button>
          </form>
       </div>
    )
 }
 
-const CreateEarning = ({ setIsFormVisible }) => {
+const EarningForm = ({ type = 'create', setIsFormVisible }) => {
    const [createEarning] = useMutation(CREATE_EARNING, {
       refetchQueries: () => ['earnings', 'total_earnings'],
    })
@@ -99,17 +101,19 @@ const CreateEarning = ({ setIsFormVisible }) => {
    const handleSubmit = e => {
       e.preventDefault()
       const data = Object.fromEntries(new FormData(e.target))
-      createEarning({
-         variables: {
-            ...data,
-            date: new Date(data.date).toISOString(),
-         },
-      })
+      if (type === 'create') {
+         createEarning({
+            variables: {
+               ...data,
+               date: new Date(data.date).toISOString(),
+            },
+         })
+      }
       setIsFormVisible(isFormVisible => !isFormVisible)
    }
    return (
       <div>
-         <h1 className="text-xl mt-4 mb-3 text-teal-600">Create Expense</h1>
+         <h1 className="text-xl mt-4 mb-3 text-teal-600">Create Earning</h1>
          <form onSubmit={handleSubmit}>
             <div className="flex">
                <Field>
@@ -140,14 +144,14 @@ const CreateEarning = ({ setIsFormVisible }) => {
                type="submit"
                className="h-10 w-auto px-3 bg-teal-500 text-white rounded"
             >
-               Create Earning
+               {type === 'create' ? 'Create' : 'Update'} Earning
             </button>
          </form>
       </div>
    )
 }
 
-export const Form = ({ setIsFormVisible }) => {
+export const Form = ({ type = 'create', setIsFormVisible }) => {
    const [tab, setTab] = React.useState('expense')
    const { data: { payment_methods = [] } = {} } = useQuery(PAYMENT_METHODS)
 
@@ -181,13 +185,14 @@ export const Form = ({ setIsFormVisible }) => {
                </button>
             </div>
             {tab === 'expense' && (
-               <CreateExpense
+               <ExpenseForm
+                  type={type}
                   methods={payment_methods}
                   setIsFormVisible={setIsFormVisible}
                />
             )}
             {tab === 'earning' && (
-               <CreateEarning setIsFormVisible={setIsFormVisible} />
+               <EarningForm type={type} setIsFormVisible={setIsFormVisible} />
             )}
          </div>
       </div>
