@@ -1,10 +1,18 @@
 import React from 'react'
+import { useMutation } from '@apollo/react-hooks'
 
 import { formatDate, formatCurrency } from '../../../utils'
 
 import { Table } from '../../../components'
 
+import { DELETE_EARNINGS } from '../../../queries'
+
+import { DeleteIcon } from '../../../assets/icons'
+
 export const Listing = ({ loading, earnings }) => {
+   const [deleteEarnings] = useMutation(DELETE_EARNINGS, {
+      refetchQueries: () => ['earnings', 'total_earnings'],
+   })
    const columns = [
       {
          key: 'Source',
@@ -21,6 +29,10 @@ export const Listing = ({ loading, earnings }) => {
       {
          key: 'Date',
          type: 'Date',
+      },
+      {
+         type: 'Actions',
+         type: 'Actions',
       },
    ]
 
@@ -58,6 +70,18 @@ export const Listing = ({ loading, earnings }) => {
                   </Table.Cell>
                   <Table.Cell as="td" align="right">
                      {formatDate(earning.date)}
+                  </Table.Cell>
+                  <Table.Cell as="td" align="right">
+                     <button
+                        onClick={() =>
+                           deleteEarnings({
+                              variables: { where: { id: { _eq: earning.id } } },
+                           })
+                        }
+                        className="ml-2 border rounded p-1 hover:bg-red-500 group"
+                     >
+                        <DeleteIcon className="stroke-current text-gray-500 group-hover:text-white" />
+                     </button>
                   </Table.Cell>
                </Table.Row>
             ))}

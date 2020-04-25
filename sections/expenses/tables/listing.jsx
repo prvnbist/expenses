@@ -1,10 +1,18 @@
 import React from 'react'
+import { useMutation } from '@apollo/react-hooks'
 
 import { formatDate, formatCurrency } from '../../../utils'
 
 import { Table } from '../../../components'
 
+import { DELETE_EXPENSES } from '../../../queries'
+
+import { DeleteIcon } from '../../../assets/icons'
+
 export const Listing = ({ loading, expenses }) => {
+   const [deleteExpenses] = useMutation(DELETE_EXPENSES, {
+      refetchQueries: () => ['expenses', 'total_expenses'],
+   })
    const columns = [
       {
          key: 'Title',
@@ -25,6 +33,10 @@ export const Listing = ({ loading, expenses }) => {
       {
          key: 'Payment Method',
          type: 'String',
+      },
+      {
+         key: 'Actions',
+         type: 'Actions',
       },
    ]
 
@@ -61,6 +73,18 @@ export const Listing = ({ loading, expenses }) => {
                      {formatDate(expense.date)}
                   </Table.Cell>
                   <Table.Cell as="td">{expense.payment_method}</Table.Cell>
+                  <Table.Cell as="td" align="right">
+                     <button
+                        onClick={() =>
+                           deleteExpenses({
+                              variables: { where: { id: { _eq: expense.id } } },
+                           })
+                        }
+                        className="ml-2 border rounded p-1 hover:bg-red-500 group"
+                     >
+                        <DeleteIcon className="stroke-current text-gray-500 group-hover:text-white" />
+                     </button>
+                  </Table.Cell>
                </Table.Row>
             ))}
          </Table.Body>
