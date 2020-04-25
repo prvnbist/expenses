@@ -46,9 +46,9 @@ export const Expenses = () => {
                   <input
                      type="text"
                      value={search.replace(/%/g, '')}
-                     onChange={e => setSearch(`%${e.target.value}%`)}
                      placeholder="Search by title..."
-                     className="ml-3 px-2 bg-white border"
+                     className="ml-3 px-2 bg-white border w-full"
+                     onChange={e => setSearch(`%${e.target.value}%`)}
                   />
                </div>
                <div className="mt-2 mb-3 sm:my-0 flex items-start flex-wrap sm:items-center sm:flex-row sm:space-x-4">
