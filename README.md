@@ -11,19 +11,19 @@
 - [ ] Delete
   - [ ] Expenses
   - [ ] Earnings
-- [ ] Listing
-  - [ ] Expenses
+- [x] Listing
+  - [x] Expenses
     - [x] List
     - [x] Limit
     - [x] Pagination
     - [x] Sort
-    - [ ] Search
-  - [ ] Earnings
+    - [x] Search
+  - [x] Earnings
     - [x] List
     - [x] Limit
     - [x] Pagination
     - [x] Sort
-    - [ ] Search
+    - [x] Search
 - [x] Analytics
   - [x] Total Spent
   - [x] Total Earned

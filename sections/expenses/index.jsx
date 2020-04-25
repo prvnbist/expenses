@@ -8,6 +8,7 @@ import { useWindowSize } from '../../utils'
 
 export const Expenses = () => {
    const { width } = useWindowSize()
+   const [search, setSearch] = React.useState('%%')
    const [limit, setLimit] = React.useState(10)
    const [offset, setOffset] = React.useState(0)
    const [sortBy, setSortBy] = React.useState({
@@ -23,6 +24,9 @@ export const Expenses = () => {
          order_by: {
             [sortBy.key]: sortBy.value,
          },
+         where: {
+            title: { _like: search },
+         },
       },
    })
 
@@ -37,12 +41,21 @@ export const Expenses = () => {
       <div className="flex lg:space-x-4 flex-col lg:flex-row">
          <div className="w-full lg:w-9/12">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-4 border-b pb-1">
-               <h1 className="text-xl text-teal-600">Expenses</h1>
+               <div className="flex justify-between sm:justify-start">
+                  <h1 className="text-xl text-teal-600">Expenses</h1>
+                  <input
+                     type="text"
+                     value={search.replace(/%/g, '')}
+                     onChange={e => setSearch(`%${e.target.value}%`)}
+                     placeholder="Search by title..."
+                     className="ml-3 px-2 bg-white border"
+                  />
+               </div>
                <div className="mt-2 mb-3 sm:my-0 flex items-start flex-wrap sm:items-center sm:flex-row sm:space-x-4">
                   <section>
                      <span>Sort By: </span>
                      <select
-                        className="border"
+                        className="border bg-white"
                         onChange={e => {
                            const { label } = e.target.options[
                               e.target.options.selectedIndex
@@ -64,7 +77,7 @@ export const Expenses = () => {
                      <span>Rows Per Page:</span>
                      <select
                         value={limit}
-                        className="border"
+                        className="border bg-white"
                         onChange={e => {
                            setOffset(0)
                            setLimit(Number(e.target.value))
@@ -79,7 +92,7 @@ export const Expenses = () => {
                   <section className="flex items-center">
                      <span>Pages:</span>
                      <select
-                        className="border"
+                        className="border bg-white"
                         onChange={e => setOffset(e.target.value * limit)}
                      >
                         {Array(pages)
