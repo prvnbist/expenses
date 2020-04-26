@@ -1,6 +1,15 @@
+import { useMutation } from '@apollo/react-hooks'
+
 import { formatDate, formatCurrency } from '../../../utils'
 
+import { DELETE_EARNINGS } from '../../../queries'
+
+import { DeleteIcon } from '../../../assets/icons'
+
 export const Cards = ({ loading, earnings }) => {
+   const [deleteEarnings] = useMutation(DELETE_EARNINGS, {
+      refetchQueries: () => ['earnings', 'total_earnings'],
+   })
    if (loading) return <div>Loading...</div>
    return (
       <ul className="mt-3 divide-y border rounded-md">
@@ -22,10 +31,22 @@ export const Cards = ({ loading, earnings }) => {
                      </span>
                   </div>
                </header>
-               <main className="flex mt-3 border-t pt-2">
+               <main className="flex justify-between mt-3 border-t pt-2">
                   <time className="text-teal-500">
                      {formatDate(earning.date)}
                   </time>
+                  <section>
+                     <button
+                        onClick={() =>
+                           deleteEarnings({
+                              variables: { where: { id: { _eq: earning.id } } },
+                           })
+                        }
+                        className="ml-2 border rounded p-1 hover:bg-red-500 group"
+                     >
+                        <DeleteIcon className="stroke-current text-gray-500 group-hover:text-white" />
+                     </button>
+                  </section>
                </main>
             </li>
          ))}
