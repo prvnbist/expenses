@@ -4,6 +4,8 @@ import { EARNINGS, TOTAL_EARNINGS } from '../../queries'
 import { Listing, Analytics } from './tables'
 import { Cards } from './cards'
 
+import { Label } from '../../components'
+
 import { useWindowSize } from '../../utils'
 
 export const Earnings = () => {
@@ -39,73 +41,88 @@ export const Earnings = () => {
 
    return (
       <div className="flex lg:space-x-4 flex-col lg:flex-row">
-         <div className="w-full lg:w-9/12">
+         <div className="w-full lg:w-2/12">
+            <h1 className="mt-4 text-xl text-teal-600 border-b pb-2">
+               Filters
+            </h1>
+            <section className="mb-3 mt-1">
+               <Label htmlFor="search">Search</Label>
+               <input
+                  type="text"
+                  value={search.replace(/%/g, '')}
+                  placeholder="Search by source..."
+                  className="px-2 mt-1 bg-white border w-full rounded h-8"
+                  onChange={e => setSearch(`%${e.target.value}%`)}
+               />
+            </section>
+            <section className="flex flex-col mb-3">
+               <label
+                  htmlFor="sortby"
+                  className="uppercase text-gray-500 text-sm tracking-wider"
+               >
+                  Sort By
+               </label>
+               <select
+                  name="sortBy"
+                  className="mt-1 border bg-white flex-1 rounded h-8"
+                  onChange={e => {
+                     const { label } = e.target.options[
+                        e.target.options.selectedIndex
+                     ]
+                     setOffset(0)
+                     setSortBy({
+                        key: label,
+                        value: e.target.value,
+                     })
+                  }}
+               >
+                  <option value="desc_nulls_last">date</option>
+                  <option value="asc">source</option>
+                  <option value="desc">amount</option>
+                  <option value="asc_nulls_last">category</option>
+               </select>
+            </section>
+            <section className="flex flex-col mb-3">
+               <Label htmlFor="rowsPerPage">Rows Per Page</Label>
+               <select
+                  value={limit}
+                  name="rowsPerPage"
+                  className="mt-1 border bg-white flex-1 rounded h-8"
+                  onChange={e => {
+                     setOffset(0)
+                     setLimit(Number(e.target.value))
+                  }}
+               >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+               </select>
+            </section>
+            <section className="flex flex-col mb-3">
+               <Label htmlFor="pages">Pages</Label>
+               <select
+                  name="pages"
+                  value={offset}
+                  className="mt-1 border bg-white flex-1 rounded h-8"
+                  onChange={e => setOffset(e.target.value * limit)}
+               >
+                  {Array(pages)
+                     .fill()
+                     .map((_, index) => (
+                        <option key={index} value={index}>
+                           {index + 1}
+                        </option>
+                     ))}
+               </select>
+            </section>
+         </div>
+         <div className="w-full lg:w-7/12">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-4 border-b pb-2">
                <div className="flex justify-between sm:justify-start">
                   <h1 className="text-xl text-teal-600">Earnings</h1>
-                  <input
-                     type="text"
-                     value={search.replace(/%/g, '')}
-                     placeholder="Search by title..."
-                     className="ml-3 px-2 bg-white border w-full"
-                     onChange={e => setSearch(`%${e.target.value}%`)}
-                  />
                </div>
-               <div className="mt-2 mb-3 sm:my-0 flex items-start flex-wrap sm:items-center sm:flex-row sm:space-x-4">
-                  <section>
-                     <span>Sort By: </span>
-                     <select
-                        className="border bg-white"
-                        onChange={e => {
-                           const { label } = e.target.options[
-                              e.target.options.selectedIndex
-                           ]
-                           setOffset(0)
-                           setSortBy({
-                              key: label,
-                              value: e.target.value,
-                           })
-                        }}
-                     >
-                        <option value="desc_nulls_last">date</option>
-                        <option value="asc">source</option>
-                        <option value="desc">amount</option>
-                        <option value="asc_nulls_last">category</option>
-                     </select>
-                  </section>
-                  <section className="flex items-center">
-                     <span>Rows Per Page:</span>
-                     <select
-                        value={limit}
-                        className="border bg-white"
-                        onChange={e => {
-                           setOffset(0)
-                           setLimit(Number(e.target.value))
-                        }}
-                     >
-                        <option value={5}>5</option>
-                        <option value={10}>10</option>
-                        <option value={25}>25</option>
-                        <option value={50}>50</option>
-                     </select>
-                  </section>
-                  <section className="flex items-center">
-                     <span>Pages:</span>
-                     <select
-                        value={offset}
-                        className="border bg-white"
-                        onChange={e => setOffset(e.target.value * limit)}
-                     >
-                        {Array(pages)
-                           .fill()
-                           .map((_, index) => (
-                              <option key={index} value={index}>
-                                 {index + 1}
-                              </option>
-                           ))}
-                     </select>
-                  </section>
-               </div>
+               <div className="mt-2 mb-3 sm:my-0 flex items-start flex-wrap sm:items-center sm:flex-row sm:space-x-4"></div>
             </div>
             {width >= 768 && <Listing loading={loading} earnings={earnings} />}
             {width < 768 && <Cards loading={loading} earnings={earnings} />}
