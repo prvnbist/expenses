@@ -1,6 +1,8 @@
 ## Expenses App
 > A self-hosted app built with Hasura Engine, React, Apollo Client.
 
+![Demo Screenshot](https://res.cloudinary.com/prvnbist/image/upload/v1588229800/2020-04-30_122559_wgg44e.png "Demo ScreenShot")
+
 #### Features:
 - [x] Create
   - [x] Expenses
