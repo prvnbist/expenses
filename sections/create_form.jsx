@@ -40,6 +40,7 @@ const ExpenseForm = ({ type = 'create', methods, setIsFormVisible }) => {
       }
       setIsFormVisible(isFormVisible => !isFormVisible)
    }
+
    return (
       <div>
          <h1 className="text-xl mt-4 mb-3 text-teal-600">Create Expense</h1>
@@ -58,7 +59,11 @@ const ExpenseForm = ({ type = 'create', methods, setIsFormVisible }) => {
                </Field>
                <Field>
                   <Label htmlFor="date">Date</Label>
-                  <Input type="date" name="date" />
+                  <Input
+                     type="date"
+                     name="date"
+                     defaultValue={new Date().toISOString().substr(0, 10)}
+                  />
                </Field>
             </div>
             <div className="flex">
@@ -133,7 +138,11 @@ const EarningForm = ({ type = 'create', setIsFormVisible }) => {
                </Field>
                <Field>
                   <Label htmlFor="date">Date</Label>
-                  <Input type="date" name="date" />
+                  <Input
+                     type="date"
+                     name="date"
+                     defaultValue={new Date().toISOString().substr(0, 10)}
+                  />
                </Field>
             </div>
             <button
