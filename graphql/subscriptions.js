@@ -96,3 +96,21 @@ export const TOTAL_EXPENSES = gql`
       }
    }
 `
+
+export const EARNING_SOURCES = gql`
+   subscription earning_sources {
+      earning_sources {
+         id
+         title
+      }
+   }
+`
+
+export const EXPENSES_CATEGORIES = gql`
+   subscription expense_categories {
+      expense_categories {
+         id
+         title
+      }
+   }
+`

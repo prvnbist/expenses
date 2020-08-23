@@ -1,31 +1,21 @@
 import { Tab } from '../components'
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 
-import { CREATE_EXPENSE, CREATE_EARNING, PAYMENT_METHODS } from '../graphql'
+import {
+   CREATE_EXPENSE,
+   CREATE_EARNING,
+   PAYMENT_METHODS,
+   EARNING_SOURCES,
+   EXPENSES_CATEGORIES,
+} from '../graphql'
 
 import { Field, Label, Input, Select } from '../components'
 
 const ExpenseForm = ({ type = 'create', methods, setIsFormVisible }) => {
    const [createExpense] = useMutation(CREATE_EXPENSE)
-   const [categories] = React.useState([
-      'Accessories',
-      'Clothing & Footwears',
-      'Entertainment',
-      'Family',
-      'Food & Drinks',
-      'Friends',
-      'Groceries',
-      'Health Care',
-      'Internet/Talktime',
-      'Others',
-      'Rent',
-      'Repairs',
-      'Stationary',
-      'Transportation',
-      'Trip',
-      'Vehicle',
-      'Electronic/Hardware',
-   ])
+   const { data: { expense_categories = [] } = {} } = useSubscription(
+      EXPENSES_CATEGORIES
+   )
 
    const handleSubmit = e => {
       e.preventDefault()
@@ -55,7 +45,11 @@ const ExpenseForm = ({ type = 'create', methods, setIsFormVisible }) => {
             <div className="flex">
                <Field>
                   <Label htmlFor="category">Categories</Label>
-                  <Select id="category" name="category" list={categories} />
+                  <Select
+                     id="category"
+                     name="category"
+                     list={expense_categories.map(category => category.title)}
+                  />
                </Field>
                <Field>
                   <Label htmlFor="date">Date</Label>
@@ -97,7 +91,9 @@ const ExpenseForm = ({ type = 'create', methods, setIsFormVisible }) => {
 
 const EarningForm = ({ type = 'create', setIsFormVisible }) => {
    const [createEarning] = useMutation(CREATE_EARNING)
-   const [categories] = React.useState(['Job', 'Freelance', 'Internship'])
+   const { data: { earning_sources = [] } = {} } = useSubscription(
+      EARNING_SOURCES
+   )
 
    const handleSubmit = e => {
       e.preventDefault()
@@ -134,7 +130,11 @@ const EarningForm = ({ type = 'create', setIsFormVisible }) => {
             <div className="flex">
                <Field>
                   <Label htmlFor="category">Categories</Label>
-                  <Select id="category" name="category" list={categories} />
+                  <Select
+                     id="category"
+                     name="category"
+                     list={earning_sources.map(source => source.title)}
+                  />
                </Field>
                <Field>
                   <Label htmlFor="date">Date</Label>
