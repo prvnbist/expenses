@@ -1,30 +1,58 @@
 import React from 'react'
 import App from 'next/app'
 import '../global.css'
+
 import fetch from 'node-fetch'
-import { ApolloLink, concat } from 'apollo-link'
-import { HttpLink } from 'apollo-link-http'
 import { ApolloClient } from 'apollo-client'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import { setContext } from 'apollo-link-context'
+import { HttpLink } from 'apollo-link-http'
+import { split } from 'apollo-link'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
+
+const authLink = setContext((_, { headers }) => {
+   return {
+      headers: {
+         ...headers,
+         'x-hasura-admin-secret': `${process.env.HASURA_KEY}`,
+      },
+   }
+})
+
+const wsLink = process.browser
+   ? new WebSocketLink({
+        uri: process.env.WS_GRAPHQL_ENDPOINT,
+        options: {
+           reconnect: true,
+           connectionParams: {
+              headers: {
+                 'x-hasura-admin-secret': `${process.env.HASURA_KEY}`,
+              },
+           },
+        },
+     })
+   : null
 
 const httpLink = new HttpLink({
-   fetch: fetch,
+   fetch,
    uri: process.env.GRAPHQL_ENDPOINT,
 })
 
-const middlewareLink = new ApolloLink((operation, forward) => {
-   operation.setContext({
-      headers: {
-         'Content-Type': 'application/json',
-         'x-hasura-admin-secret': process.env.HASURA_KEY,
-      },
-   })
-   return forward(operation)
-})
+const link = process.browser
+   ? split(
+        ({ query }) => {
+           const { kind, operation } = getMainDefinition(query)
+           return kind === 'OperationDefinition' && operation === 'subscription'
+        },
+        wsLink,
+        authLink.concat(httpLink)
+     )
+   : authLink.concat(httpLink)
 
 const client = new ApolloClient({
-   link: concat(middlewareLink, httpLink),
+   link,
    cache: new InMemoryCache(),
 })
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useSubscription } from '@apollo/react-hooks'
 
 import { TOTAL_EXPENSES, TOTAL_EARNINGS } from '../queries'
 
@@ -8,10 +8,10 @@ import { formatCurrency } from '../utils'
 import { Stat } from '../components'
 
 export const Header = () => {
-   const { data: expensesData, loading: expensesLoading } = useQuery(
+   const { data: expensesData, loading: expensesLoading } = useSubscription(
       TOTAL_EXPENSES
    )
-   const { data: earningsData, loading: earningsLoading } = useQuery(
+   const { data: earningsData, loading: earningsLoading } = useSubscription(
       TOTAL_EARNINGS
    )
    return (

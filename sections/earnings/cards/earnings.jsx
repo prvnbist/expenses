@@ -7,9 +7,7 @@ import { DELETE_EARNINGS } from '../../../queries'
 import { DeleteIcon } from '../../../assets/icons'
 
 export const Cards = ({ loading, earnings }) => {
-   const [deleteEarnings] = useMutation(DELETE_EARNINGS, {
-      refetchQueries: () => ['earnings', 'total_earnings'],
-   })
+   const [deleteEarnings] = useMutation(DELETE_EARNINGS)
    if (loading) return <div>Loading...</div>
    return (
       <ul className="mt-3 divide-y border rounded-md">

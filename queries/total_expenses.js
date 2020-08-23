@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 export const TOTAL_EXPENSES = gql`
-   query total_expenses {
+   subscription total_expenses {
       total_expenses {
          aggregate {
             min {

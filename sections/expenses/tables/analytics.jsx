@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/react-hooks'
+import { useSubscription } from '@apollo/react-hooks'
 
 import { TOTAL_EXPENSES } from '../../../queries'
 import { formatCurrency } from '../../../utils'
@@ -12,7 +12,7 @@ export const Analytics = () => {
       max: 0,
       min: 0,
    })
-   const { data: { total_expenses = {} } = {}, loading } = useQuery(
+   const { data: { total_expenses = {} } = {}, loading } = useSubscription(
       TOTAL_EXPENSES
    )
    const columns = [

@@ -10,9 +10,7 @@ import { DELETE_EARNINGS } from '../../../queries'
 import { DeleteIcon } from '../../../assets/icons'
 
 export const Listing = ({ loading, earnings }) => {
-   const [deleteEarnings] = useMutation(DELETE_EARNINGS, {
-      refetchQueries: () => ['earnings', 'total_earnings'],
-   })
+   const [deleteEarnings] = useMutation(DELETE_EARNINGS)
    const columns = [
       {
          key: 'Source',

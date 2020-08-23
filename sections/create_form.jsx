@@ -1,14 +1,12 @@
 import { Tab } from '../components'
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useMutation, useSubscription } from '@apollo/react-hooks'
 
 import { CREATE_EXPENSE, CREATE_EARNING, PAYMENT_METHODS } from '../queries'
 
 import { Field, Label, Input, Select } from '../components'
 
 const ExpenseForm = ({ type = 'create', methods, setIsFormVisible }) => {
-   const [createExpense] = useMutation(CREATE_EXPENSE, {
-      refetchQueries: () => ['expenses', 'total_expenses'],
-   })
+   const [createExpense] = useMutation(CREATE_EXPENSE)
    const [categories] = React.useState([
       'Accessories',
       'Clothing & Footwears',
@@ -93,9 +91,7 @@ const ExpenseForm = ({ type = 'create', methods, setIsFormVisible }) => {
 }
 
 const EarningForm = ({ type = 'create', setIsFormVisible }) => {
-   const [createEarning] = useMutation(CREATE_EARNING, {
-      refetchQueries: () => ['earnings', 'total_earnings'],
-   })
+   const [createEarning] = useMutation(CREATE_EARNING)
    const [categories] = React.useState(['Job', 'Freelance', 'Internship'])
 
    const handleSubmit = e => {
@@ -153,7 +149,9 @@ const EarningForm = ({ type = 'create', setIsFormVisible }) => {
 
 export const Form = ({ type = 'create', setIsFormVisible }) => {
    const [tab, setTab] = React.useState('expense')
-   const { data: { payment_methods = [] } = {} } = useQuery(PAYMENT_METHODS)
+   const { data: { payment_methods = [] } = {} } = useSubscription(
+      PAYMENT_METHODS
+   )
 
    return (
       <div className="fixed inset-0 bg-tint sm:pt-40 flex items-start justify-center">

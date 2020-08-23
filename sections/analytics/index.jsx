@@ -1,11 +1,13 @@
-import { useQuery } from '@apollo/react-hooks'
+import { useSubscription } from '@apollo/react-hooks'
 
 import { EXPENSES } from '../../queries'
 
 import { ByCategories, ByYears, ByMonths } from './tables'
 
 export const Analytics = () => {
-   const { loading, error, data: { expenses = [] } = {} } = useQuery(EXPENSES)
+   const { loading, error, data: { expenses = [] } = {} } = useSubscription(
+      EXPENSES
+   )
 
    if (loading) return <div>Loading...</div>
    return (

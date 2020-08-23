@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/react-hooks'
+import { useSubscription } from '@apollo/react-hooks'
 
 import { EARNINGS, TOTAL_EARNINGS } from '../../queries'
 import { Listing, Analytics } from './tables'
@@ -18,8 +18,10 @@ export const Earnings = () => {
       key: 'date',
       value: 'desc_nulls_last',
    })
-   const { data: { total_earnings = {} } = {} } = useQuery(TOTAL_EARNINGS)
-   const { loading, data: { earnings = [] } = {} } = useQuery(EARNINGS, {
+   const { data: { total_earnings = {} } = {} } = useSubscription(
+      TOTAL_EARNINGS
+   )
+   const { loading, data: { earnings = [] } = {} } = useSubscription(EARNINGS, {
       variables: {
          limit,
          offset,
