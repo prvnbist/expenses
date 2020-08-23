@@ -37,7 +37,7 @@ const Earnings = () => {
                </button>
                <ul className="flex space-x-2">
                   {paginate(offset, TOTAL_PAGES).map(node => (
-                     <li key={node}>
+                     <li key={node + Math.floor(Math.random() * 100)}}>
                         {typeof node === 'string' ? (
                            <span className="h-8 w-8">{node}</span>
                         ) : (
