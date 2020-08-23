@@ -1,18 +1,8 @@
 import gql from 'graphql-tag'
 
 export const EARNINGS = gql`
-   subscription earnings(
-      $limit: Int
-      $offset: Int
-      $where: earnings_bool_exp
-      $order_by: [earnings_order_by!]
-   ) {
-      earnings(
-         limit: $limit
-         where: $where
-         offset: $offset
-         order_by: $order_by
-      ) {
+   subscription earnings($limit: Int, $offset: Int) {
+      earnings(limit: $limit, offset: $offset, order_by: { date: desc }) {
          id
          date
          amount
@@ -23,18 +13,8 @@ export const EARNINGS = gql`
 `
 
 export const EXPENSES = gql`
-   subscription expenses(
-      $limit: Int
-      $offset: Int
-      $where: expenses_bool_exp
-      $order_by: [expenses_order_by!]
-   ) {
-      expenses(
-         limit: $limit
-         where: $where
-         offset: $offset
-         order_by: $order_by
-      ) {
+   subscription expenses($limit: Int, $offset: Int) {
+      expenses(limit: $limit, offset: $offset, order_by: { date: desc }) {
          id
          date
          title
