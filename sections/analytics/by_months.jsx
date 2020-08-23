@@ -1,14 +1,29 @@
 import groupBy from 'lodash.groupby'
 
-import { formatCurrency, formatDate } from '../../../utils'
+import { formatCurrency } from '../../utils'
 
-import { Table } from '../../../components'
+import { Table } from '../../components'
 
-export const ByYears = ({ expenses }) => {
-   const [years, setYears] = React.useState([])
+const months = [
+   'January',
+   'February',
+   'March',
+   'April',
+   'May',
+   'June',
+   'July',
+   'August',
+   'September',
+   'October',
+   'November',
+   'December',
+]
+
+export const ByMonths = ({ expenses }) => {
+   const [list, setList] = React.useState([])
    const [columns] = React.useState([
       {
-         key: 'Year',
+         key: 'Months',
          type: 'String',
       },
       {
@@ -24,16 +39,16 @@ export const ByYears = ({ expenses }) => {
    React.useEffect(() => {
       const formatted = expenses.map(expense => ({
          ...expense,
-         date: new Date(formatDate(expense.date)).getFullYear(),
+         date: new Date(expense.date).getMonth(),
       }))
 
       const groups = groupBy(formatted, 'date')
-      const years = []
+      const result = []
       for (let [key, value] of Object.entries(groups)) {
          const amount = value.reduce((acc, current) => acc + current.amount, 0)
-         years.push({ year: key, expenses: value.length, amount })
+         result.push({ month: key, expenses: value.length, amount })
       }
-      setYears(years.sort((a, b) => b.year - a.year))
+      setList(result)
    }, [expenses])
 
    if (expenses.length === 0)
@@ -51,9 +66,9 @@ export const ByYears = ({ expenses }) => {
             </Table.Row>
          </Table.Head>
          <Table.Body>
-            {years.map((category, index) => (
+            {list.map((category, index) => (
                <Table.Row key={index} isEven={(index & 1) === 1}>
-                  <Table.Cell as="td">{category.year}</Table.Cell>
+                  <Table.Cell as="td">{months[category.month]}</Table.Cell>
                   <Table.Cell as="td" align="right">
                      <span className="font-medium text-red-600">
                         - {formatCurrency(category.amount)}

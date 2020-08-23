@@ -1,4 +1,3 @@
-import { Tab } from '../components'
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 
 import {
@@ -167,20 +166,22 @@ export const Form = ({ type = 'create', setIsFormVisible }) => {
          <div className="w-full h-full bg-white sm:w-11/12 sm:h-auto lg:w-7/12 xl:w-4/12  p-5 rounded-lg">
             <div className="flex">
                <div className="flex-1 rounded-lg border mr-3">
-                  <Tab
-                     tab={tab}
-                     type="expense"
+                  <button
                      onClick={() => setTab('expense')}
+                     className={`inline-block h-10 focus:outline-none rounded-lg focus:bg-indigo-200 focus:text-indigo-800 py-2 px-3 ${
+                        tab === 'expense' ? 'bg-indigo-200 text-indigo-800' : ''
+                     }`}
                   >
                      Expense
-                  </Tab>
-                  <Tab
-                     tab={tab}
-                     type="earning"
+                  </button>
+                  <button
                      onClick={() => setTab('earning')}
+                     className={`inline-block h-10 focus:outline-none rounded-lg focus:bg-indigo-200 focus:text-indigo-800 py-2 px-3 ${
+                        tab === 'earning' ? 'bg-indigo-200 text-indigo-800' : ''
+                     }`}
                   >
                      Earning
-                  </Tab>
+                  </button>
                </div>
                <button
                   onClick={() =>

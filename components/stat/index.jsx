@@ -11,7 +11,7 @@ const typePicker = type => {
    }
 }
 
-export const Stat = ({ type, loading, label, children }) => {
+export const Stat = ({ type, label, children }) => {
    return (
       <main className={`flex flex-col p-3 rounded-lg ${typePicker(type)[0]}`}>
          <h3
@@ -22,7 +22,7 @@ export const Stat = ({ type, loading, label, children }) => {
             {label}
          </h3>
          <span className="text-2xl sm:text-3xl font-bold text-white">
-            {loading ? 'Loading...' : children}
+            {children}
          </span>
       </main>
    )

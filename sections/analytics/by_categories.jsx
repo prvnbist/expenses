@@ -1,8 +1,8 @@
 import groupBy from 'lodash.groupby'
 
-import { formatCurrency } from '../../../utils'
+import { formatCurrency } from '../../utils'
 
-import { Table } from '../../../components'
+import { Table } from '../../components'
 
 export const ByCategories = ({ expenses }) => {
    const [categories, setCategories] = React.useState([])

@@ -1,11 +1,12 @@
 import { useSubscription } from '@apollo/react-hooks'
 
-import { Cards } from './cards'
-import { Listing, Analytics } from './tables'
-import { useWindowSize, paginate } from '../../utils'
-import { EXPENSES, TOTAL_EXPENSES } from '../../graphql'
+import { Cards } from '../sections/expenses/cards'
+import { useWindowSize, paginate } from '../utils'
+import { EXPENSES, TOTAL_EXPENSES } from '../graphql'
+import { Layout } from '../sections'
+import { Listing, Analytics } from '../sections/expenses/tables'
 
-export const Expenses = () => {
+const Expenses = () => {
    const { width } = useWindowSize()
    const [limit] = React.useState(10)
    const [offset, setOffset] = React.useState(0)
@@ -22,7 +23,7 @@ export const Expenses = () => {
    const TOTAL_PAGES = Math.ceil(total_expenses?.aggregate?.count / limit) || 0
 
    return (
-      <div className="flex lg:space-x-4 flex-col lg:flex-row">
+      <Layout>
          <div className="w-full lg:w-9/12">
             <h1 className="mt-4 text-xl text-teal-600 border-b pb-2">
                Expenses
@@ -74,6 +75,8 @@ export const Expenses = () => {
             </h1>
             <Analytics />
          </div>
-      </div>
+      </Layout>
    )
 }
+
+export default Expenses

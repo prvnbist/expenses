@@ -1,13 +1,14 @@
 import { useSubscription } from '@apollo/react-hooks'
 
-import { Cards } from './cards'
-import { Listing, Analytics } from './tables'
-import { useWindowSize, paginate } from '../../utils'
-import { EARNINGS, TOTAL_EARNINGS } from '../../graphql'
+import { Layout } from '../sections'
+import { useWindowSize, paginate } from '../utils'
+import { Cards } from '../sections/earnings/cards'
+import { EARNINGS, TOTAL_EARNINGS } from '../graphql'
+import { Listing, Analytics } from '../sections/earnings/tables'
 
-export const Earnings = () => {
+const Earnings = () => {
    const { width } = useWindowSize()
-   const [limit, setLimit] = React.useState(10)
+   const [limit] = React.useState(10)
    const [offset, setOffset] = React.useState(0)
    const { data: { total_earnings = {} } = {} } = useSubscription(
       TOTAL_EARNINGS
@@ -22,7 +23,7 @@ export const Earnings = () => {
    const TOTAL_PAGES = Math.ceil(total_earnings?.aggregate?.count / limit) || 0
 
    return (
-      <div className="flex lg:space-x-4 flex-col lg:flex-row">
+      <Layout>
          <div className="w-full lg:w-9/12">
             <h1 className="mt-4 text-xl text-teal-600 border-b pb-2">
                Earnings
@@ -75,6 +76,8 @@ export const Earnings = () => {
             </h1>
             <Analytics />
          </div>
-      </div>
+      </Layout>
    )
 }
+
+export default Earnings
