@@ -14,15 +14,7 @@ export const Cards = ({ loading, earnings }) => {
          {earnings.map(earning => (
             <li key={earning.id} className="p-3">
                <header className="flex items-center justify-between">
-                  <h2 className="text-xl">
-                     {earning.source}
-                     <span className="mx-2 font-bold text-gray-400">
-                        &middot;
-                     </span>
-                     <span className="border border-teal-300 bg-teal-200 text-teal-600 px-1 text-sm rounded">
-                        {earning.category}
-                     </span>
-                  </h2>
+                  <h2 className="text-xl">{earning.source}</h2>
                   <div>
                      <span className="font-medium text-blue-600">
                         + {formatCurrency(earning.amount)}
@@ -30,9 +22,15 @@ export const Cards = ({ loading, earnings }) => {
                   </div>
                </header>
                <main className="flex justify-between mt-3 border-t pt-2">
-                  <time className="text-teal-500">
-                     {formatDate(earning.date)}
-                  </time>
+                  <section className="flex items-center">
+                     <h3 className="text-teal-500">{earning.category}</h3>
+                     <span className="mx-2 font-bold text-gray-400">
+                        &middot;
+                     </span>
+                     <time className="text-teal-500">
+                        {formatDate(earning.date)}
+                     </time>
+                  </section>
                   <section>
                      <button
                         onClick={() =>
