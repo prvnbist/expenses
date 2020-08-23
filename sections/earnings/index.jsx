@@ -1,6 +1,6 @@
 import { useSubscription } from '@apollo/react-hooks'
 
-import { EARNINGS, TOTAL_EARNINGS } from '../../queries'
+import { EARNINGS, TOTAL_EARNINGS } from '../../graphql'
 import { Listing, Analytics } from './tables'
 import { Cards } from './cards'
 

@@ -2,7 +2,7 @@ import { useSubscription } from '@apollo/react-hooks'
 
 import { Listing, Analytics } from './tables'
 import { Cards } from './cards'
-import { EXPENSES, TOTAL_EXPENSES } from '../../queries'
+import { EXPENSES, TOTAL_EXPENSES } from '../../graphql'
 
 import { Label } from '../../components'
 

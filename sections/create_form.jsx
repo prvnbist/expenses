@@ -1,7 +1,7 @@
 import { Tab } from '../components'
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 
-import { CREATE_EXPENSE, CREATE_EARNING, PAYMENT_METHODS } from '../queries'
+import { CREATE_EXPENSE, CREATE_EARNING, PAYMENT_METHODS } from '../graphql'
 
 import { Field, Label, Input, Select } from '../components'
 

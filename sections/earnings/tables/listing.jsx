@@ -5,7 +5,7 @@ import { formatDate, formatCurrency } from '../../../utils'
 
 import { Table } from '../../../components'
 
-import { DELETE_EARNINGS } from '../../../queries'
+import { DELETE_EARNINGS } from '../../../graphql'
 
 import { DeleteIcon } from '../../../assets/icons'
 

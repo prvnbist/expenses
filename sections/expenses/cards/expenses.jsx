@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/react-hooks'
 
 import { formatDate, formatCurrency } from '../../../utils'
 
-import { DELETE_EXPENSES } from '../../../queries'
+import { DELETE_EXPENSES } from '../../../graphql'
 
 import { DeleteIcon } from '../../../assets/icons'
 

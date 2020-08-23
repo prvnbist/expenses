@@ -1,6 +1,6 @@
 import { useSubscription } from '@apollo/react-hooks'
 
-import { EXPENSES } from '../../queries'
+import { EXPENSES } from '../../graphql'
 
 import { ByCategories, ByYears, ByMonths } from './tables'
 

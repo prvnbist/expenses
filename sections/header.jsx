@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSubscription } from '@apollo/react-hooks'
 
-import { TOTAL_EXPENSES, TOTAL_EARNINGS } from '../queries'
+import { TOTAL_EXPENSES, TOTAL_EARNINGS } from '../graphql'
 
 import { formatCurrency } from '../utils'
 
