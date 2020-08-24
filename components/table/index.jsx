@@ -21,14 +21,14 @@ const Cell = ({ as, align = 'left', type, children }) => {
             align={
                ['Number', 'Date', 'Actions'].includes(type) ? 'right' : 'left'
             }
-            className="px-4 py-2 uppercase text-gray-600 font-medium text-sm tracking-wider"
+            className="px-4 h-8 uppercase text-gray-600 font-medium text-sm tracking-wider"
          >
             {children}
          </th>
       )
    }
    return (
-      <td align={align} className="border px-4 py-2">
+      <td align={align} className="border px-4 h-10">
          {children}
       </td>
    )

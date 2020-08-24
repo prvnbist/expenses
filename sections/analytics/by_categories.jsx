@@ -4,7 +4,7 @@ import { formatCurrency } from '../../utils'
 
 import { Table } from '../../components'
 
-export const ByCategories = ({ expenses }) => {
+export const ByCategories = ({ loading, expenses }) => {
    const [categories, setCategories] = React.useState([])
    const [columns] = React.useState([
       {
@@ -31,8 +31,6 @@ export const ByCategories = ({ expenses }) => {
       setCategories(categories.sort((a, b) => b.amount - a.amount))
    }, [expenses])
 
-   if (expenses.length === 0)
-      return <h3 className="text-center my-3">No data</h3>
    return (
       <Table>
          <Table.Head>
@@ -44,21 +42,37 @@ export const ByCategories = ({ expenses }) => {
                ))}
             </Table.Row>
          </Table.Head>
-         <Table.Body>
-            {categories.map((category, index) => (
-               <Table.Row key={index} isEven={(index & 1) === 1}>
-                  <Table.Cell as="td">{category.title}</Table.Cell>
-                  <Table.Cell as="td" align="right">
-                     <span className="font-medium text-red-600">
-                        - {formatCurrency(category.amount)}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell as="td" align="right">
-                     {category.expenses}
-                  </Table.Cell>
-               </Table.Row>
-            ))}
-         </Table.Body>
+         {loading ? (
+            <Table.Body>
+               {[false, true, false, true, false].map((node, index) => (
+                  <Table.Row isEven={node} key={index}>
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                  </Table.Row>
+               ))}
+            </Table.Body>
+         ) : (
+            <Table.Body>
+               {categories.length > 0 ? (
+                  categories.map((category, index) => (
+                     <Table.Row key={index} isEven={(index & 1) === 1}>
+                        <Table.Cell as="td">{category.title}</Table.Cell>
+                        <Table.Cell as="td" align="right">
+                           <span className="font-medium text-red-600">
+                              - {formatCurrency(category.amount)}
+                           </span>
+                        </Table.Cell>
+                        <Table.Cell as="td" align="right">
+                           {category.expenses}
+                        </Table.Cell>
+                     </Table.Row>
+                  ))
+               ) : (
+                  <h3 className="text-center my-3">No data</h3>
+               )}
+            </Table.Body>
+         )}
       </Table>
    )
 }

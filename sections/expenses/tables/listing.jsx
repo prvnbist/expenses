@@ -38,10 +38,6 @@ export const Listing = ({ loading, expenses }) => {
       },
    ]
 
-   if (loading) return <div>Loading...</div>
-   if (expenses.length === 0)
-      return <h3 className="text-center my-3">No data</h3>
-
    return (
       <Table>
          <Table.Head>
@@ -53,39 +49,73 @@ export const Listing = ({ loading, expenses }) => {
                ))}
             </Table.Row>
          </Table.Head>
-         <Table.Body>
-            {expenses.map((expense, index) => (
-               <Table.Row key={expense.id} isEven={(index & 1) === 1}>
-                  <Table.Cell as="td">{expense.title}</Table.Cell>
-                  <Table.Cell as="td" align="right">
-                     <span className="font-medium text-red-600">
-                        - {formatCurrency(expense.amount)}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell as="td">
-                     <span className="border border-teal-300 bg-teal-200 text-teal-600 px-1 text-sm rounded">
-                        {expense.category}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell as="td" align="right">
-                     {formatDate(expense.date)}
-                  </Table.Cell>
-                  <Table.Cell as="td">{expense.payment_method}</Table.Cell>
-                  <Table.Cell as="td" align="right">
-                     <button
-                        onClick={() =>
-                           deleteExpenses({
-                              variables: { where: { id: { _eq: expense.id } } },
-                           })
-                        }
-                        className="ml-2 border rounded p-1 hover:bg-red-500 group"
-                     >
-                        <DeleteIcon className="stroke-current text-gray-500 group-hover:text-white" />
-                     </button>
-                  </Table.Cell>
-               </Table.Row>
-            ))}
-         </Table.Body>
+         {loading ? (
+            <Table.Body>
+               {[
+                  false,
+                  true,
+                  false,
+                  true,
+                  false,
+                  true,
+                  false,
+                  true,
+                  false,
+                  true,
+               ].map((node, index) => (
+                  <Table.Row isEven={node} key={index}>
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                  </Table.Row>
+               ))}
+            </Table.Body>
+         ) : (
+            <Table.Body>
+               {expenses.length > 0 ? (
+                  expenses.map((expense, index) => (
+                     <Table.Row key={expense.id} isEven={(index & 1) === 1}>
+                        <Table.Cell as="td">{expense.title}</Table.Cell>
+                        <Table.Cell as="td" align="right">
+                           <span className="font-medium text-red-600">
+                              - {formatCurrency(expense.amount)}
+                           </span>
+                        </Table.Cell>
+                        <Table.Cell as="td">
+                           <span className="border border-teal-300 bg-teal-200 text-teal-600 px-1 text-sm rounded">
+                              {expense.category}
+                           </span>
+                        </Table.Cell>
+                        <Table.Cell as="td" align="right">
+                           {formatDate(expense.date)}
+                        </Table.Cell>
+                        <Table.Cell as="td">
+                           {expense.payment_method}
+                        </Table.Cell>
+                        <Table.Cell as="td" align="right">
+                           <button
+                              onClick={() =>
+                                 deleteExpenses({
+                                    variables: {
+                                       where: { id: { _eq: expense.id } },
+                                    },
+                                 })
+                              }
+                              className="ml-2 border rounded p-1 hover:bg-red-500 group"
+                           >
+                              <DeleteIcon className="stroke-current text-gray-500 group-hover:text-white" />
+                           </button>
+                        </Table.Cell>
+                     </Table.Row>
+                  ))
+               ) : (
+                  <h3 className="text-center my-3">No data</h3>
+               )}
+            </Table.Body>
+         )}
       </Table>
    )
 }

@@ -34,9 +34,6 @@ export const Listing = ({ loading, earnings }) => {
       },
    ]
 
-   if (loading) return <div>Loading...</div>
-   if (earnings.length === 0)
-      return <h3 className="text-center my-3">No data</h3>
    return (
       <Table>
          <Table.Head>
@@ -48,42 +45,74 @@ export const Listing = ({ loading, earnings }) => {
                ))}
             </Table.Row>
          </Table.Head>
-         <Table.Body>
-            {earnings.map((earning, index) => (
-               <Table.Row
-                  key={earning.id}
-                  isEven={(index & 1) === 1}
-                  className={`${(index & 1) === 1 ? 'bg-gray-100' : ''}`}
-               >
-                  <Table.Cell as="td">{earning.source}</Table.Cell>
-                  <Table.Cell as="td" align="right">
-                     <span className="font-medium text-blue-600">
-                        + {formatCurrency(earning.amount)}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell as="td">
-                     <span className="border border-teal-300 bg-teal-200 text-teal-600 px-1 text-sm rounded">
-                        {earning.category}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell as="td" align="right">
-                     {formatDate(earning.date)}
-                  </Table.Cell>
-                  <Table.Cell as="td" align="right">
-                     <button
-                        onClick={() =>
-                           deleteEarnings({
-                              variables: { where: { id: { _eq: earning.id } } },
-                           })
-                        }
-                        className="ml-2 border rounded p-1 hover:bg-red-500 group"
+         {loading ? (
+            <Table.Body>
+               {[
+                  false,
+                  true,
+                  false,
+                  true,
+                  false,
+                  true,
+                  false,
+                  true,
+                  false,
+                  true,
+               ].map((node, index) => (
+                  <Table.Row isEven={node} key={index}>
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                  </Table.Row>
+               ))}
+            </Table.Body>
+         ) : (
+            <Table.Body>
+               {earnings.length > 0 ? (
+                  earnings.map((earning, index) => (
+                     <Table.Row
+                        key={earning.id}
+                        isEven={(index & 1) === 1}
+                        className={`${(index & 1) === 1 ? 'bg-gray-100' : ''}`}
                      >
-                        <DeleteIcon className="stroke-current text-gray-500 group-hover:text-white" />
-                     </button>
-                  </Table.Cell>
-               </Table.Row>
-            ))}
-         </Table.Body>
+                        <Table.Cell as="td">{earning.source}</Table.Cell>
+                        <Table.Cell as="td" align="right">
+                           <span className="font-medium text-blue-600">
+                              + {formatCurrency(earning.amount)}
+                           </span>
+                        </Table.Cell>
+                        <Table.Cell as="td">
+                           <span className="border border-teal-300 bg-teal-200 text-teal-600 px-1 text-sm rounded">
+                              {earning.category}
+                           </span>
+                        </Table.Cell>
+                        <Table.Cell as="td" align="right">
+                           {formatDate(earning.date)}
+                        </Table.Cell>
+                        <Table.Cell as="td" align="right">
+                           <button
+                              onClick={() =>
+                                 deleteEarnings({
+                                    variables: {
+                                       where: { id: { _eq: earning.id } },
+                                    },
+                                 })
+                              }
+                              className="ml-2 border rounded p-1 hover:bg-red-500 group"
+                           >
+                              <DeleteIcon className="stroke-current text-gray-500 group-hover:text-white" />
+                           </button>
+                        </Table.Cell>
+                     </Table.Row>
+                  ))
+               ) : (
+                  <h3 className="text-center my-3">No data</h3>
+               )}
+            </Table.Body>
+         )}
       </Table>
    )
 }

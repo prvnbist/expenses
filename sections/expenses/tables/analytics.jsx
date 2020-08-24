@@ -37,7 +37,6 @@ export const Analytics = () => {
       }
    }, [total_expenses])
 
-   if (loading) return <div>Loading...</div>
    return (
       <Table>
          <Table.Head>
@@ -49,32 +48,43 @@ export const Analytics = () => {
                ))}
             </Table.Row>
          </Table.Head>
-         <Table.Body>
-            <Table.Row>
-               <Table.Cell as="td">Expenses Count</Table.Cell>
-               <Table.Cell as="td" align="right">
-                  {metrics.count}
-               </Table.Cell>
-            </Table.Row>
-            <Table.Row isEven={true}>
-               <Table.Cell as="td">Average Spending</Table.Cell>
-               <Table.Cell as="td" align="right">
-                  {formatCurrency(metrics.avg.toFixed(2))}
-               </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-               <Table.Cell as="td">Maximum Spending</Table.Cell>
-               <Table.Cell as="td" align="right">
-                  {formatCurrency(metrics.max.toFixed(2))}
-               </Table.Cell>
-            </Table.Row>
-            <Table.Row isEven={true}>
-               <Table.Cell as="td">Minimum Spending</Table.Cell>
-               <Table.Cell as="td" align="right">
-                  {formatCurrency(metrics.min.toFixed(2))}
-               </Table.Cell>
-            </Table.Row>
-         </Table.Body>
+         {loading ? (
+            <Table.Body>
+               {[false, true, false, true].map((node, index) => (
+                  <Table.Row isEven={node} key={index}>
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                  </Table.Row>
+               ))}
+            </Table.Body>
+         ) : (
+            <Table.Body>
+               <Table.Row>
+                  <Table.Cell as="td">Expenses Count</Table.Cell>
+                  <Table.Cell as="td" align="right">
+                     {metrics.count}
+                  </Table.Cell>
+               </Table.Row>
+               <Table.Row isEven={true}>
+                  <Table.Cell as="td">Average Spending</Table.Cell>
+                  <Table.Cell as="td" align="right">
+                     {formatCurrency(metrics.avg.toFixed(2))}
+                  </Table.Cell>
+               </Table.Row>
+               <Table.Row>
+                  <Table.Cell as="td">Maximum Spending</Table.Cell>
+                  <Table.Cell as="td" align="right">
+                     {formatCurrency(metrics.max.toFixed(2))}
+                  </Table.Cell>
+               </Table.Row>
+               <Table.Row isEven={true}>
+                  <Table.Cell as="td">Minimum Spending</Table.Cell>
+                  <Table.Cell as="td" align="right">
+                     {formatCurrency(metrics.min.toFixed(2))}
+                  </Table.Cell>
+               </Table.Row>
+            </Table.Body>
+         )}
       </Table>
    )
 }

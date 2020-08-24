@@ -4,7 +4,7 @@ import { formatCurrency, formatDate } from '../../utils'
 
 import { Table } from '../../components'
 
-export const ByYears = ({ expenses }) => {
+export const ByYears = ({ loading, expenses }) => {
    const [years, setYears] = React.useState([])
    const [columns] = React.useState([
       {
@@ -36,9 +36,6 @@ export const ByYears = ({ expenses }) => {
       setYears(years.sort((a, b) => b.year - a.year))
    }, [expenses])
 
-   if (expenses.length === 0)
-      return <h3 className="text-center my-3">No data</h3>
-
    return (
       <Table>
          <Table.Head>
@@ -50,21 +47,37 @@ export const ByYears = ({ expenses }) => {
                ))}
             </Table.Row>
          </Table.Head>
-         <Table.Body>
-            {years.map((category, index) => (
-               <Table.Row key={index} isEven={(index & 1) === 1}>
-                  <Table.Cell as="td">{category.year}</Table.Cell>
-                  <Table.Cell as="td" align="right">
-                     <span className="font-medium text-red-600">
-                        - {formatCurrency(category.amount)}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell as="td" align="right">
-                     {category.expenses}
-                  </Table.Cell>
-               </Table.Row>
-            ))}
-         </Table.Body>
+         {loading ? (
+            <Table.Body>
+               {[false, true, false, true, false].map((node, index) => (
+                  <Table.Row isEven={node} key={index}>
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                     <Table.Cell as="td" />
+                  </Table.Row>
+               ))}
+            </Table.Body>
+         ) : (
+            <Table.Body>
+               {years.length > 0 ? (
+                  years.map((category, index) => (
+                     <Table.Row key={index} isEven={(index & 1) === 1}>
+                        <Table.Cell as="td">{category.year}</Table.Cell>
+                        <Table.Cell as="td" align="right">
+                           <span className="font-medium text-red-600">
+                              - {formatCurrency(category.amount)}
+                           </span>
+                        </Table.Cell>
+                        <Table.Cell as="td" align="right">
+                           {category.expenses}
+                        </Table.Cell>
+                     </Table.Row>
+                  ))
+               ) : (
+                  <h3 className="text-center my-3">No data</h3>
+               )}
+            </Table.Body>
+         )}
       </Table>
    )
 }
