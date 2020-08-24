@@ -7,18 +7,22 @@ import { Table } from '../../../components'
 
 import { DELETE_EXPENSES } from '../../../graphql'
 
-import { DeleteIcon } from '../../../assets/icons'
+import { DeleteIcon, CaretUp, CaretDown, Disable } from '../../../assets/icons'
 
-export const Listing = ({ loading, expenses }) => {
+export const Listing = ({ loading, expenses, sort, setSort }) => {
    const [deleteExpenses] = useMutation(DELETE_EXPENSES)
    const columns = [
       {
          key: 'Title',
          type: 'String',
+         sort: true,
+         field: 'title',
       },
       {
          key: 'Amount',
          type: 'Number',
+         sort: true,
+         field: 'amount',
       },
       {
          key: 'Category',
@@ -27,6 +31,8 @@ export const Listing = ({ loading, expenses }) => {
       {
          key: 'Date',
          type: 'Date',
+         sort: true,
+         field: 'date',
       },
       {
          key: 'Payment Method',
@@ -44,7 +50,58 @@ export const Listing = ({ loading, expenses }) => {
             <Table.Row>
                {columns.map((column, index) => (
                   <Table.Cell as="th" key={index} type={column.type}>
-                     {column.key}
+                     {column.sort ? (
+                        <section
+                           className={`flex items-center ${
+                              ['Number', 'Date'].includes(column.type)
+                                 ? 'justify-end'
+                                 : ''
+                           }`}
+                        >
+                           {column.key}
+                           {sort[column.field] === 'asc' && (
+                              <button
+                                 className="ml-2 bg-gray-200 border-gray-300 rounded h-6 w-6 inline-flex items-center justify-center"
+                                 onClick={() =>
+                                    setSort({
+                                       ...sort,
+                                       [column.field]: 'desc',
+                                    })
+                                 }
+                              >
+                                 <CaretUp className="stroke-current" />
+                              </button>
+                           )}
+                           {sort[column.field] === 'desc' && (
+                              <button
+                                 className="ml-2 bg-gray-200 border-gray-300 rounded h-6 w-6 inline-flex items-center justify-center"
+                                 onClick={() =>
+                                    setSort({
+                                       ...sort,
+                                       [column.field]: undefined,
+                                    })
+                                 }
+                              >
+                                 <CaretDown className="stroke-current" />
+                              </button>
+                           )}
+                           {sort[column.field] === undefined && (
+                              <button
+                                 className="ml-2 bg-gray-200 border-gray-300 rounded h-6 w-6 inline-flex items-center justify-center"
+                                 onClick={() =>
+                                    setSort({
+                                       ...sort,
+                                       [column.field]: 'asc',
+                                    })
+                                 }
+                              >
+                                 <Disable className="stroke-current" />
+                              </button>
+                           )}
+                        </section>
+                     ) : (
+                        column.key
+                     )}
                   </Table.Cell>
                ))}
             </Table.Row>
@@ -95,7 +152,7 @@ export const Listing = ({ loading, expenses }) => {
                         <Table.Cell as="td">
                            {expense.payment_method}
                         </Table.Cell>
-                        <Table.Cell as="td" align="right">
+                        <Table.Cell as="td" align="center">
                            <button
                               onClick={() =>
                                  deleteExpenses({
@@ -104,7 +161,7 @@ export const Listing = ({ loading, expenses }) => {
                                     },
                                  })
                               }
-                              className="ml-2 border rounded p-1 hover:bg-red-500 group"
+                              className="border rounded p-1 hover:bg-red-500 group"
                            >
                               <DeleteIcon className="stroke-current text-gray-500 group-hover:text-white" />
                            </button>

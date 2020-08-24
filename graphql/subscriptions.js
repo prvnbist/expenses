@@ -13,8 +13,12 @@ export const EARNINGS = gql`
 `
 
 export const EXPENSES = gql`
-   subscription expenses($limit: Int, $offset: Int) {
-      expenses(limit: $limit, offset: $offset, order_by: { date: desc }) {
+   subscription expenses(
+      $limit: Int
+      $offset: Int
+      $order_by: [expenses_order_by!]
+   ) {
+      expenses(limit: $limit, offset: $offset, order_by: $order_by) {
          id
          date
          title

@@ -10,13 +10,15 @@ const Expenses = () => {
    const { width } = useWindowSize()
    const [limit] = React.useState(10)
    const [offset, setOffset] = React.useState(0)
+   const [sort, setSort] = React.useState({ date: 'desc' })
    const { data: { total_expenses = {} } = {} } = useSubscription(
       TOTAL_EXPENSES
    )
    const { loading, data: { expenses = [] } = {} } = useSubscription(EXPENSES, {
       variables: {
-         offset: offset * limit,
          limit,
+         offset: offset * limit,
+         order_by: sort,
       },
    })
 
@@ -66,7 +68,14 @@ const Expenses = () => {
                   Next
                </button>
             </section>
-            {width >= 768 && <Listing loading={loading} expenses={expenses} />}
+            {width >= 768 && (
+               <Listing
+                  sort={sort}
+                  setSort={setSort}
+                  loading={loading}
+                  expenses={expenses}
+               />
+            )}
             {width < 768 && <Cards loading={loading} expenses={expenses} />}
          </div>
          <div className="w-full lg:w-3/12">

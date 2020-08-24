@@ -18,10 +18,11 @@ const Cell = ({ as, align = 'left', type, children }) => {
    if (as === 'th') {
       return (
          <th
-            align={
-               ['Number', 'Date', 'Actions'].includes(type) ? 'right' : 'left'
-            }
-            className="px-4 h-8 uppercase text-gray-600 font-medium text-sm tracking-wider"
+            className={`px-4 h-8 uppercase text-gray-600 font-medium text-sm tracking-wider ${
+               type === 'Actions' ? 'text-center' : ''
+            } ${
+               ['Number', 'Date'].includes(type) ? 'text-right' : 'text-left'
+            }`}
          >
             {children}
          </th>
