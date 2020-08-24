@@ -13,7 +13,10 @@ const typePicker = type => {
 
 export const Stat = ({ type, label, children }) => {
    return (
-      <main className={`flex flex-col p-3 rounded-lg ${typePicker(type)[0]}`}>
+      <main
+         style={{ minWidth: '220px' }}
+         className={`flex flex-col p-3 rounded-lg ${typePicker(type)[0]}`}
+      >
          <h3
             className={`text-sm font-bold sm:font-normal sm:text-base uppercase tracking-wider ${
                typePicker(type)[1]
