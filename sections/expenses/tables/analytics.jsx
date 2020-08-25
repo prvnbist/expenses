@@ -1,20 +1,15 @@
-import { useSubscription } from '@apollo/react-hooks'
-
 import { TOTAL_EXPENSES } from '../../../graphql'
 import { formatCurrency } from '../../../utils'
 
 import { Table } from '../../../components'
 
-export const Analytics = () => {
+export const Analytics = ({ loading, total_expenses }) => {
    const [metrics, setMetrics] = React.useState({
       count: 0,
       avg: 0,
       max: 0,
       min: 0,
    })
-   const { data: { total_expenses = {} } = {}, loading } = useSubscription(
-      TOTAL_EXPENSES
-   )
    const columns = [
       {
          key: 'Title',

@@ -8,9 +8,13 @@ export const paginate = (currentPage, pageCount) => {
       // delta === 7: [1 2 3 4 5 6 7]
       delta = 7
    } else {
-      // delta === 1: [1 ... 4 5 6 ... 10]
-      // delta === 2: [1 2 3 4 5 ... 10]
-      delta = currentPage > 4 && currentPage < pageCount - 3 ? 1 : 2
+      // delta === 2: [1 ... 4 5 6 ... 10]
+      // delta === 4: [1 2 3 4 5 ... 10]
+      if (window.innerWidth > 568) {
+         delta = currentPage > 4 && currentPage < pageCount - 3 ? 2 : 4
+      } else {
+         delta = currentPage > 4 && currentPage < pageCount - 3 ? 1 : 2
+      }
    }
 
    const range = {

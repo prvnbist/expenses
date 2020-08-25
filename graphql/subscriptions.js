@@ -17,8 +17,14 @@ export const EXPENSES = gql`
       $limit: Int
       $offset: Int
       $order_by: [expenses_order_by!]
+      $where: expenses_bool_exp = {}
    ) {
-      expenses(limit: $limit, offset: $offset, order_by: $order_by) {
+      expenses(
+         limit: $limit
+         offset: $offset
+         order_by: $order_by
+         where: $where
+      ) {
          id
          date
          title
@@ -60,8 +66,8 @@ export const TOTAL_EARNINGS = gql`
 `
 
 export const TOTAL_EXPENSES = gql`
-   subscription total_expenses {
-      total_expenses {
+   subscription total_expenses($where: expenses_bool_exp = {}) {
+      total_expenses(where: $where) {
          aggregate {
             min {
                amount
