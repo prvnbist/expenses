@@ -1,11 +1,12 @@
 import { useSubscription } from '@apollo/react-hooks'
 
 import { TOTAL_EARNINGS } from '../../../graphql'
-import { formatCurrency } from '../../../utils'
 
 import { Table } from '../../../components'
+import { useConfig } from '../../../context'
 
 export const Analytics = () => {
+   const { methods } = useConfig()
    const [metrics, setMetrics] = React.useState({
       count: 0,
       avg: 0,
@@ -68,19 +69,19 @@ export const Analytics = () => {
                <Table.Row isEven={true}>
                   <Table.Cell as="td">Average Earning</Table.Cell>
                   <Table.Cell as="td" align="right">
-                     {formatCurrency(metrics.avg.toFixed(2))}
+                     {methods.format_currency(metrics.avg.toFixed(2))}
                   </Table.Cell>
                </Table.Row>
                <Table.Row>
                   <Table.Cell as="td">Maximum Earning</Table.Cell>
                   <Table.Cell as="td" align="right">
-                     {formatCurrency(metrics.max.toFixed(2))}
+                     {methods.format_currency(metrics.max.toFixed(2))}
                   </Table.Cell>
                </Table.Row>
                <Table.Row isEven={true}>
                   <Table.Cell as="td">Minimum Earning</Table.Cell>
                   <Table.Cell as="td" align="right">
-                     {formatCurrency(metrics.min.toFixed(2))}
+                     {methods.format_currency(metrics.min.toFixed(2))}
                   </Table.Cell>
                </Table.Row>
             </Table.Body>

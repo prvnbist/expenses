@@ -11,6 +11,7 @@ import { HttpLink } from 'apollo-link-http'
 import { split } from 'apollo-link'
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
+import { ConfigProvider } from '../context/config'
 
 const authLink = setContext((_, { headers }) => {
    return {
@@ -61,7 +62,9 @@ class MyApp extends App {
       const { Component, pageProps } = this.props
       return (
          <ApolloProvider client={client}>
-            <Component {...pageProps} />
+            <ConfigProvider>
+               <Component {...pageProps} />
+            </ConfigProvider>
          </ApolloProvider>
       )
    }

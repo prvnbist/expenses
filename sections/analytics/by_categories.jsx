@@ -1,10 +1,10 @@
 import groupBy from 'lodash.groupby'
 
-import { formatCurrency } from '../../utils'
-
 import { Table } from '../../components'
+import { useConfig } from '../../context'
 
 export const ByCategories = ({ loading, expenses }) => {
+   const { methods } = useConfig()
    const [categories, setCategories] = React.useState([])
    const [columns] = React.useState([
       {
@@ -60,7 +60,7 @@ export const ByCategories = ({ loading, expenses }) => {
                         <Table.Cell as="td">{category.title}</Table.Cell>
                         <Table.Cell as="td" align="right">
                            <span className="font-medium text-red-600">
-                              - {formatCurrency(category.amount)}
+                              - {methods.format_currency(category.amount)}
                            </span>
                         </Table.Cell>
                         <Table.Cell as="td" align="right">

@@ -1,12 +1,14 @@
 import { useMutation } from '@apollo/react-hooks'
 
-import { formatDate, formatCurrency } from '../../../utils'
+import { formatDate } from '../../../utils'
 
 import { DELETE_EARNINGS } from '../../../graphql'
 
 import { DeleteIcon } from '../../../assets/icons'
+import { useConfig } from '../../../context'
 
 export const Cards = ({ loading, earnings }) => {
+   const { methods } = useConfig()
    const [deleteEarnings] = useMutation(DELETE_EARNINGS)
    if (loading) return <div>Loading...</div>
    return (
@@ -17,7 +19,7 @@ export const Cards = ({ loading, earnings }) => {
                   <h2 className="text-xl">{earning.source}</h2>
                   <div>
                      <span className="font-medium text-blue-600">
-                        + {formatCurrency(earning.amount)}
+                        + {methods.format_currency(earning.amount)}
                      </span>
                   </div>
                </header>

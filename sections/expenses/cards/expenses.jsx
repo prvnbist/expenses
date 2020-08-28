@@ -1,12 +1,14 @@
 import { useMutation } from '@apollo/react-hooks'
 
-import { formatDate, formatCurrency } from '../../../utils'
+import { formatDate } from '../../../utils'
 
 import { DELETE_EXPENSES } from '../../../graphql'
 
 import { DeleteIcon } from '../../../assets/icons'
+import { useConfig } from '../../../context'
 
 export const Cards = ({ loading, expenses }) => {
+   const { methods } = useConfig()
    const [deleteExpenses] = useMutation(DELETE_EXPENSES)
    if (loading) return <div>Loading...</div>
    return (
@@ -20,7 +22,7 @@ export const Cards = ({ loading, expenses }) => {
                         {formatDate(expense.date)}
                      </time>
                      <span className="font-medium text-red-600">
-                        - {formatCurrency(expense.amount)}
+                        - {methods.format_currency(expense.amount)}
                      </span>
                   </div>
                </header>

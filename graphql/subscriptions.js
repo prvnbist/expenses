@@ -104,3 +104,13 @@ export const EXPENSES_CATEGORIES = gql`
       }
    }
 `
+
+export const SETTINGS = gql`
+   subscription settings {
+      settings {
+         id
+         type
+         value
+      }
+   }
+`

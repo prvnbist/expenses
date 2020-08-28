@@ -1,8 +1,7 @@
 import groupBy from 'lodash.groupby'
 
-import { formatCurrency } from '../../utils'
-
 import { Table } from '../../components'
+import { useConfig } from '../../context'
 
 const months = [
    'January',
@@ -20,6 +19,7 @@ const months = [
 ]
 
 export const ByMonths = ({ loading, expenses }) => {
+   const { methods } = useConfig()
    const [list, setList] = React.useState([])
    const [columns] = React.useState([
       {
@@ -82,7 +82,7 @@ export const ByMonths = ({ loading, expenses }) => {
                         </Table.Cell>
                         <Table.Cell as="td" align="right">
                            <span className="font-medium text-red-600">
-                              - {formatCurrency(category.amount)}
+                              - {methods.format_currency(category.amount)}
                            </span>
                         </Table.Cell>
                         <Table.Cell as="td" align="right">

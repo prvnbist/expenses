@@ -1,10 +1,12 @@
 import groupBy from 'lodash.groupby'
 
-import { formatCurrency, formatDate } from '../../utils'
+import { formatDate } from '../../utils'
 
 import { Table } from '../../components'
+import { useConfig } from '../../context'
 
 export const ByYears = ({ loading, expenses }) => {
+   const { methods } = useConfig()
    const [years, setYears] = React.useState([])
    const [columns] = React.useState([
       {
@@ -65,7 +67,7 @@ export const ByYears = ({ loading, expenses }) => {
                         <Table.Cell as="td">{category.year}</Table.Cell>
                         <Table.Cell as="td" align="right">
                            <span className="font-medium text-red-600">
-                              - {formatCurrency(category.amount)}
+                              - {methods.format_currency(category.amount)}
                            </span>
                         </Table.Cell>
                         <Table.Cell as="td" align="right">

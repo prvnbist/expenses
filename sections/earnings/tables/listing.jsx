@@ -1,15 +1,17 @@
 import React from 'react'
 import { useMutation } from '@apollo/react-hooks'
 
-import { formatDate, formatCurrency } from '../../../utils'
+import { formatDate } from '../../../utils'
 
 import { Table } from '../../../components'
 
 import { DELETE_EARNINGS } from '../../../graphql'
 
 import { DeleteIcon } from '../../../assets/icons'
+import { useConfig } from '../../../context'
 
 export const Listing = ({ loading, earnings }) => {
+   const { methods } = useConfig()
    const [deleteEarnings] = useMutation(DELETE_EARNINGS)
    const columns = [
       {
@@ -81,7 +83,7 @@ export const Listing = ({ loading, earnings }) => {
                         <Table.Cell as="td">{earning.source}</Table.Cell>
                         <Table.Cell as="td" align="right">
                            <span className="font-medium text-blue-600">
-                              + {formatCurrency(earning.amount)}
+                              + {methods.format_currency(earning.amount)}
                            </span>
                         </Table.Cell>
                         <Table.Cell as="td">
