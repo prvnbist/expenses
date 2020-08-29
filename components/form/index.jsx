@@ -10,17 +10,17 @@ export const Label = ({ htmlFor, children }) => (
 )
 
 export const Input = props => (
-   <input {...props} css="w-full bg-white mt-2 border rounded h-12 px-3" />
+   <input {...props} tw="w-full bg-white mt-2 border rounded h-12 px-3" />
 )
 
 export const Field = ({ children, ...props }) => (
-   <fieldset css="mb-4 mr-4 flex flex-col flex-1" {...props}>
+   <fieldset tw="mb-4 mr-4 flex flex-col flex-1" {...props}>
       {children}
    </fieldset>
 )
 
 export const Select = ({ list, ...props }) => (
-   <select css="w-full mt-2 border rounded h-12 px-3 bg-white" {...props}>
+   <select tw="w-full mt-2 border rounded h-12 px-3 bg-white" {...props}>
       {list.map((item, index) => (
          <option key={index} value={item}>
             {item}
