@@ -1,3 +1,4 @@
+import tw from 'twin.macro'
 import { useSubscription } from '@apollo/react-hooks'
 
 import { TOTAL_EARNINGS } from '../../../graphql'

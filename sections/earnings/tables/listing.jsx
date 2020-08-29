@@ -1,4 +1,5 @@
 import React from 'react'
+import tw from 'twin.macro'
 import { useMutation } from '@apollo/react-hooks'
 
 import { formatDate } from '../../../utils'
@@ -78,16 +79,16 @@ export const Listing = ({ loading, earnings }) => {
                      <Table.Row
                         key={earning.id}
                         isEven={(index & 1) === 1}
-                        className={`${(index & 1) === 1 ? 'bg-gray-100' : ''}`}
+                        css={[(index & 1) === 1 ? tw`bg-gray-100` : '']}
                      >
                         <Table.Cell as="td">{earning.source}</Table.Cell>
                         <Table.Cell as="td" align="right">
-                           <span className="font-medium text-blue-600">
+                           <span tw="font-medium text-blue-600">
                               + {methods.format_currency(earning.amount)}
                            </span>
                         </Table.Cell>
                         <Table.Cell as="td">
-                           <span className="border border-teal-300 bg-teal-200 text-teal-600 px-1 text-sm rounded">
+                           <span tw="border border-teal-300 bg-teal-200 text-teal-600 px-1 text-sm rounded">
                               {earning.category}
                            </span>
                         </Table.Cell>
@@ -103,15 +104,16 @@ export const Listing = ({ loading, earnings }) => {
                                     },
                                  })
                               }
-                              className="ml-2 border rounded p-1 hover:bg-red-500 group"
+                              className="group"
+                              tw="ml-2 border rounded p-1 hover:bg-red-500"
                            >
-                              <DeleteIcon className="stroke-current text-gray-500 group-hover:text-white" />
+                              <DeleteIcon tw="stroke-current text-gray-500 group-hover:text-white" />
                            </button>
                         </Table.Cell>
                      </Table.Row>
                   ))
                ) : (
-                  <h3 className="text-center my-3">No data</h3>
+                  <h3 tw="text-center my-3">No data</h3>
                )}
             </Table.Body>
          )}

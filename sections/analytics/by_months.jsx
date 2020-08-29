@@ -1,3 +1,4 @@
+import tw from 'twin.macro'
 import groupBy from 'lodash.groupby'
 
 import { Table } from '../../components'
@@ -81,7 +82,7 @@ export const ByMonths = ({ loading, expenses }) => {
                            {months[category.month]}
                         </Table.Cell>
                         <Table.Cell as="td" align="right">
-                           <span className="font-medium text-red-600">
+                           <span tw="font-medium text-red-600">
                               - {methods.format_currency(category.amount)}
                            </span>
                         </Table.Cell>
@@ -91,7 +92,7 @@ export const ByMonths = ({ loading, expenses }) => {
                      </Table.Row>
                   ))
                ) : (
-                  <h3 className="text-center my-3">No data</h3>
+                  <h3 tw="text-center my-3">No data</h3>
                )}
             </Table.Body>
          )}

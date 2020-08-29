@@ -1,7 +1,8 @@
-import { TOTAL_EXPENSES } from '../../../graphql'
+import tw from 'twin.macro'
 
 import { Table } from '../../../components'
 import { useConfig } from '../../../context'
+import { TOTAL_EXPENSES } from '../../../graphql'
 
 export const Analytics = ({ loading, total_expenses }) => {
    const { methods } = useConfig()
