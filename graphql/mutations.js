@@ -76,3 +76,14 @@ export const DELETE_EXPENSES = gql`
       }
    }
 `
+
+export const UPDATE_SETTING = gql`
+   mutation update_settings(
+      $type: String_comparison_exp!
+      $_set: settings_set_input!
+   ) {
+      update_settings(where: { type: $type }, _set: $_set) {
+         affected_rows
+      }
+   }
+`
