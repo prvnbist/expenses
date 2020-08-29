@@ -1,3 +1,4 @@
+import tw from 'twin.macro'
 import { useMutation } from '@apollo/react-hooks'
 
 import { formatDate } from '../../../utils'
@@ -12,26 +13,22 @@ export const Cards = ({ loading, earnings }) => {
    const [deleteEarnings] = useMutation(DELETE_EARNINGS)
    if (loading) return <div>Loading...</div>
    return (
-      <ul className="mt-3 divide-y border rounded-md">
+      <ul tw="mt-3 divide-y border rounded-md">
          {earnings.map(earning => (
-            <li key={earning.id} className="p-3">
-               <header className="flex items-center justify-between">
-                  <h2 className="text-xl">{earning.source}</h2>
+            <li key={earning.id} tw="p-3">
+               <header tw="flex items-center justify-between">
+                  <h2 tw="text-xl">{earning.source}</h2>
                   <div>
-                     <span className="font-medium text-blue-600">
+                     <span tw="font-medium text-blue-600">
                         + {methods.format_currency(earning.amount)}
                      </span>
                   </div>
                </header>
-               <main className="flex justify-between mt-3 border-t pt-2">
-                  <section className="flex items-center">
-                     <h3 className="text-teal-500">{earning.category}</h3>
-                     <span className="mx-2 font-bold text-gray-400">
-                        &middot;
-                     </span>
-                     <time className="text-teal-500">
-                        {formatDate(earning.date)}
-                     </time>
+               <main tw="flex justify-between mt-3 border-t pt-2">
+                  <section tw="flex items-center">
+                     <h3 tw="text-teal-500">{earning.category}</h3>
+                     <span tw="mx-2 font-bold text-gray-400">&middot;</span>
+                     <time tw="text-teal-500">{formatDate(earning.date)}</time>
                   </section>
                   <section>
                      <button
@@ -40,9 +37,10 @@ export const Cards = ({ loading, earnings }) => {
                               variables: { where: { id: { _eq: earning.id } } },
                            })
                         }
-                        className="ml-2 border rounded p-1 hover:bg-red-500 group"
+                        className="group"
+                        tw="ml-2 border rounded p-1 hover:bg-red-500"
                      >
-                        <DeleteIcon className="stroke-current text-gray-500 group-hover:text-white" />
+                        <DeleteIcon tw="stroke-current text-gray-500 group-hover:text-white" />
                      </button>
                   </section>
                </main>

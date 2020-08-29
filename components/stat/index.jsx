@@ -1,13 +1,15 @@
+import tw from 'twin.macro'
+
 const typePicker = type => {
    switch (type) {
       case 'expenses':
-         return ['bg-red-400', 'text-red-800']
+         return [tw`bg-red-400`, tw`text-red-800`]
       case 'earnings':
-         return ['bg-indigo-400', 'text-indigo-800']
+         return [tw`bg-indigo-400`, tw`text-indigo-800`]
       case 'neutral':
-         return ['bg-gray-400', 'text-gray-600']
+         return [tw`bg-gray-400`, tw`text-gray-600`]
       default:
-         return ['bg-red-400', 'text-red-800']
+         return [tw`bg-red-400`, tw`text-red-800`]
    }
 }
 
@@ -15,18 +17,17 @@ export const Stat = ({ type, label, children }) => {
    return (
       <main
          style={{ minWidth: '220px' }}
-         className={`flex flex-col p-3 rounded-lg ${typePicker(type)[0]}`}
+         css={[tw`flex flex-col p-3 rounded-lg`, typePicker(type)[0]]}
       >
          <h3
-            className={`text-sm font-bold sm:font-normal sm:text-base uppercase tracking-wider ${
-               typePicker(type)[1]
-            }`}
+            css={[
+               tw`text-sm font-bold sm:font-normal sm:text-base uppercase tracking-wider`,
+               typePicker(type)[1],
+            ]}
          >
             {label}
          </h3>
-         <span className="text-2xl sm:text-3xl font-bold text-white">
-            {children}
-         </span>
+         <span tw="text-2xl sm:text-3xl font-bold text-white">{children}</span>
       </main>
    )
 }

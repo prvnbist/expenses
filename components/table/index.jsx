@@ -1,5 +1,7 @@
+import tw from 'twin.macro'
+
 export const Table = ({ children }) => {
-   return <table className="w-full table-auto">{children}</table>
+   return <table tw="w-full table-auto">{children}</table>
 }
 
 const Head = ({ children }) => {
@@ -11,25 +13,27 @@ const Body = ({ children }) => {
 }
 
 const Row = ({ isEven, children }) => {
-   return <tr className={`${isEven ? 'bg-gray-100' : ''}`}>{children}</tr>
+   return <tr css={isEven ? tw`bg-gray-100` : ''}>{children}</tr>
 }
 
 const Cell = ({ as, align = 'left', type, children }) => {
    if (as === 'th') {
       return (
          <th
-            className={`px-4 h-8 uppercase text-gray-600 font-medium text-sm tracking-wider ${
-               type === 'Actions' ? 'text-center' : ''
-            } ${
-               ['Number', 'Date'].includes(type) ? 'text-right' : 'text-left'
-            }`}
+            css={[
+               tw`px-4 h-8 uppercase text-gray-600 font-medium text-sm tracking-wider`,
+               type === 'Actions' ? tw`text-center` : '',
+               ['Number', 'Date'].includes(type)
+                  ? tw`text-right`
+                  : tw`text-left`,
+            ]}
          >
             {children}
          </th>
       )
    }
    return (
-      <td align={align} className="border px-4 h-10">
+      <td align={align} tw="border px-4 h-10">
          {children}
       </td>
    )

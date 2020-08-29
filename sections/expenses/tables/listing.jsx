@@ -1,4 +1,5 @@
 import React from 'react'
+import tw from 'twin.macro'
 import { useMutation } from '@apollo/react-hooks'
 
 import { formatDate } from '../../../utils'
@@ -54,16 +55,17 @@ export const Listing = ({ loading, expenses, sort, setSort }) => {
                   <Table.Cell as="th" key={index} type={column.type}>
                      {column.sort ? (
                         <section
-                           className={`flex items-center ${
+                           css={[
+                              tw`flex items-center`,
                               ['Number', 'Date'].includes(column.type)
-                                 ? 'justify-end'
-                                 : ''
-                           }`}
+                                 ? tw`justify-end`
+                                 : '',
+                           ]}
                         >
                            {column.key}
                            {sort[column.field] === 'asc' && (
                               <button
-                                 className="ml-2 bg-gray-200 border-gray-300 rounded h-6 w-6 inline-flex items-center justify-center"
+                                 tw="ml-2 bg-gray-200 border-gray-300 rounded h-6 w-6 inline-flex items-center justify-center"
                                  onClick={() =>
                                     setSort({
                                        ...sort,
@@ -71,12 +73,12 @@ export const Listing = ({ loading, expenses, sort, setSort }) => {
                                     })
                                  }
                               >
-                                 <CaretUp className="stroke-current" />
+                                 <CaretUp tw="stroke-current" />
                               </button>
                            )}
                            {sort[column.field] === 'desc' && (
                               <button
-                                 className="ml-2 bg-gray-200 border-gray-300 rounded h-6 w-6 inline-flex items-center justify-center"
+                                 tw="ml-2 bg-gray-200 border-gray-300 rounded h-6 w-6 inline-flex items-center justify-center"
                                  onClick={() =>
                                     setSort({
                                        ...sort,
@@ -84,12 +86,12 @@ export const Listing = ({ loading, expenses, sort, setSort }) => {
                                     })
                                  }
                               >
-                                 <CaretDown className="stroke-current" />
+                                 <CaretDown tw="stroke-current" />
                               </button>
                            )}
                            {sort[column.field] === undefined && (
                               <button
-                                 className="ml-2 bg-gray-200 border-gray-300 rounded h-6 w-6 inline-flex items-center justify-center"
+                                 tw="ml-2 bg-gray-200 border-gray-300 rounded h-6 w-6 inline-flex items-center justify-center"
                                  onClick={() =>
                                     setSort({
                                        ...sort,
@@ -97,7 +99,7 @@ export const Listing = ({ loading, expenses, sort, setSort }) => {
                                     })
                                  }
                               >
-                                 <Disable className="stroke-current" />
+                                 <Disable tw="stroke-current" />
                               </button>
                            )}
                         </section>
@@ -139,12 +141,12 @@ export const Listing = ({ loading, expenses, sort, setSort }) => {
                      <Table.Row key={expense.id} isEven={(index & 1) === 1}>
                         <Table.Cell as="td">{expense.title}</Table.Cell>
                         <Table.Cell as="td" align="right">
-                           <span className="font-medium text-red-600">
+                           <span tw="font-medium text-red-600">
                               - {methods.format_currency(expense.amount)}
                            </span>
                         </Table.Cell>
                         <Table.Cell as="td">
-                           <span className="border border-teal-300 bg-teal-200 text-teal-600 px-1 text-sm rounded">
+                           <span tw="border border-teal-300 bg-teal-200 text-teal-600 px-1 text-sm rounded">
                               {expense.category}
                            </span>
                         </Table.Cell>
@@ -163,15 +165,16 @@ export const Listing = ({ loading, expenses, sort, setSort }) => {
                                     },
                                  })
                               }
-                              className="border rounded p-1 hover:bg-red-500 group"
+                              className="group"
+                              tw="border rounded p-1 hover:bg-red-500"
                            >
-                              <DeleteIcon className="stroke-current text-gray-500 group-hover:text-white" />
+                              <DeleteIcon tw="stroke-current text-gray-500 group-hover:text-white" />
                            </button>
                         </Table.Cell>
                      </Table.Row>
                   ))
                ) : (
-                  <h3 className="text-center my-3">No data</h3>
+                  <h3 tw="text-center my-3">No data</h3>
                )}
             </Table.Body>
          )}

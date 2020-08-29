@@ -1,6 +1,7 @@
 import React from 'react'
 import App from 'next/app'
 import '../global.css'
+import 'tailwindcss/dist/base.min.css'
 
 import fetch from 'node-fetch'
 import { ApolloClient } from 'apollo-client'

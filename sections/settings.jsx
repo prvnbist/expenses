@@ -1,4 +1,5 @@
 import React from 'react'
+import tw from 'twin.macro'
 import { useMutation } from '@apollo/react-hooks'
 
 import { useConfig } from '../context'
@@ -9,21 +10,21 @@ export const Settings = ({ setIsSettingsVisible }) => {
    const [update] = useMutation(UPDATE_SETTING)
    const { state } = useConfig()
    return (
-      <div className="fixed inset-0 bg-tint sm:pt-40 flex items-start justify-center">
-         <div className="w-full h-full bg-white sm:w-11/12 sm:h-auto lg:w-7/12 xl:w-4/12  p-5 rounded-lg">
-            <div className="flex">
-               <div className="flex-1  flex items-center justify-between mr-3">
+      <div tw="fixed inset-0 bg-tint sm:pt-40 flex items-start justify-center">
+         <div tw="w-full h-full bg-white sm:w-11/12 sm:h-auto lg:w-7/12 xl:w-4/12  p-5 rounded-lg">
+            <div tw="flex">
+               <div tw="flex-1  flex items-center justify-between mr-3">
                   <h1>Settings</h1>
                   <button
                      onClick={() => setIsSettingsVisible(false)}
-                     className="text-2xl shrink-0 rounded-lg w-10 h-10 border hover:bg-gray-300"
+                     tw="text-2xl flex-shrink-0 rounded-lg w-10 h-10 border hover:bg-gray-300"
                   >
                      &times;
                   </button>
                </div>
             </div>
-            <section className="mt-3 flex flex-col">
-               <label className="text-sm mb-1 uppercase font-medium tracking-wider text-gray-500">
+            <section tw="mt-3 flex flex-col">
+               <label tw="text-sm mb-1 uppercase font-medium tracking-wider text-gray-500">
                   Currency
                </label>
                <select
@@ -41,7 +42,7 @@ export const Settings = ({ setIsSettingsVisible }) => {
                         },
                      })
                   }
-                  className="border rounded py-2 px-1 focus:outline-none focus:border-indigo-400"
+                  tw="border rounded py-2 px-1 focus:outline-none focus:border-indigo-400"
                >
                   {currency_json.map(currency => (
                      <option key={currency.value} value={currency.value}>

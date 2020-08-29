@@ -1,4 +1,5 @@
 import React from 'react'
+import tw from 'twin.macro'
 import { useSubscription } from '@apollo/react-hooks'
 
 import { useConfig } from '../context'
@@ -15,7 +16,7 @@ export const Header = () => {
    )
    return (
       <header>
-         <section className="grid gap-3 sm:grid-cols-2 lg:flex lg:space-x-3 mb-6">
+         <section tw="grid gap-3 sm:grid-cols-2 lg:flex lg:space-x-3 mb-6">
             <Stat type="expenses" label="Total Expenses">
                {!expensesLoading
                   ? methods.format_currency(
@@ -39,7 +40,7 @@ export const Header = () => {
                   : methods.format_currency(0)}
             </Stat>
          </section>
-         <div className="rounded-lg border">
+         <div tw="rounded-lg border">
             <Tab href="/expenses">Expenses</Tab>
             <Tab href="/earnings">Earning</Tab>
             <Tab href="/analytics">Analytics</Tab>

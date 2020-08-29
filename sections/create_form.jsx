@@ -1,3 +1,4 @@
+import tw from 'twin.macro'
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 
 import {
@@ -32,16 +33,16 @@ const ExpenseForm = ({ type = 'create', methods, setIsFormVisible }) => {
 
    return (
       <div>
-         <h1 className="text-xl mt-4 mb-3 text-teal-600">Create Expense</h1>
+         <h1 tw="text-xl mt-4 mb-3 text-teal-600">Create Expense</h1>
          <form onSubmit={handleSubmit}>
-            <div className="flex">
+            <div tw="flex">
                <Field>
                   <Label htmlFor="title">Title</Label>
                   <Input type="text" name="title" placeholder="Enter title" />
                </Field>
             </div>
 
-            <div className="flex">
+            <div tw="flex">
                <Field>
                   <Label htmlFor="category">Categories</Label>
                   <Select
@@ -59,7 +60,7 @@ const ExpenseForm = ({ type = 'create', methods, setIsFormVisible }) => {
                   />
                </Field>
             </div>
-            <div className="flex">
+            <div tw="flex">
                <Field>
                   <Label htmlFor="amount">Amount</Label>
                   <Input
@@ -79,7 +80,7 @@ const ExpenseForm = ({ type = 'create', methods, setIsFormVisible }) => {
             </div>
             <button
                type="submit"
-               className="h-10 w-auto px-3 bg-teal-500 text-white rounded"
+               tw="h-10 w-auto px-3 bg-teal-500 text-white rounded"
             >
                {type === 'create' ? 'Create' : 'Update'} Expense
             </button>
@@ -109,9 +110,9 @@ const EarningForm = ({ type = 'create', setIsFormVisible }) => {
    }
    return (
       <div>
-         <h1 className="text-xl mt-4 mb-3 text-teal-600">Create Earning</h1>
+         <h1 tw="text-xl mt-4 mb-3 text-teal-600">Create Earning</h1>
          <form onSubmit={handleSubmit}>
-            <div className="flex">
+            <div tw="flex">
                <Field>
                   <Label htmlFor="source">Source</Label>
                   <Input type="text" name="source" placeholder="Enter source" />
@@ -126,7 +127,7 @@ const EarningForm = ({ type = 'create', setIsFormVisible }) => {
                </Field>
             </div>
 
-            <div className="flex">
+            <div tw="flex">
                <Field>
                   <Label htmlFor="category">Categories</Label>
                   <Select
@@ -146,7 +147,7 @@ const EarningForm = ({ type = 'create', setIsFormVisible }) => {
             </div>
             <button
                type="submit"
-               className="h-10 w-auto px-3 bg-teal-500 text-white rounded"
+               tw="h-10 w-auto px-3 bg-teal-500 text-white rounded"
             >
                {type === 'create' ? 'Create' : 'Update'} Earning
             </button>
@@ -162,23 +163,29 @@ export const Form = ({ type = 'create', setIsFormVisible }) => {
    )
 
    return (
-      <div className="fixed inset-0 bg-tint sm:pt-40 flex items-start justify-center">
-         <div className="w-full h-full bg-white sm:w-11/12 sm:h-auto lg:w-7/12 xl:w-4/12  p-5 rounded-lg">
-            <div className="flex">
-               <div className="flex-1 rounded-lg border mr-3">
+      <div tw="fixed inset-0 bg-tint sm:pt-40 flex items-start justify-center">
+         <div tw="w-full h-full bg-white sm:w-11/12 sm:h-auto lg:w-7/12 xl:w-4/12  p-5 rounded-lg">
+            <div tw="flex">
+               <div tw="flex-1 rounded-lg border mr-3">
                   <button
                      onClick={() => setTab('expense')}
-                     className={`inline-block h-10 focus:outline-none rounded-lg focus:bg-indigo-200 focus:text-indigo-800 py-2 px-3 ${
-                        tab === 'expense' ? 'bg-indigo-200 text-indigo-800' : ''
-                     }`}
+                     css={[
+                        tw`inline-block h-10 focus:outline-none rounded-lg focus:bg-indigo-200 focus:text-indigo-800 py-2 px-3`,
+                        tab === 'expense'
+                           ? tw`bg-indigo-200 text-indigo-800`
+                           : '',
+                     ]}
                   >
                      Expense
                   </button>
                   <button
                      onClick={() => setTab('earning')}
-                     className={`inline-block h-10 focus:outline-none rounded-lg focus:bg-indigo-200 focus:text-indigo-800 py-2 px-3 ${
-                        tab === 'earning' ? 'bg-indigo-200 text-indigo-800' : ''
-                     }`}
+                     css={[
+                        tw`inline-block h-10 focus:outline-none rounded-lg focus:bg-indigo-200 focus:text-indigo-800 py-2 px-3`,
+                        tab === 'earning'
+                           ? tw`bg-indigo-200 text-indigo-800`
+                           : '',
+                     ]}
                   >
                      Earning
                   </button>
@@ -187,7 +194,7 @@ export const Form = ({ type = 'create', setIsFormVisible }) => {
                   onClick={() =>
                      setIsFormVisible(isFormVisible => !isFormVisible)
                   }
-                  className="text-2xl shrink-0 rounded-lg w-10 h-10 border hover:bg-gray-300"
+                  tw="text-2xl flex-shrink-0 rounded-lg w-10 h-10 border hover:bg-gray-300"
                >
                   &times;
                </button>

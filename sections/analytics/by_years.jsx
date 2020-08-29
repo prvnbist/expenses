@@ -1,3 +1,4 @@
+import tw from 'twin.macro'
 import groupBy from 'lodash.groupby'
 
 import { formatDate } from '../../utils'
@@ -66,7 +67,7 @@ export const ByYears = ({ loading, expenses }) => {
                      <Table.Row key={index} isEven={(index & 1) === 1}>
                         <Table.Cell as="td">{category.year}</Table.Cell>
                         <Table.Cell as="td" align="right">
-                           <span className="font-medium text-red-600">
+                           <span tw="font-medium text-red-600">
                               - {methods.format_currency(category.amount)}
                            </span>
                         </Table.Cell>
@@ -76,7 +77,7 @@ export const ByYears = ({ loading, expenses }) => {
                      </Table.Row>
                   ))
                ) : (
-                  <h3 className="text-center my-3">No data</h3>
+                  <h3 tw="text-center my-3">No data</h3>
                )}
             </Table.Body>
          )}
