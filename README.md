@@ -1,9 +1,16 @@
 ## Expenses App
 > A self-hosted app built with Hasura Engine, React, Apollo Client.
 
-![Demo Screenshot](https://res.cloudinary.com/prvnbist/image/upload/v1588229800/2020-04-30_122559_wgg44e.png "Demo ScreenShot")
+![Demo Screenshot](https://res.cloudinary.com/prvnbist/image/upload/v1598776999/Screenshot_2020-08-30_https_expense-demo_netlify_app_uknqa3.png "Demo ScreenShot")
+
+
+#### Demo:
+- Visit [https://expense-demo.netlify.app](https://expense-demo.netlify.app) to checkout the demo.
 
 #### Features:
+- [ ] Settings
+  - [x] Change currency
+  - [ ] Change date format 
 - [x] Create
   - [x] Expenses
   - [x] Earnings
@@ -24,8 +31,8 @@
     - [x] List
     - [x] Limit
     - [x] Pagination
-    - [x] Sort
-    - [x] Search
+    - [ ] Sort
+    - [ ] Search
 - [x] Analytics
   - [x] Total Spent
   - [x] Total Earned
