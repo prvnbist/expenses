@@ -2,8 +2,6 @@ import React from 'react'
 import tw from 'twin.macro'
 import { useMutation } from '@apollo/react-hooks'
 
-import { formatDate } from '../../../utils'
-
 import { Table } from '../../../components'
 
 import { DELETE_EARNINGS } from '../../../graphql'
@@ -93,7 +91,7 @@ export const Listing = ({ loading, earnings }) => {
                            </span>
                         </Table.Cell>
                         <Table.Cell as="td" align="right">
-                           {formatDate(earning.date)}
+                           {methods.format_date(earning.date)}
                         </Table.Cell>
                         <Table.Cell as="td" align="right">
                            <button

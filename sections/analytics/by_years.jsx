@@ -1,7 +1,6 @@
 import tw from 'twin.macro'
+import moment from 'moment'
 import groupBy from 'lodash.groupby'
-
-import { formatDate } from '../../utils'
 
 import { Table } from '../../components'
 import { useConfig } from '../../context'
@@ -27,7 +26,7 @@ export const ByYears = ({ loading, expenses }) => {
    React.useEffect(() => {
       const formatted = expenses.map(expense => ({
          ...expense,
-         date: new Date(formatDate(expense.date)).getFullYear(),
+         date: moment(expense.date).year(),
       }))
 
       const groups = groupBy(formatted, 'date')

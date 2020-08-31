@@ -1,4 +1,5 @@
 import tw from 'twin.macro'
+import moment from 'moment'
 import groupBy from 'lodash.groupby'
 
 import { Table } from '../../components'
@@ -40,7 +41,7 @@ export const ByMonths = ({ loading, expenses }) => {
    React.useEffect(() => {
       const formatted = expenses.map(expense => ({
          ...expense,
-         date: new Date(expense.date).getMonth(),
+         date: moment(expense.date).month(),
       }))
 
       const groups = groupBy(formatted, 'date')

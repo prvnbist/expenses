@@ -2,14 +2,10 @@ import React from 'react'
 import tw from 'twin.macro'
 import { useMutation } from '@apollo/react-hooks'
 
-import { formatDate } from '../../../utils'
-
 import { Table } from '../../../components'
-
-import { DELETE_EXPENSES } from '../../../graphql'
-
-import { DeleteIcon, CaretUp, CaretDown, Disable } from '../../../assets/icons'
 import { useConfig } from '../../../context'
+import { DELETE_EXPENSES } from '../../../graphql'
+import { DeleteIcon, CaretUp, CaretDown, Disable } from '../../../assets/icons'
 
 export const Listing = ({ loading, expenses, sort, setSort }) => {
    const { methods } = useConfig()
@@ -151,7 +147,7 @@ export const Listing = ({ loading, expenses, sort, setSort }) => {
                            </span>
                         </Table.Cell>
                         <Table.Cell as="td" align="right">
-                           {formatDate(expense.date)}
+                           {methods.format_date(expense.date)}
                         </Table.Cell>
                         <Table.Cell as="td">
                            {expense.payment_method}

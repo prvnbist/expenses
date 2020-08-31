@@ -1,8 +1,6 @@
 import tw from 'twin.macro'
 import { useMutation } from '@apollo/react-hooks'
 
-import { formatDate } from '../../../utils'
-
 import { DELETE_EXPENSES } from '../../../graphql'
 
 import { DeleteIcon } from '../../../assets/icons'
@@ -19,7 +17,9 @@ export const Cards = ({ loading, expenses }) => {
                <header tw="flex flex-col justify-between">
                   <h2 tw="mb-3 text-xl">{expense.title}</h2>
                   <div tw="flex items-center justify-between">
-                     <time tw="text-teal-500">{formatDate(expense.date)}</time>
+                     <time tw="text-teal-500">
+                        {methods.format_date(expense.date)}
+                     </time>
                      <span tw="font-medium text-red-600">
                         - {methods.format_currency(expense.amount)}
                      </span>
