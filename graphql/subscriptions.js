@@ -107,7 +107,7 @@ export const EXPENSES_CATEGORIES = gql`
 
 export const SETTINGS = gql`
    subscription settings {
-      settings {
+      currency: setting(type: "currency") {
          id
          type
          value

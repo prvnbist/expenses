@@ -22,9 +22,8 @@ export const ConfigProvider = ({ children }) => {
    const [state, dispatch] = React.useReducer(reducers, initialState)
    useSubscription(SETTINGS, {
       onSubscriptionData: ({ subscriptionData: { data = {} } = {} }) => {
-         const { settings } = data
-         if (settings.length > 0) {
-            dispatch({ type: 'SET_CURRENCY', payload: settings[0].value })
+         if ('currency' in data) {
+            dispatch({ type: 'SET_CURRENCY', payload: data.currency.value })
          }
       },
    })
