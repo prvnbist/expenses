@@ -23,7 +23,9 @@ export const ConfigProvider = ({ children }) => {
    useSubscription(SETTINGS, {
       onSubscriptionData: ({ subscriptionData: { data = {} } = {} }) => {
          const { settings } = data
-         dispatch({ type: 'SET_CURRENCY', payload: settings[0].value })
+         if (settings.length > 0) {
+            dispatch({ type: 'SET_CURRENCY', payload: settings[0].value })
+         }
       },
    })
 
