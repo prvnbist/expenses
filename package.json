@@ -33,7 +33,7 @@
       "lodash.groupby": "^4.6.0",
       "moment": "^2.27.0",
       "next": "^9.3.5",
-      "node-fetch": "^2.6.0",
+      "node-fetch": "^2.6.1",
       "react": "^16.13.1",
       "react-dom": "^16.13.1",
       "subscriptions-transport-ws": "^0.9.18",
