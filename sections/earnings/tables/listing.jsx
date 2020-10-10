@@ -6,34 +6,50 @@ import { Table } from '../../../components'
 
 import { DELETE_EARNINGS } from '../../../graphql'
 
-import { DeleteIcon } from '../../../assets/icons'
-import { useConfig } from '../../../context'
+import { useConfig, useForm } from '../../../context'
+import { DeleteIcon, EditIcon } from '../../../assets/icons'
 
 export const Listing = ({ loading, earnings }) => {
    const { methods } = useConfig()
+   const { dispatch } = useForm()
    const [deleteEarnings] = useMutation(DELETE_EARNINGS)
-   const columns = [
-      {
-         key: 'Source',
-         type: 'String',
-      },
-      {
-         key: 'Amount',
-         type: 'Number',
-      },
-      {
-         key: 'Category',
-         type: 'String',
-      },
-      {
-         key: 'Date',
-         type: 'Date',
-      },
-      {
-         type: 'Actions',
-         type: 'Actions',
-      },
-   ]
+   const columns = React.useMemo(
+      () => [
+         {
+            key: 'Source',
+            type: 'String',
+         },
+         {
+            key: 'Amount',
+            type: 'Number',
+         },
+         {
+            key: 'Category',
+            type: 'String',
+         },
+         {
+            key: 'Date',
+            type: 'Date',
+         },
+         {
+            key: 'Actions',
+            type: 'Actions',
+         },
+      ],
+      []
+   )
+
+   const edit = data => {
+      dispatch({
+         type: 'TOGGLE_FORM',
+         payload: {
+            isOpen: true,
+            mode: 'EDIT',
+            type: 'EARNING',
+            data,
+         },
+      })
+   }
 
    return (
       <Table>
@@ -93,7 +109,17 @@ export const Listing = ({ loading, earnings }) => {
                         <Table.Cell as="td" align="right">
                            {methods.format_date(earning.date)}
                         </Table.Cell>
-                        <Table.Cell as="td" align="right">
+                        <Table.Cell as="td" align="center">
+                           <button
+                              className="group"
+                              onClick={() => edit(earning)}
+                              tw="mr-2 border rounded p-1 hover:(bg-blue-500 border-transparent)"
+                           >
+                              <EditIcon
+                                 size={18}
+                                 tw="stroke-current text-gray-500 group-hover:text-white"
+                              />
+                           </button>
                            <button
                               onClick={() =>
                                  deleteEarnings({

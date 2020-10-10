@@ -2,11 +2,12 @@ import tw from 'twin.macro'
 
 import { Header } from './header'
 import { Form } from './create_form'
+import { useForm } from '../context'
 import { Settings } from './settings'
 import { SettingsIcon } from '../assets/icons'
 
 export const Layout = ({ children }) => {
-   const [isFormVisible, setIsFormVisible] = React.useState(false)
+   const { state, dispatch } = useForm()
    const [isSettingsVisible, setIsSettingsVisible] = React.useState(false)
    return (
       <div tw="m-3">
@@ -20,13 +21,23 @@ export const Layout = ({ children }) => {
                <SettingsIcon tw="stroke-current" />
             </button>
             <button
-               onClick={() => setIsFormVisible(true)}
+               onClick={() =>
+                  dispatch({
+                     type: 'TOGGLE_FORM',
+                     payload: {
+                        isOpen: true,
+                        mode: 'CREATE',
+                        type: 'EXPENSE',
+                        data: {},
+                     },
+                  })
+               }
                tw="h-16 w-16 text-white fixed right-0 top-0 mr-6 mt-6 rounded-full bg-teal-600 hover:bg-teal-700"
             >
                Add
             </button>
          </section>
-         {isFormVisible && <Form setIsFormVisible={setIsFormVisible} />}
+         {state.form.isOpen && <Form />}
          {isSettingsVisible && (
             <Settings setIsSettingsVisible={setIsSettingsVisible} />
          )}

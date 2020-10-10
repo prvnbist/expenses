@@ -3,45 +3,67 @@ import tw from 'twin.macro'
 import { useMutation } from '@apollo/react-hooks'
 
 import { Table } from '../../../components'
-import { useConfig } from '../../../context'
 import { DELETE_EXPENSES } from '../../../graphql'
-import { DeleteIcon, CaretUp, CaretDown, Disable } from '../../../assets/icons'
+import { useConfig, useForm } from '../../../context'
+import {
+   DeleteIcon,
+   CaretUp,
+   CaretDown,
+   Disable,
+   EditIcon,
+} from '../../../assets/icons'
 
 export const Listing = ({ loading, expenses, sort, setSort }) => {
    const { methods } = useConfig()
+   const { dispatch } = useForm()
    const [deleteExpenses] = useMutation(DELETE_EXPENSES)
-   const columns = [
-      {
-         key: 'Title',
-         type: 'String',
-         sort: true,
-         field: 'title',
-      },
-      {
-         key: 'Amount',
-         type: 'Number',
-         sort: true,
-         field: 'amount',
-      },
-      {
-         key: 'Category',
-         type: 'String',
-      },
-      {
-         key: 'Date',
-         type: 'Date',
-         sort: true,
-         field: 'date',
-      },
-      {
-         key: 'Payment Method',
-         type: 'String',
-      },
-      {
-         key: 'Actions',
-         type: 'Actions',
-      },
-   ]
+   const columns = React.useMemo(
+      () => [
+         {
+            key: 'Title',
+            type: 'String',
+            sort: true,
+            field: 'title',
+         },
+         {
+            key: 'Amount',
+            type: 'Number',
+            sort: true,
+            field: 'amount',
+         },
+         {
+            key: 'Category',
+            type: 'String',
+         },
+         {
+            key: 'Date',
+            type: 'Date',
+            sort: true,
+            field: 'date',
+         },
+         {
+            key: 'Payment Method',
+            type: 'String',
+         },
+         {
+            key: 'Actions',
+            type: 'Actions',
+         },
+      ],
+      []
+   )
+
+   const edit = data => {
+      dispatch({
+         type: 'TOGGLE_FORM',
+         payload: {
+            isOpen: true,
+            mode: 'EDIT',
+            type: 'EXPENSE',
+            data,
+         },
+      })
+   }
 
    return (
       <Table>
@@ -154,6 +176,16 @@ export const Listing = ({ loading, expenses, sort, setSort }) => {
                         </Table.Cell>
                         <Table.Cell as="td" align="center">
                            <button
+                              className="group"
+                              onClick={() => edit(expense)}
+                              tw="mr-2 border rounded p-1 hover:(bg-blue-500 border-transparent)"
+                           >
+                              <EditIcon
+                                 size={18}
+                                 tw="stroke-current text-gray-500 group-hover:text-white"
+                              />
+                           </button>
+                           <button
                               onClick={() =>
                                  deleteExpenses({
                                     variables: {
@@ -162,7 +194,7 @@ export const Listing = ({ loading, expenses, sort, setSort }) => {
                                  })
                               }
                               className="group"
-                              tw="border rounded p-1 hover:bg-red-500"
+                              tw="border rounded p-1 hover:(bg-red-500 border-transparent)"
                            >
                               <DeleteIcon tw="stroke-current text-gray-500 group-hover:text-white" />
                            </button>

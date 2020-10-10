@@ -87,3 +87,25 @@ export const UPDATE_SETTING = gql`
       }
    }
 `
+
+export const UPDATE_EXPENSE = gql`
+   mutation updateExpense($id: uuid!, $_set: expenses_set_input!) {
+      updateExpense: update_expenses_by_pk(
+         pk_columns: { id: $id }
+         _set: $_set
+      ) {
+         id
+      }
+   }
+`
+
+export const UPDATE_EARNING = gql`
+   mutation updateEarning($id: uuid!, $_set: earnings_set_input!) {
+      updateEarning: update_earnings_by_pk(
+         pk_columns: { id: $id }
+         _set: $_set
+      ) {
+         id
+      }
+   }
+`
