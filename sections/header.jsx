@@ -20,22 +20,24 @@ export const Header = () => {
             <Stat type="expenses" label="Total Expenses">
                {!expensesLoading
                   ? methods.format_currency(
-                       expensesData?.total_expenses.aggregate.sum.amount
+                       expensesData?.total_expenses.aggregate.sum.amount || 0
                     )
                   : methods.format_currency(0)}
             </Stat>
             <Stat type="earnings" label="Total Earning">
                {!earningsLoading
                   ? methods.format_currency(
-                       earningsData?.total_earnings.aggregate.sum.amount
+                       earningsData?.total_earnings.aggregate.sum.amount || 0
                     )
                   : methods.format_currency(0)}
             </Stat>
             <Stat type="neutral" label="Balance">
                {!expensesLoading && !earningsLoading
                   ? methods.format_currency(
-                       earningsData?.total_earnings.aggregate.sum.amount -
-                          expensesData?.total_expenses.aggregate.sum.amount
+                       (earningsData?.total_earnings.aggregate.sum.amount ||
+                          0) -
+                          (expensesData?.total_expenses.aggregate.sum.amount ||
+                             0)
                     )
                   : methods.format_currency(0)}
             </Stat>
