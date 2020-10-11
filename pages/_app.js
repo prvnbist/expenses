@@ -1,5 +1,6 @@
 import React from 'react'
 import App from 'next/app'
+import { ToastProvider } from 'react-toast-notifications'
 import '../global.css'
 import 'tailwindcss/dist/base.min.css'
 
@@ -63,13 +64,19 @@ class MyApp extends App {
    render() {
       const { Component, pageProps } = this.props
       return (
-         <ApolloProvider client={client}>
-            <ConfigProvider>
-               <FormProvider>
-                  <Component {...pageProps} />
-               </FormProvider>
-            </ConfigProvider>
-         </ApolloProvider>
+         <ToastProvider
+            autoDismiss
+            placement="top-center"
+            autoDismissTimeout={4000}
+         >
+            <ApolloProvider client={client}>
+               <ConfigProvider>
+                  <FormProvider>
+                     <Component {...pageProps} />
+                  </FormProvider>
+               </ConfigProvider>
+            </ApolloProvider>
+         </ToastProvider>
       )
    }
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import tw from 'twin.macro'
 import { useMutation } from '@apollo/react-hooks'
+import { useToasts } from 'react-toast-notifications'
 
 import { Table } from '../../../components'
 
@@ -12,7 +13,17 @@ import { DeleteIcon, EditIcon } from '../../../assets/icons'
 export const Listing = ({ loading, earnings }) => {
    const { methods } = useConfig()
    const { dispatch } = useForm()
-   const [deleteEarnings] = useMutation(DELETE_EARNINGS)
+   const { addToast } = useToasts()
+   const [deleteEarnings] = useMutation(DELETE_EARNINGS, {
+      onCompleted: () =>
+         addToast('Successfully deleted the earning.', {
+            appearance: 'success',
+         }),
+      onError: () =>
+         addToast('Failed to delete the earning.', {
+            appearance: 'error',
+         }),
+   })
    const columns = React.useMemo(
       () => [
          {

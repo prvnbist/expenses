@@ -1,6 +1,7 @@
 import React from 'react'
 import tw from 'twin.macro'
 import { useMutation } from '@apollo/react-hooks'
+import { useToasts } from 'react-toast-notifications'
 
 import { Table } from '../../../components'
 import { DELETE_EXPENSES } from '../../../graphql'
@@ -16,7 +17,17 @@ import {
 export const Listing = ({ loading, expenses, sort, setSort }) => {
    const { methods } = useConfig()
    const { dispatch } = useForm()
-   const [deleteExpenses] = useMutation(DELETE_EXPENSES)
+   const { addToast } = useToasts()
+   const [deleteExpenses] = useMutation(DELETE_EXPENSES, {
+      onCompleted: () =>
+         addToast('Successfully deleted the expense.', {
+            appearance: 'success',
+         }),
+      onError: () =>
+         addToast('Failed to delete the expense.', {
+            appearance: 'error',
+         }),
+   })
    const columns = React.useMemo(
       () => [
          {

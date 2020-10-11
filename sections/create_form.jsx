@@ -1,4 +1,5 @@
 import tw from 'twin.macro'
+import { useToasts } from 'react-toast-notifications'
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 
 import {
@@ -97,9 +98,24 @@ export const Form = () => {
 }
 
 const ExpenseForm = ({ methods, categories }) => {
+   const { addToast } = useToasts()
    const { state, dispatch } = useForm()
-   const [create] = useMutation(CREATE_EXPENSE)
-   const [update] = useMutation(UPDATE_EXPENSE)
+   const [create] = useMutation(CREATE_EXPENSE, {
+      onCompleted: () =>
+         addToast('Successfully added the expense.', {
+            appearance: 'success',
+         }),
+      onError: () =>
+         addToast('Failed to add the expense.', { appearance: 'error' }),
+   })
+   const [update] = useMutation(UPDATE_EXPENSE, {
+      onCompleted: () =>
+         addToast('Successfully updated the expense.', {
+            appearance: 'success',
+         }),
+      onError: () =>
+         addToast('Failed to update the expense.', { appearance: 'error' }),
+   })
 
    const handleSubmit = e => {
       e.preventDefault()
@@ -199,9 +215,24 @@ const ExpenseForm = ({ methods, categories }) => {
 }
 
 const EarningForm = ({ sources }) => {
+   const { addToast } = useToasts()
    const { state, dispatch } = useForm()
-   const [create] = useMutation(CREATE_EARNING)
-   const [update] = useMutation(UPDATE_EARNING)
+   const [create] = useMutation(CREATE_EARNING, {
+      onCompleted: () =>
+         addToast('Successfully added the earning.', {
+            appearance: 'success',
+         }),
+      onError: () =>
+         addToast('Failed to add the earning.', { appearance: 'error' }),
+   })
+   const [update] = useMutation(UPDATE_EARNING, {
+      onCompleted: () =>
+         addToast('Successfully updated the earning.', {
+            appearance: 'success',
+         }),
+      onError: () =>
+         addToast('Failed to update the earning.', { appearance: 'error' }),
+   })
 
    const handleSubmit = e => {
       e.preventDefault()
