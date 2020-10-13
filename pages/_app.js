@@ -1,4 +1,5 @@
 import React from 'react'
+import tw, { css } from 'twin.macro'
 import App from 'next/app'
 import { ToastProvider } from 'react-toast-notifications'
 import '../global.css'
@@ -61,8 +62,86 @@ const client = new ApolloClient({
 })
 
 class MyApp extends App {
+   constructor(props) {
+      super(props)
+      this.state = {
+         code: '',
+         error: null,
+         storeLocally: false,
+         isAuthenticated: false,
+      }
+   }
+
+   componentDidMount() {
+      const access_code = localStorage.getItem('access_code')
+      if (access_code === process.env.HASURA_KEY) {
+         this.setState({ code: '', isAuthenticated: true })
+      }
+   }
+
+   verifyCode = () => {
+      if (this.state.code === process.env.HASURA_KEY) {
+         this.setState({ code: '', isAuthenticated: true })
+         if (this.state.storeLocally) {
+            localStorage.setItem('access_code', this.state.code)
+         }
+      } else {
+         this.setState({ error: 'Incorrect code, please try again!' })
+      }
+   }
+
    render() {
       const { Component, pageProps } = this.props
+      if (!this.state.isAuthenticated) {
+         return (
+            <div tw="h-screen bg-gray-100 flex items-center justify-center">
+               <section tw="flex flex-col bg-white border p-3 rounded">
+                  <h2 tw="text-center text-gray-800 text-xl mb-3">
+                     Authentication
+                  </h2>
+                  <input
+                     type="password"
+                     value={this.state.value}
+                     placeholder="Enter the secret code"
+                     tw="h-10 rounded px-3 bg-gray-200"
+                     onChange={e =>
+                        this.setState({ error: null, code: e.target.value })
+                     }
+                  />
+                  {this.state.error && (
+                     <span tw="text-red-600">{this.state.error}</span>
+                  )}
+                  <button
+                     onClick={() => this.verifyCode()}
+                     disabled={this.state.code.length === 0}
+                     css={[
+                        tw`mt-2 px-3 h-10 rounded text-white uppercase tracking-wider`,
+                        this.state.code.length > 0
+                           ? tw`bg-teal-600`
+                           : tw`bg-teal-300 cursor-not-allowed`,
+                     ]}
+                  >
+                     Submit
+                  </button>
+                  <fieldset tw="mt-2">
+                     <input
+                        tw="mr-2"
+                        type="checkbox"
+                        id="store_locally"
+                        name="store_locally"
+                        checked={this.state.storeLocally}
+                        onChange={() =>
+                           this.setState({
+                              storeLocally: !this.state.storeLocally,
+                           })
+                        }
+                     />
+                     <label htmlFor="store_locally">Login automatically?</label>
+                  </fieldset>
+               </section>
+            </div>
+         )
+      }
       return (
          <ToastProvider
             autoDismiss

@@ -17,6 +17,11 @@ export const Settings = ({ setIsSettingsVisible }) => {
       'DD/MM/YYYY',
       'ddd, MMM DD, YYYY',
    ])
+
+   const clearStorage = () => {
+      localStorage.removeItem('access_code')
+   }
+
    return (
       <div tw="fixed inset-0 bg-tint sm:pt-40 flex items-start justify-center">
          <div tw="w-full h-full bg-white sm:w-11/12 sm:h-auto lg:w-7/12 xl:w-4/12  p-5 rounded-lg">
@@ -84,6 +89,17 @@ export const Settings = ({ setIsSettingsVisible }) => {
                      <option value={node}>{moment().format(node)}</option>
                   ))}
                </select>
+            </section>
+            <section tw="mt-3 flex flex-col">
+               <label tw="text-sm mb-1 uppercase font-medium tracking-wider text-gray-500">
+                  Access Code
+               </label>
+               <button
+                  onClick={clearStorage}
+                  tw="bg-red-200 text-red-700 px-3 h-10 rounded self-start"
+               >
+                  Clear
+               </button>
             </section>
          </div>
       </div>
