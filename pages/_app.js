@@ -1,7 +1,9 @@
 import React from 'react'
-import tw, { css } from 'twin.macro'
 import App from 'next/app'
+import tw from 'twin.macro'
+import styled from '@emotion/styled'
 import { ToastProvider } from 'react-toast-notifications'
+
 import '../global.css'
 import 'tailwindcss/dist/base.min.css'
 
@@ -67,6 +69,7 @@ class MyApp extends App {
       this.state = {
          code: '',
          error: null,
+         loading: true,
          storeLocally: false,
          isAuthenticated: false,
       }
@@ -77,6 +80,7 @@ class MyApp extends App {
       if (access_code === process.env.HASURA_KEY) {
          this.setState({ code: '', isAuthenticated: true })
       }
+      this.setState({ loading: false })
    }
 
    verifyCode = () => {
@@ -92,72 +96,138 @@ class MyApp extends App {
 
    render() {
       const { Component, pageProps } = this.props
-      if (!this.state.isAuthenticated) {
+      if (this.state.loading)
          return (
-            <div tw="h-screen bg-gray-100 flex items-center justify-center">
-               <section tw="flex flex-col bg-white border p-3 rounded">
-                  <h2 tw="text-center text-gray-800 text-xl mb-3">
-                     Authentication
-                  </h2>
-                  <input
-                     type="password"
-                     value={this.state.value}
-                     placeholder="Enter the secret code"
-                     tw="h-10 rounded px-3 bg-gray-200"
-                     onChange={e =>
-                        this.setState({ error: null, code: e.target.value })
-                     }
-                  />
-                  {this.state.error && (
-                     <span tw="text-red-600">{this.state.error}</span>
-                  )}
-                  <button
-                     onClick={() => this.verifyCode()}
-                     disabled={this.state.code.length === 0}
-                     css={[
-                        tw`mt-2 px-3 h-10 rounded text-white uppercase tracking-wider`,
-                        this.state.code.length > 0
-                           ? tw`bg-teal-600`
-                           : tw`bg-teal-300 cursor-not-allowed`,
-                     ]}
-                  >
-                     Submit
-                  </button>
-                  <fieldset tw="mt-2">
-                     <input
-                        tw="mr-2"
-                        type="checkbox"
-                        id="store_locally"
-                        name="store_locally"
-                        checked={this.state.storeLocally}
-                        onChange={() =>
-                           this.setState({
-                              storeLocally: !this.state.storeLocally,
-                           })
-                        }
-                     />
-                     <label htmlFor="store_locally">Login automatically?</label>
-                  </fieldset>
-               </section>
+            <div tw="h-screen w-screen flex items-center justify-center">
+               <Loader>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+               </Loader>
             </div>
+         )
+      if (this.state.isAuthenticated) {
+         return (
+            <ToastProvider
+               autoDismiss
+               placement="top-center"
+               autoDismissTimeout={4000}
+            >
+               <ApolloProvider client={client}>
+                  <ConfigProvider>
+                     <FormProvider>
+                        <Component {...pageProps} />
+                     </FormProvider>
+                  </ConfigProvider>
+               </ApolloProvider>
+            </ToastProvider>
          )
       }
       return (
-         <ToastProvider
-            autoDismiss
-            placement="top-center"
-            autoDismissTimeout={4000}
-         >
-            <ApolloProvider client={client}>
-               <ConfigProvider>
-                  <FormProvider>
-                     <Component {...pageProps} />
-                  </FormProvider>
-               </ConfigProvider>
-            </ApolloProvider>
-         </ToastProvider>
+         <div tw="h-screen bg-gray-100 flex items-center justify-center">
+            <section tw="flex flex-col bg-white border p-3 rounded">
+               <h2 tw="text-center text-gray-800 text-xl mb-3">
+                  Authentication
+               </h2>
+               <input
+                  type="password"
+                  value={this.state.value}
+                  placeholder="Enter the secret code"
+                  tw="h-10 rounded px-3 bg-gray-200"
+                  onChange={e =>
+                     this.setState({ error: null, code: e.target.value })
+                  }
+               />
+               {this.state.error && (
+                  <span tw="text-red-600">{this.state.error}</span>
+               )}
+               <button
+                  onClick={() => this.verifyCode()}
+                  disabled={this.state.code.length === 0}
+                  css={[
+                     tw`mt-2 px-3 h-10 rounded text-white uppercase tracking-wider`,
+                     this.state.code.length > 0
+                        ? tw`bg-teal-600`
+                        : tw`bg-teal-300 cursor-not-allowed`,
+                  ]}
+               >
+                  Submit
+               </button>
+               <fieldset tw="mt-2">
+                  <input
+                     tw="mr-2"
+                     type="checkbox"
+                     id="store_locally"
+                     name="store_locally"
+                     checked={this.state.storeLocally}
+                     onChange={() =>
+                        this.setState({
+                           storeLocally: !this.state.storeLocally,
+                        })
+                     }
+                  />
+                  <label htmlFor="store_locally">Remember Me</label>
+               </fieldset>
+            </section>
+         </div>
       )
    }
 }
 
 export default MyApp
+
+const Loader = styled.div`
+   position: relative;
+   height: 24px;
+   width: 78px;
+   div {
+      position: absolute;
+      top: 5px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: teal;
+      animation-timing-function: cubic-bezier(0, 1, 1, 0);
+   }
+   div:nth-child(1) {
+      left: 8px;
+      animation: lds-ellipsis1 0.6s infinite;
+   }
+   div:nth-child(2) {
+      left: 8px;
+      animation: lds-ellipsis2 0.6s infinite;
+   }
+   div:nth-child(3) {
+      left: 32px;
+      animation: lds-ellipsis2 0.6s infinite;
+   }
+   div:nth-child(4) {
+      left: 56px;
+      animation: lds-ellipsis3 0.6s infinite;
+   }
+   @keyframes lds-ellipsis1 {
+      0% {
+         transform: scale(0);
+      }
+      100% {
+         transform: scale(1);
+      }
+   }
+   @keyframes lds-ellipsis3 {
+      0% {
+         transform: scale(1);
+      }
+      100% {
+         transform: scale(0);
+      }
+   }
+   @keyframes lds-ellipsis2 {
+      0% {
+         transform: translate(0, 0);
+      }
+      100% {
+         transform: translate(24px, 0);
+      }
+   }
+`
