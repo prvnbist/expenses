@@ -114,3 +114,57 @@ export const SETTINGS = gql`
       }
    }
 `
+
+export const SUM_BY_CATEGORIES = gql`
+   subscription sumByCategory {
+      sumByCategory: sum_by_category_aggregate(order_by: { amount: desc }) {
+         aggregate {
+            count
+            sum {
+               amount
+            }
+         }
+         nodes {
+            title
+            count
+            amount
+         }
+      }
+   }
+`
+
+export const SUM_BY_MONTH = gql`
+   subscription sumByMonth {
+      sumByMonth: sum_by_month_aggregate(order_by: { month: asc }) {
+         aggregate {
+            count
+            sum {
+               amount
+            }
+         }
+         nodes {
+            title
+            amount
+            count
+         }
+      }
+   }
+`
+
+export const SUM_BY_YEAR = gql`
+   subscription sumByYear {
+      sumByYear: sum_by_year_aggregate(order_by: { year: desc }) {
+         aggregate {
+            count
+            sum {
+               amount
+            }
+         }
+         nodes {
+            year
+            amount
+            count
+         }
+      }
+   }
+`

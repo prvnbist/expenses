@@ -1,12 +1,15 @@
 import tw from 'twin.macro'
-import groupBy from 'lodash.groupby'
 
 import { Table } from '../../components'
 import { useConfig } from '../../context'
+import { useSubscription } from '@apollo/react-hooks'
+import { SUM_BY_CATEGORIES } from '../../graphql'
 
-export const ByCategories = ({ loading, expenses }) => {
+export const ByCategories = () => {
    const { methods } = useConfig()
-   const [categories, setCategories] = React.useState([])
+   const { loading, data: { sumByCategory = {} } = {} } = useSubscription(
+      SUM_BY_CATEGORIES
+   )
    const [columns] = React.useState([
       {
          key: 'Category',
@@ -21,16 +24,6 @@ export const ByCategories = ({ loading, expenses }) => {
          type: 'Number',
       },
    ])
-
-   React.useEffect(() => {
-      const groups = groupBy(expenses, 'category')
-      const categories = []
-      for (let [key, value] of Object.entries(groups)) {
-         const amount = value.reduce((acc, current) => acc + current.amount, 0)
-         categories.push({ title: key, expenses: value.length, amount })
-      }
-      setCategories(categories.sort((a, b) => b.amount - a.amount))
-   }, [expenses])
 
    return (
       <Table>
@@ -55,8 +48,8 @@ export const ByCategories = ({ loading, expenses }) => {
             </Table.Body>
          ) : (
             <Table.Body>
-               {categories.length > 0 ? (
-                  categories.map((category, index) => (
+               {sumByCategory?.aggregate?.count > 0 ? (
+                  sumByCategory.nodes.map((category, index) => (
                      <Table.Row key={index} isEven={(index & 1) === 1}>
                         <Table.Cell as="td">{category.title}</Table.Cell>
                         <Table.Cell as="td" align="right">
@@ -65,7 +58,7 @@ export const ByCategories = ({ loading, expenses }) => {
                            </span>
                         </Table.Cell>
                         <Table.Cell as="td" align="right">
-                           {category.expenses}
+                           {category.count}
                         </Table.Cell>
                      </Table.Row>
                   ))

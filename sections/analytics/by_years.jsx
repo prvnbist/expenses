@@ -1,13 +1,15 @@
 import tw from 'twin.macro'
-import moment from 'moment'
-import groupBy from 'lodash.groupby'
 
 import { Table } from '../../components'
 import { useConfig } from '../../context'
+import { useSubscription } from '@apollo/react-hooks'
+import { SUM_BY_YEAR } from '../../graphql'
 
-export const ByYears = ({ loading, expenses }) => {
+export const ByYears = () => {
    const { methods } = useConfig()
-   const [years, setYears] = React.useState([])
+   const { loading, data: { sumByYear = {} } = {} } = useSubscription(
+      SUM_BY_YEAR
+   )
    const [columns] = React.useState([
       {
          key: 'Year',
@@ -22,21 +24,6 @@ export const ByYears = ({ loading, expenses }) => {
          type: 'Number',
       },
    ])
-
-   React.useEffect(() => {
-      const formatted = expenses.map(expense => ({
-         ...expense,
-         date: moment(expense.date).year(),
-      }))
-
-      const groups = groupBy(formatted, 'date')
-      const years = []
-      for (let [key, value] of Object.entries(groups)) {
-         const amount = value.reduce((acc, current) => acc + current.amount, 0)
-         years.push({ year: key, expenses: value.length, amount })
-      }
-      setYears(years.sort((a, b) => b.year - a.year))
-   }, [expenses])
 
    return (
       <Table>
@@ -61,8 +48,8 @@ export const ByYears = ({ loading, expenses }) => {
             </Table.Body>
          ) : (
             <Table.Body>
-               {years.length > 0 ? (
-                  years.map((category, index) => (
+               {sumByYear?.aggregate?.count > 0 ? (
+                  sumByYear.nodes.map((category, index) => (
                      <Table.Row key={index} isEven={(index & 1) === 1}>
                         <Table.Cell as="td">{category.year}</Table.Cell>
                         <Table.Cell as="td" align="right">
@@ -71,7 +58,7 @@ export const ByYears = ({ loading, expenses }) => {
                            </span>
                         </Table.Cell>
                         <Table.Cell as="td" align="right">
-                           {category.expenses}
+                           {category.count}
                         </Table.Cell>
                      </Table.Row>
                   ))

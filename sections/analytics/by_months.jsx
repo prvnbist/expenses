@@ -1,28 +1,15 @@
 import tw from 'twin.macro'
-import moment from 'moment'
-import groupBy from 'lodash.groupby'
 
 import { Table } from '../../components'
 import { useConfig } from '../../context'
+import { SUM_BY_MONTH } from '../../graphql'
+import { useSubscription } from '@apollo/react-hooks'
 
-const months = [
-   'January',
-   'February',
-   'March',
-   'April',
-   'May',
-   'June',
-   'July',
-   'August',
-   'September',
-   'October',
-   'November',
-   'December',
-]
-
-export const ByMonths = ({ loading, expenses }) => {
+export const ByMonths = () => {
    const { methods } = useConfig()
-   const [list, setList] = React.useState([])
+   const { loading, data: { sumByMonth = {} } = {} } = useSubscription(
+      SUM_BY_MONTH
+   )
    const [columns] = React.useState([
       {
          key: 'Months',
@@ -37,21 +24,6 @@ export const ByMonths = ({ loading, expenses }) => {
          type: 'Number',
       },
    ])
-
-   React.useEffect(() => {
-      const formatted = expenses.map(expense => ({
-         ...expense,
-         date: moment(expense.date).month(),
-      }))
-
-      const groups = groupBy(formatted, 'date')
-      const result = []
-      for (let [key, value] of Object.entries(groups)) {
-         const amount = value.reduce((acc, current) => acc + current.amount, 0)
-         result.push({ month: key, expenses: value.length, amount })
-      }
-      setList(result)
-   }, [expenses])
 
    return (
       <Table>
@@ -76,19 +48,17 @@ export const ByMonths = ({ loading, expenses }) => {
             </Table.Body>
          ) : (
             <Table.Body>
-               {list.length > 0 ? (
-                  list.map((category, index) => (
+               {sumByMonth?.aggregate?.count > 0 ? (
+                  sumByMonth.nodes.map((category, index) => (
                      <Table.Row key={index} isEven={(index & 1) === 1}>
-                        <Table.Cell as="td">
-                           {months[category.month]}
-                        </Table.Cell>
+                        <Table.Cell as="td">{category.title}</Table.Cell>
                         <Table.Cell as="td" align="right">
                            <span tw="font-medium text-red-600">
                               - {methods.format_currency(category.amount)}
                            </span>
                         </Table.Cell>
                         <Table.Cell as="td" align="right">
-                           {category.expenses}
+                           {category.count}
                         </Table.Cell>
                      </Table.Row>
                   ))
