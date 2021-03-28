@@ -1,11 +1,12 @@
 import React from 'react'
 import tw from 'twin.macro'
 
-import { Button, Table } from '../components'
+import { Layout } from '../sections'
 import * as Icon from '../assets/icons'
+import { Button, Table } from '../components'
 
 const IndexPage = () => (
-   <div>
+   <Layout>
       <Button.Group>
          <Button.Icon>
             <Icon.Delete tw="stroke-current" />
@@ -40,7 +41,7 @@ const IndexPage = () => (
             </Table.Row>
          </Table.Body>
       </Table>
-   </div>
+   </Layout>
 )
 
 export default IndexPage
