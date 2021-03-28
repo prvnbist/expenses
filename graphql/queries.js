@@ -20,8 +20,18 @@ export const SETTINGS = gql`
 `
 
 export const TRANSACTIONS = gql`
-   subscription transactions {
-      transactions(order_by: { date: desc, title: asc }) {
+   subscription transactions(
+      $limit: Int = 10
+      $offset: Int = 0
+      $where: transactions_bool_exp = {}
+      $order_by: [transactions_order_by!] = {}
+   ) {
+      transactions(
+         where: $where
+         order_by: $order_by
+         limit: $limit
+         offset: $offset
+      ) {
          id
          date
          type

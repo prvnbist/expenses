@@ -9,9 +9,13 @@ import { Table, TableLoader } from '../components'
 
 const IndexPage = () => {
    const { methods } = useConfig()
-   const { loading, data: { transactions = [] } = {} } = useSubscription(
-      TRANSACTIONS
-   )
+   const [variables] = React.useState({
+      order_by: { date: 'desc', title: 'asc' },
+   })
+   const {
+      loading,
+      data: { transactions = [] } = {},
+   } = useSubscription(TRANSACTIONS, { variables })
    return (
       <Layout>
          <h1 tw="text-3xl mt-4 mb-3">Transactions</h1>
