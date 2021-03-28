@@ -6,7 +6,11 @@ const CustomStyles = createGlobalStyle`
    * {
       box-sizing: border-box;
       font-family: 'Inter', sans-serif;
-  }
+   }
+   body {
+      color: #fff;
+      background: #1F2937;
+   }
 `
 
 const GlobalStyles = () => (
