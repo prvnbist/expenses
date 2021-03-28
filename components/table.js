@@ -2,7 +2,7 @@ import tw, { css, styled } from 'twin.macro'
 
 export const Table = ({ children }) => <Styles.Table>{children}</Styles.Table>
 
-const Head = ({ children }) => <thead>{children}</thead>
+const Head = ({ children }) => <Styles.Head>{children}</Styles.Head>
 const Body = ({ children }) => <tbody>{children}</tbody>
 const Row = ({ children, ...props }) => (
    <Styles.Row {...props}>{children}</Styles.Row>
@@ -15,7 +15,10 @@ const HCell = ({ children, ...props }) => (
 )
 
 const Styles = {
-   Table: tw.table`w-full table-auto`,
+   Table: styled.table`
+      ${tw`relative w-full table-auto`}
+   `,
+   Head: tw.thead`relative `,
    Row: styled.tr(
       ({ odd }) => css`
          ${odd && tw`bg-gray-700`};
@@ -36,7 +39,7 @@ const Styles = {
    HCell: styled.th(
       ({ is_right }) =>
          css`
-            ${tw`h-8 px-2 text-left text-sm text-gray-500 uppercase font-medium tracking-wider`}
+            ${tw`bg-gray-800 sticky top-0 h-8 px-2 text-left text-sm text-gray-500 uppercase font-medium tracking-wider`}
             ${is_right && tw`text-right`}
          `
    ),
