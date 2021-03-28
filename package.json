@@ -13,11 +13,17 @@
       "start": "next start"
    },
    "dependencies": {
+      "@apollo/client": "^3.3.13",
       "dotenv": "^8.2.0",
+      "graphql": "^15.5.0",
+      "graphql-tag": "^2.11.0",
       "next": "^9.3.5",
+      "node-fetch": "^2.6.1",
       "react": "^16.13.1",
       "react-dom": "^16.13.1",
-      "styled-components": "5.1.1"
+      "styled-components": "5.1.1",
+      "subscriptions-transport-ws": "^0.9.18",
+      "ws": "^7.4.4"
    },
    "devDependencies": {
       "tailwindcss": "^2.0.3",
