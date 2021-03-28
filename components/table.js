@@ -20,13 +20,16 @@ const Styles = {
    `,
    Head: tw.thead`relative `,
    Row: styled.tr(
-      ({ odd }) => css`
+      ({ odd, noBg }) => css`
          ${odd && tw`bg-gray-700`};
          td:first-of-type {
             ${tw`rounded-l`}
          }
          td:last-of-type {
             ${tw`rounded-r`}
+         }
+         > th {
+            ${noBg && tw`bg-transparent`}
          }
       `
    ),

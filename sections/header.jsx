@@ -12,6 +12,11 @@ const Header = () => {
                title="Transactions"
                is_active={router.asPath === '/'}
             />
+            <Route
+               path="/analytics"
+               title="Analytics"
+               is_active={router.asPath === '/analytics'}
+            />
          </Styles.NavItems>
       </Styles.Header>
    )
