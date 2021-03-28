@@ -9,6 +9,7 @@ const CustomStyles = createGlobalStyle`
    }
    body {
       color: #fff;
+      margin: 16px;
       background: #1F2937;
    }
 `
