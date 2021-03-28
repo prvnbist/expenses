@@ -12,6 +12,7 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 import '../styles/global.css'
+import { ConfigProvider } from '../context'
 import GlobalStyles from '../styles/global'
 
 const wssLink = process.browser
@@ -65,7 +66,9 @@ const App = ({ Component, pageProps }) => {
    return (
       <ApolloProvider client={client}>
          <GlobalStyles />
-         <Component {...pageProps} />
+         <ConfigProvider>
+            <Component {...pageProps} />
+         </ConfigProvider>
       </ApolloProvider>
    )
 }

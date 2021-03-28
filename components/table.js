@@ -7,8 +7,12 @@ const Body = ({ children }) => <tbody>{children}</tbody>
 const Row = ({ children, ...props }) => (
    <Styles.Row {...props}>{children}</Styles.Row>
 )
-const Cell = ({ children }) => <Styles.Cell>{children}</Styles.Cell>
-const HCell = ({ children }) => <Styles.HCell>{children}</Styles.HCell>
+const Cell = ({ children, ...props }) => (
+   <Styles.Cell {...props}>{children}</Styles.Cell>
+)
+const HCell = ({ children, ...props }) => (
+   <Styles.HCell {...props}>{children}</Styles.HCell>
+)
 
 const Styles = {
    Table: tw.table`w-full table-auto`,
@@ -23,8 +27,19 @@ const Styles = {
          }
       `
    ),
-   Cell: tw.td`px-2 font-light h-10`,
-   HCell: tw.th`h-8 px-2 text-left text-sm text-gray-500 uppercase font-medium tracking-wider`,
+   Cell: styled.td(
+      ({ is_right }) => css`
+         ${tw`px-2 font-light h-10`}
+         ${is_right && tw`text-right`}
+      `
+   ),
+   HCell: styled.th(
+      ({ is_right }) =>
+         css`
+            ${tw`h-8 px-2 text-left text-sm text-gray-500 uppercase font-medium tracking-wider`}
+            ${is_right && tw`text-right`}
+         `
+   ),
 }
 
 Table.Head = Head
