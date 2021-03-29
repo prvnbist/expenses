@@ -2,13 +2,15 @@ import React from 'react'
 import tw from 'twin.macro'
 import { useSubscription } from '@apollo/client'
 
-import { Layout } from '../sections'
 import { useConfig } from '../context'
+import * as Icon from '../assets/icons'
 import { TRANSACTIONS } from '../graphql'
-import { Table, TableLoader } from '../components'
+import { Layout, Form } from '../sections'
+import { Button, Table, TableLoader } from '../components'
 
 const IndexPage = () => {
    const { methods } = useConfig()
+   const [open, toggle] = React.useState(false)
    const [variables] = React.useState({
       order_by: { date: 'desc', title: 'asc' },
    })
@@ -18,7 +20,12 @@ const IndexPage = () => {
    } = useSubscription(TRANSACTIONS, { variables })
    return (
       <Layout>
-         <h1 tw="text-3xl mt-4 mb-3">Transactions</h1>
+         <header tw="flex items-center justify-between">
+            <h1 tw="text-3xl mt-4 mb-3">Transactions</h1>
+            <Button.Icon onClick={() => toggle(!open)}>
+               <Icon.Add tw="stroke-current" />
+            </Button.Icon>
+         </header>
          <section tw="overflow-y-auto" style={{ maxHeight: '520px' }}>
             {loading ? (
                <TableLoader />
@@ -73,6 +80,19 @@ const IndexPage = () => {
                </Table>
             )}
          </section>
+         {open && (
+            <section tw="absolute left-0 top-0 bottom-0 z-10 bg-gray-800 shadow-xl w-screen md:w-6/12 lg:w-5/12 xl:w-4/12">
+               <header tw="flex items-center justify-between px-3 h-16 border-b border-gray-700">
+                  <h1 tw="text-xl">Add Transactions</h1>
+                  <Button.Icon onClick={() => toggle(!open)}>
+                     <Icon.Close tw="stroke-current" />
+                  </Button.Icon>
+               </header>
+               <main tw="px-3">
+                  <Form close={toggle} />
+               </main>
+            </section>
+         )}
       </Layout>
    )
 }

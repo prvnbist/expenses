@@ -19,6 +19,25 @@ export const SETTINGS = gql`
    }
 `
 
+export const CATEGORIES = gql`
+   subscription categories {
+      categories(order_by: { title: asc }) {
+         id
+         type
+         title
+      }
+   }
+`
+
+export const PAYMENT_METHODS = gql`
+   subscription payment_methods {
+      payment_methods(order_by: { title: asc }) {
+         id
+         title
+      }
+   }
+`
+
 export const TRANSACTIONS = gql`
    subscription transactions(
       $limit: Int = 10
@@ -37,10 +56,12 @@ export const TRANSACTIONS = gql`
          type
          title
          amount
+         category_id
          category {
             id
             title
          }
+         payment_method_id
          payment_method {
             id
             title
