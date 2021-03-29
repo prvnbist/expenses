@@ -1,16 +1,17 @@
 import React from 'react'
 import tw from 'twin.macro'
-import { useSubscription } from '@apollo/client'
+import { useMutation, useSubscription } from '@apollo/client'
 
 import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
-import { TRANSACTIONS } from '../graphql'
+import { DELETE_TRANSACTION, TRANSACTIONS } from '../graphql'
 import { Layout, Form } from '../sections'
 import { Button, Table, TableLoader } from '../components'
 
 const IndexPage = () => {
    const { methods } = useConfig()
    const [open, toggle] = React.useState(false)
+   const [edit, setEdit] = React.useState({})
    const [variables] = React.useState({
       order_by: { date: 'desc', title: 'asc' },
    })
@@ -18,6 +19,15 @@ const IndexPage = () => {
       loading,
       data: { transactions = [] } = {},
    } = useSubscription(TRANSACTIONS, { variables })
+   const [remove] = useMutation(DELETE_TRANSACTION, {
+      onError: error => console.log('delete -> error ->', error),
+   })
+
+   const update = transaction => {
+      setEdit(transaction)
+      toggle(true)
+   }
+
    return (
       <Layout>
          <header tw="flex items-center justify-between">
@@ -39,6 +49,7 @@ const IndexPage = () => {
                         <Table.HCell is_right>Date</Table.HCell>
                         <Table.HCell>Category</Table.HCell>
                         <Table.HCell>Payment Method</Table.HCell>
+                        <Table.HCell>Actions</Table.HCell>
                      </Table.Row>
                   </Table.Head>
                   <Table.Body>
@@ -74,6 +85,27 @@ const IndexPage = () => {
                            <Table.Cell>
                               {transaction.payment_method?.title || ''}
                            </Table.Cell>
+                           <Table.Cell>
+                              <Button.Group>
+                                 <Button.Icon
+                                    is_small
+                                    onClick={() => update(transaction)}
+                                 >
+                                    <Icon.Edit size={16} tw="stroke-current" />
+                                 </Button.Icon>
+                                 <Button.Icon is_small>
+                                    <Icon.Delete
+                                       size={16}
+                                       tw="stroke-current"
+                                       onClick={() =>
+                                          remove({
+                                             variables: { id: transaction.id },
+                                          })
+                                       }
+                                    />
+                                 </Button.Icon>
+                              </Button.Group>
+                           </Table.Cell>
                         </Table.Row>
                      ))}
                   </Table.Body>
@@ -89,7 +121,7 @@ const IndexPage = () => {
                   </Button.Icon>
                </header>
                <main tw="px-3">
-                  <Form close={toggle} />
+                  <Form close={toggle} transaction={edit} setEdit={setEdit} />
                </main>
             </section>
          )}

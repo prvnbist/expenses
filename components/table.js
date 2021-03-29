@@ -35,14 +35,14 @@ const Styles = {
    ),
    Cell: styled.td(
       ({ is_right }) => css`
-         ${tw`px-2 font-light h-10`}
+         ${tw`px-3 font-light h-12 whitespace-nowrap`}
          ${is_right && tw`text-right`}
       `
    ),
    HCell: styled.th(
       ({ is_right }) =>
          css`
-            ${tw`bg-gray-800 sticky top-0 h-8 px-2 text-left text-sm text-gray-500 uppercase font-medium tracking-wider`}
+            ${tw`bg-gray-800 sticky top-0 h-8 px-3 text-left text-sm text-gray-500 uppercase font-medium tracking-wider whitespace-nowrap`}
             ${is_right && tw`text-right`}
          `
    ),

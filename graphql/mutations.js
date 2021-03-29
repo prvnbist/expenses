@@ -16,3 +16,11 @@ export const INSERT_TRANSACTION = gql`
       }
    }
 `
+
+export const DELETE_TRANSACTION = gql`
+   mutation delete_transaction($id: uuid!) {
+      delete_transaction: delete_transactions_by_pk(id: $id) {
+         id
+      }
+   }
+`

@@ -18,7 +18,10 @@ export const Button = {
 
 const Styles = {
    Group: tw.section`flex flex-wrap items-center gap-3`,
-   Icon: tw.button`h-10 w-10 flex flex-shrink-0 items-center justify-center rounded-lg bg-gray-700 hover:(bg-gray-600)`,
+   Icon: styled.button`
+      ${tw`flex flex-shrink-0 items-center justify-center rounded-lg bg-gray-600 hover:(bg-gray-500)`}
+      ${({ is_small }) => (is_small ? tw`h-8 w-8` : tw`h-10 w-10`)}
+   `,
    Text: styled.button`
       ${tw`h-10 px-4 flex flex-shrink-0 items-center justify-center rounded-lg bg-gray-700 hover:(bg-gray-600)`}
       &[disabled] {
