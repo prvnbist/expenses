@@ -12,7 +12,8 @@ const IndexPage = () => {
    const { methods } = useConfig()
    const [open, toggle] = React.useState(false)
    const [edit, setEdit] = React.useState({})
-   const [variables] = React.useState({
+   const [keyword, setKeyword] = React.useState('')
+   const [variables, setVariables] = React.useState({
       order_by: { date: 'desc', title: 'asc' },
    })
    const {
@@ -28,6 +29,20 @@ const IndexPage = () => {
       toggle(true)
    }
 
+   const onSearch = keyword => {
+      setVariables(existing => ({
+         ...existing,
+         where: {
+            _or: [
+               { title: { _ilike: `%${keyword}%` } },
+               { account: { title: { _ilike: `%${keyword}%` } } },
+               { payment_method: { title: { _ilike: `%${keyword}%` } } },
+               { category: { title: { _ilike: `%${keyword}%` } } },
+            ],
+         },
+      }))
+   }
+
    return (
       <Layout>
          <header tw="flex items-center justify-between">
@@ -36,6 +51,22 @@ const IndexPage = () => {
                <Icon.Add tw="stroke-current" />
             </Button.Icon>
          </header>
+         <section tw="mt-3 mb-2">
+            <fieldset>
+               <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  value={keyword}
+                  placeholder="Enter your search"
+                  onChange={e => {
+                     setKeyword(e.target.value)
+                     onSearch(e.target.value)
+                  }}
+                  tw="bg-gray-700 h-10 rounded px-2"
+               />
+            </fieldset>
+         </section>
          <section tw="overflow-y-auto" style={{ maxHeight: '520px' }}>
             {loading ? (
                <TableLoader />
