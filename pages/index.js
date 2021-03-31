@@ -49,6 +49,7 @@ const IndexPage = () => {
                         <Table.HCell is_right>Date</Table.HCell>
                         <Table.HCell>Category</Table.HCell>
                         <Table.HCell>Payment Method</Table.HCell>
+                        <Table.HCell>Account</Table.HCell>
                         <Table.HCell>Actions</Table.HCell>
                      </Table.Row>
                   </Table.Head>
@@ -86,6 +87,9 @@ const IndexPage = () => {
                               {transaction.payment_method?.title || ''}
                            </Table.Cell>
                            <Table.Cell>
+                              {transaction.account?.title || ''}
+                           </Table.Cell>
+                           <Table.Cell>
                               <Button.Group>
                                  <Button.Icon
                                     is_small
@@ -116,7 +120,12 @@ const IndexPage = () => {
             <section tw="absolute left-0 top-0 bottom-0 z-10 bg-gray-800 shadow-xl w-screen md:w-6/12 lg:w-5/12 xl:w-4/12">
                <header tw="flex items-center justify-between px-3 h-16 border-b border-gray-700">
                   <h1 tw="text-xl">Add Transactions</h1>
-                  <Button.Icon onClick={() => toggle(!open)}>
+                  <Button.Icon
+                     onClick={() => {
+                        setEdit({})
+                        toggle(!open)
+                     }}
+                  >
                      <Icon.Close tw="stroke-current" />
                   </Button.Icon>
                </header>

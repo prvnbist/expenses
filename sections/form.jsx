@@ -2,7 +2,12 @@ import tw, { styled } from 'twin.macro'
 import { useMutation, useSubscription } from '@apollo/client'
 
 import { Button } from '../components'
-import { CATEGORIES, INSERT_TRANSACTION, PAYMENT_METHODS } from '../graphql'
+import {
+   ACCOUNTS,
+   CATEGORIES,
+   INSERT_TRANSACTION,
+   PAYMENT_METHODS,
+} from '../graphql'
 
 const Styles = {
    Fieldset: styled.fieldset`
@@ -19,22 +24,27 @@ const Styles = {
    `,
 }
 
-export const Form = ({ close, transaction = {} }) => {
+export const Form = ({ close, setEdit, transaction = {} }) => {
    const [form, setForm] = React.useState({
       title: '',
       amount: '',
       type: 'expense',
       date: '',
+      account_id: '',
       category_id: '',
       payment_method_id: '',
    })
    const [upsert, { loading }] = useMutation(INSERT_TRANSACTION, {
-      onCompleted: () => close(false),
+      onCompleted: () => {
+         setEdit({})
+         close(false)
+      },
       onError: error => {
          console.log('insert -> error -> ', error)
       },
    })
    const { data: { categories = [] } = {} } = useSubscription(CATEGORIES)
+   const { data: { accounts = [] } = {} } = useSubscription(ACCOUNTS)
    const { data: { payment_methods = [] } = {} } = useSubscription(
       PAYMENT_METHODS
    )
@@ -44,8 +54,19 @@ export const Form = ({ close, transaction = {} }) => {
          typeof transaction === 'object' &&
          Object.keys(transaction).length > 0
       ) {
-         const { __typename, payment_method, category, ...rest } = transaction
-         setForm(existing => ({ ...existing, ...rest }))
+         const {
+            __typename,
+            account,
+            payment_method,
+            category,
+            date,
+            ...rest
+         } = transaction
+         setForm(existing => ({
+            ...existing,
+            ...rest,
+            date: date.slice(0, 10),
+         }))
       }
    }, [transaction])
 
@@ -54,7 +75,8 @@ export const Form = ({ close, transaction = {} }) => {
       form.amount > 0 &&
       form.type &&
       form.date &&
-      form.category_id
+      form.category_id &&
+      form.account_id
 
    const handleSubmit = () => {
       if (!isFormValid) return
@@ -75,6 +97,7 @@ export const Form = ({ close, transaction = {} }) => {
                'amount',
                'category_id',
                'payment_method_id',
+               'account_id',
             ],
          },
       })
@@ -179,6 +202,21 @@ export const Form = ({ close, transaction = {} }) => {
                </Styles.Select>
             </Styles.Fieldset>
          )}
+         <Styles.Fieldset>
+            <Styles.Label htmlFor="account">Account</Styles.Label>
+            <Styles.Select
+               name="account_id"
+               id="account_id"
+               value={form.account_id}
+               onChange={e => handleChange(e.target.name, e.target.value)}
+            >
+               {accounts.map(account => (
+                  <option key={account.id} value={account.id}>
+                     {account.title}
+                  </option>
+               ))}
+            </Styles.Select>
+         </Styles.Fieldset>
          <div tw="h-4" />
          <Button.Text
             is_loading={loading}

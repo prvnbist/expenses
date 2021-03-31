@@ -56,6 +56,11 @@ export const TRANSACTIONS = gql`
          type
          title
          amount
+         account_id
+         account {
+            id
+            title
+         }
          category_id
          category {
             id
@@ -180,6 +185,15 @@ export const INCOMES_BY_YEARS = gql`
             count
             amount
          }
+      }
+   }
+`
+
+export const ACCOUNTS = gql`
+   subscription accounts {
+      accounts {
+         id
+         title
       }
    }
 `
