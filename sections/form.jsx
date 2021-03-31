@@ -29,7 +29,7 @@ export const Form = ({ close, setEdit, transaction = {} }) => {
       title: '',
       amount: '',
       type: 'expense',
-      date: '',
+      date: new Date().toISOString().slice(0, 10),
       account_id: '',
       category_id: '',
       payment_method_id: '',
@@ -50,10 +50,7 @@ export const Form = ({ close, setEdit, transaction = {} }) => {
    )
 
    React.useEffect(() => {
-      if (
-         typeof transaction === 'object' &&
-         Object.keys(transaction).length > 0
-      ) {
+      if (Object.keys(transaction).length > 0) {
          const {
             __typename,
             account,
@@ -173,6 +170,7 @@ export const Form = ({ close, setEdit, transaction = {} }) => {
                   value={form.category_id}
                   onChange={e => handleChange(e.target.name, e.target.value)}
                >
+                  <option value="">Select a category</option>
                   {categories
                      .filter(node => node.type === form.type)
                      .map(category => (
@@ -194,6 +192,7 @@ export const Form = ({ close, setEdit, transaction = {} }) => {
                   value={form.payment_method_id}
                   onChange={e => handleChange(e.target.name, e.target.value)}
                >
+                  <option value="">Select a payment method</option>
                   {payment_methods.map(payment_method => (
                      <option key={payment_method.id} value={payment_method.id}>
                         {payment_method.title}
@@ -210,6 +209,7 @@ export const Form = ({ close, setEdit, transaction = {} }) => {
                value={form.account_id}
                onChange={e => handleChange(e.target.name, e.target.value)}
             >
+               <option value="">Select an account</option>
                {accounts.map(account => (
                   <option key={account.id} value={account.id}>
                      {account.title}
