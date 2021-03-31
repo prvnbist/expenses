@@ -54,18 +54,19 @@ export const Form = ({ close, transaction = {} }) => {
       form.amount > 0 &&
       form.type &&
       form.date &&
-      form.category_id &&
-      form.payment_method_id
+      form.category_id
 
    const handleSubmit = () => {
       if (!isFormValid) return
 
+      const { payment_method_id, ...rest } = form
       upsert({
          variables: {
             object: {
-               ...form,
+               ...rest,
                amount: Number(form.amount),
                date: new Date(form.date).toISOString(),
+               ...(form.type === 'expense' && { payment_method_id }),
             },
             update_columns: [
                'date',
@@ -159,21 +160,25 @@ export const Form = ({ close, transaction = {} }) => {
                </Styles.Select>
             </Styles.Fieldset>
          </section>
-         <Styles.Fieldset>
-            <Styles.Label htmlFor="payment_method">Payment Method</Styles.Label>
-            <Styles.Select
-               name="payment_method_id"
-               id="payment_method_id"
-               value={form.payment_method_id}
-               onChange={e => handleChange(e.target.name, e.target.value)}
-            >
-               {payment_methods.map(payment_method => (
-                  <option key={payment_method.id} value={payment_method.id}>
-                     {payment_method.title}
-                  </option>
-               ))}
-            </Styles.Select>
-         </Styles.Fieldset>
+         {form.type === 'expense' && (
+            <Styles.Fieldset>
+               <Styles.Label htmlFor="payment_method">
+                  Payment Method
+               </Styles.Label>
+               <Styles.Select
+                  name="payment_method_id"
+                  id="payment_method_id"
+                  value={form.payment_method_id}
+                  onChange={e => handleChange(e.target.name, e.target.value)}
+               >
+                  {payment_methods.map(payment_method => (
+                     <option key={payment_method.id} value={payment_method.id}>
+                        {payment_method.title}
+                     </option>
+                  ))}
+               </Styles.Select>
+            </Styles.Fieldset>
+         )}
          <div tw="h-4" />
          <Button.Text
             is_loading={loading}
