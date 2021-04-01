@@ -75,6 +75,16 @@ export const TRANSACTIONS = gql`
    }
 `
 
+export const TRANSACTIONS_AGGREGATE = gql`
+   subscription transactions_aggregate {
+      transactions_aggregate {
+         aggregate {
+            count
+         }
+      }
+   }
+`
+
 export const EXPENSES_BY_CATEGORIES = gql`
    subscription expenses_by_categories {
       expenses_by_categories: expenses_by_category_aggregate(
