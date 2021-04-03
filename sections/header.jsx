@@ -1,52 +1,46 @@
-import React from 'react'
-import tw from 'twin.macro'
-import { useSubscription } from '@apollo/react-hooks'
+import Link from 'next/link'
+import tw, { styled } from 'twin.macro'
+import { useRouter } from 'next/router'
 
-import { useConfig } from '../context'
-import { Stat, Tab } from '../components'
-import { TOTAL_EXPENSES, TOTAL_EARNINGS } from '../graphql'
-
-export const Header = () => {
-   const { methods } = useConfig()
-   const { data: expensesData, loading: expensesLoading } = useSubscription(
-      TOTAL_EXPENSES
-   )
-   const { data: earningsData, loading: earningsLoading } = useSubscription(
-      TOTAL_EARNINGS
-   )
+const Header = () => {
+   const router = useRouter()
    return (
-      <header>
-         <section tw="grid gap-3 sm:grid-cols-2 lg:flex lg:space-x-3 mb-6">
-            <Stat type="expenses" label="Total Expenses">
-               {!expensesLoading
-                  ? methods.format_currency(
-                       expensesData?.total_expenses.aggregate.sum.amount || 0
-                    )
-                  : methods.format_currency(0)}
-            </Stat>
-            <Stat type="earnings" label="Total Earning">
-               {!earningsLoading
-                  ? methods.format_currency(
-                       earningsData?.total_earnings.aggregate.sum.amount || 0
-                    )
-                  : methods.format_currency(0)}
-            </Stat>
-            <Stat type="neutral" label="Balance">
-               {!expensesLoading && !earningsLoading
-                  ? methods.format_currency(
-                       (earningsData?.total_earnings.aggregate.sum.amount ||
-                          0) -
-                          (expensesData?.total_expenses.aggregate.sum.amount ||
-                             0)
-                    )
-                  : methods.format_currency(0)}
-            </Stat>
-         </section>
-         <div tw="rounded-lg border">
-            <Tab href="/expenses">Expenses</Tab>
-            <Tab href="/earnings">Earning</Tab>
-            <Tab href="/analytics">Analytics</Tab>
-         </div>
-      </header>
+      <Styles.Header>
+         <Styles.NavItems>
+            <Route
+               path="/"
+               title="Transactions"
+               is_active={router.asPath === '/'}
+            />
+            <Route
+               path="/analytics"
+               title="Analytics"
+               is_active={router.asPath === '/analytics'}
+            />
+         </Styles.NavItems>
+      </Styles.Header>
    )
+}
+
+export default Header
+
+const Route = ({ path, title, is_active }) => (
+   <li>
+      <Link href={path}>
+         <Styles.NavLink className={is_active ? 'active' : ''}>
+            {title}
+         </Styles.NavLink>
+      </Link>
+   </li>
+)
+
+const Styles = {
+   Header: tw.header`z-10 bg-gray-800 sticky top-0 flex items-center justify-center h-auto p-2 border-b border-gray-700`,
+   NavItems: tw.ul`h-full flex items-center gap-3 flex-wrap`,
+   NavLink: styled.a`
+      ${tw`cursor-pointer inline-flex items-center justify-center px-4 h-10 rounded-lg`}
+      &.active {
+         ${tw`bg-indigo-700`}
+      }
+   `,
 }

@@ -1,233 +1,144 @@
-import React from 'react'
-import App from 'next/app'
+import {
+   split,
+   ApolloClient,
+   ApolloLink,
+   InMemoryCache,
+   createHttpLink,
+   ApolloProvider,
+} from '@apollo/client'
 import tw from 'twin.macro'
-import styled from '@emotion/styled'
-import { ToastProvider } from 'react-toast-notifications'
-
-import '../global.css'
-import 'tailwindcss/dist/base.min.css'
-
 import fetch from 'node-fetch'
-import { ApolloClient } from 'apollo-client'
-import { ApolloProvider } from '@apollo/react-hooks'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { setContext } from 'apollo-link-context'
-import { HttpLink } from 'apollo-link-http'
-import { split } from 'apollo-link'
-import { WebSocketLink } from 'apollo-link-ws'
-import { getMainDefinition } from 'apollo-utilities'
+import { getMainDefinition } from '@apollo/client/utilities'
+import { WebSocketLink } from '@apollo/client/link/ws'
+import { SubscriptionClient } from 'subscriptions-transport-ws'
 
-import { ConfigProvider, FormProvider } from '../context'
+import '../styles/global.css'
+import { ConfigProvider } from '../context'
+import GlobalStyles from '../styles/global'
+import { Button } from '../components'
 
-const authLink = setContext((_, { headers }) => {
-   return {
-      headers: {
-         ...headers,
-         'x-hasura-admin-secret': `${process.env.HASURA_KEY}`,
-      },
-   }
-})
-
-const wsLink = process.browser
-   ? new WebSocketLink({
-        uri: process.env.WS_GRAPHQL_ENDPOINT,
-        options: {
+const wssLink = process.browser
+   ? new WebSocketLink(
+        new SubscriptionClient(`${process.env.WS_GRAPHQL_ENDPOINT}`, {
            reconnect: true,
            connectionParams: {
               headers: {
                  'x-hasura-admin-secret': `${process.env.HASURA_KEY}`,
               },
            },
-        },
-     })
+        })
+     )
    : null
 
-const httpLink = new HttpLink({
-   fetch,
-   uri: process.env.GRAPHQL_ENDPOINT,
+const authLink = new ApolloLink((operation, forward) => {
+   operation.setContext(({ headers }) => ({
+      headers: {
+         ...headers,
+         'x-hasura-admin-secret': `${process.env.HASURA_KEY}`,
+      },
+   }))
+   return forward(operation)
 })
 
-const link = process.browser
+const httpLink = createHttpLink({
+   fetch,
+   uri: `${process.env.GRAPHQL_ENDPOINT}`,
+})
+
+const splitLink = process.browser
    ? split(
         ({ query }) => {
-           const { kind, operation } = getMainDefinition(query)
-           return kind === 'OperationDefinition' && operation === 'subscription'
+           const definition = getMainDefinition(query)
+           return (
+              definition.kind === 'OperationDefinition' &&
+              definition.operation === 'subscription'
+           )
         },
-        wsLink,
+        wssLink,
         authLink.concat(httpLink)
      )
    : authLink.concat(httpLink)
 
 const client = new ApolloClient({
-   link,
+   link: splitLink,
    cache: new InMemoryCache(),
 })
 
-class MyApp extends App {
-   constructor(props) {
-      super(props)
-      this.state = {
-         code: '',
-         error: null,
-         loading: true,
-         storeLocally: false,
-         isAuthenticated: false,
-      }
-   }
+const App = ({ Component, pageProps }) => {
+   const [authenticated, setAuthenticated] = React.useState(false)
 
-   componentDidMount() {
-      const access_code = localStorage.getItem('access_code')
-      if (access_code === process.env.HASURA_KEY) {
-         this.setState({ code: '', isAuthenticated: true })
+   React.useEffect(() => {
+      const secret = localStorage.getItem('secret')
+      if (secret && secret === process.env.HASURA_KEY) {
+         setAuthenticated(true)
       }
-      this.setState({ loading: false })
-   }
-
-   verifyCode = () => {
-      if (this.state.code === process.env.HASURA_KEY) {
-         this.setState({ code: '', isAuthenticated: true })
-         if (this.state.storeLocally) {
-            localStorage.setItem('access_code', this.state.code)
-         }
-      } else {
-         this.setState({ error: 'Incorrect code, please try again!' })
-      }
-   }
-
-   render() {
-      const { Component, pageProps } = this.props
-      if (this.state.loading)
-         return (
-            <div tw="h-screen w-screen flex items-center justify-center">
-               <Loader>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-               </Loader>
-            </div>
-         )
-      if (this.state.isAuthenticated) {
-         return (
-            <ToastProvider
-               autoDismiss
-               placement="top-center"
-               autoDismissTimeout={4000}
-            >
-               <ApolloProvider client={client}>
-                  <ConfigProvider>
-                     <FormProvider>
-                        <Component {...pageProps} />
-                     </FormProvider>
-                  </ConfigProvider>
-               </ApolloProvider>
-            </ToastProvider>
-         )
-      }
-      return (
-         <div tw="h-screen bg-gray-100 flex items-center justify-center">
-            <section tw="flex flex-col bg-white border p-3 rounded">
-               <h2 tw="text-center text-gray-800 text-xl mb-3">
-                  Authentication
-               </h2>
-               <input
-                  type="password"
-                  value={this.state.value}
-                  placeholder="Enter the secret code"
-                  tw="h-10 rounded px-3 bg-gray-200"
-                  onChange={e =>
-                     this.setState({ error: null, code: e.target.value })
-                  }
-               />
-               {this.state.error && (
-                  <span tw="text-red-600">{this.state.error}</span>
-               )}
-               <button
-                  onClick={() => this.verifyCode()}
-                  disabled={this.state.code.length === 0}
-                  css={[
-                     tw`mt-2 px-3 h-10 rounded text-white uppercase tracking-wider`,
-                     this.state.code.length > 0
-                        ? tw`bg-teal-600`
-                        : tw`bg-teal-300 cursor-not-allowed`,
-                  ]}
-               >
-                  Submit
-               </button>
-               <fieldset tw="mt-2">
-                  <input
-                     tw="mr-2"
-                     type="checkbox"
-                     id="store_locally"
-                     name="store_locally"
-                     checked={this.state.storeLocally}
-                     onChange={() =>
-                        this.setState({
-                           storeLocally: !this.state.storeLocally,
-                        })
-                     }
-                  />
-                  <label htmlFor="store_locally">Remember Me</label>
-               </fieldset>
-            </section>
-         </div>
-      )
-   }
+   }, [])
+   return (
+      <ApolloProvider client={client}>
+         <GlobalStyles />
+         <ConfigProvider>
+            {authenticated ? (
+               <Component {...pageProps} />
+            ) : (
+               <Login setAuthenticated={setAuthenticated} />
+            )}
+         </ConfigProvider>
+      </ApolloProvider>
+   )
 }
 
-export default MyApp
+export default App
 
-const Loader = styled.div`
-   position: relative;
-   height: 24px;
-   width: 78px;
-   div {
-      position: absolute;
-      top: 5px;
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: teal;
-      animation-timing-function: cubic-bezier(0, 1, 1, 0);
-   }
-   div:nth-child(1) {
-      left: 8px;
-      animation: lds-ellipsis1 0.6s infinite;
-   }
-   div:nth-child(2) {
-      left: 8px;
-      animation: lds-ellipsis2 0.6s infinite;
-   }
-   div:nth-child(3) {
-      left: 32px;
-      animation: lds-ellipsis2 0.6s infinite;
-   }
-   div:nth-child(4) {
-      left: 56px;
-      animation: lds-ellipsis3 0.6s infinite;
-   }
-   @keyframes lds-ellipsis1 {
-      0% {
-         transform: scale(0);
-      }
-      100% {
-         transform: scale(1);
+const Login = ({ setAuthenticated }) => {
+   const [key, setKey] = React.useState('')
+   const [saveKey, setSaveKey] = React.useState(false)
+   const [error, setError] = React.useState('')
+
+   const onSubmit = () => {
+      if (!process.browser) return
+
+      if (process.env.HASURA_KEY === key) {
+         saveKey && localStorage.setItem('secret', key)
+         setAuthenticated(true)
+      } else {
+         setError('Incorrect key provided!')
       }
    }
-   @keyframes lds-ellipsis3 {
-      0% {
-         transform: scale(1);
-      }
-      100% {
-         transform: scale(0);
-      }
-   }
-   @keyframes lds-ellipsis2 {
-      0% {
-         transform: translate(0, 0);
-      }
-      100% {
-         transform: translate(24px, 0);
-      }
-   }
-`
+   return (
+      <div tw="flex items-center justify-center h-screen">
+         <section tw="bg-gray-900 py-3 px-4 rounded">
+            <fieldset tw="flex flex-col space-y-1 mt-2 flex-1">
+               <label
+                  htmlFor="key"
+                  tw="text-sm text-gray-500 uppercase font-medium tracking-wider"
+               >
+                  Key
+               </label>
+               <input
+                  value={key}
+                  type="password"
+                  placeholder="Enter the key"
+                  tw="bg-gray-700 h-10 rounded px-2"
+                  onChange={e => setKey(e.target.value)}
+               />
+            </fieldset>
+            <fieldset tw="my-3">
+               <input
+                  type="checkbox"
+                  id="remember"
+                  name="remember"
+                  value={saveKey}
+                  onChange={() => setSaveKey(!saveKey)}
+               />
+               <label htmlFor="remember" tw="ml-2 text-gray-500 ">
+                  Remember in this browser
+               </label>
+            </fieldset>
+            <Button.Text tw="w-full" onClick={onSubmit}>
+               Submit
+            </Button.Text>
+            <span tw="block pt-3 text-red-500">{error}</span>
+         </section>
+      </div>
+   )
+}

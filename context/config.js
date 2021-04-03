@@ -1,6 +1,5 @@
-import React from 'react'
-import moment from 'moment'
-import { useSubscription } from '@apollo/react-hooks'
+import { format } from 'date-fns'
+import { useSubscription } from '@apollo/client'
 
 import { SETTINGS } from '../graphql'
 
@@ -8,7 +7,7 @@ const ConfigContext = React.createContext()
 
 const initialState = {
    currency: 'INR',
-   date: 'MMM DD, YYYY',
+   date: 'MMM dd, yyyy',
 }
 
 const reducers = (state, { type, payload }) => {
@@ -52,7 +51,7 @@ export const ConfigProvider = ({ children }) => {
          currency: state.currency,
       }).format(amount)
 
-   const format_date = date => moment(date).format(state.date)
+   const format_date = date => format(new Date(date), state.date)
 
    return (
       <ConfigContext.Provider

@@ -1,5 +1,6 @@
 import React from 'react'
-export const EditIcon = ({ size = 18, ...props }) => (
+
+export const Close = ({ size = 18, ...props }) => (
    <svg
       xmlns="http://www.w3.org/2000/svg"
       width={size}
@@ -11,6 +12,7 @@ export const EditIcon = ({ size = 18, ...props }) => (
       strokeLinejoin="round"
       {...props}
    >
-      <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
    </svg>
 )

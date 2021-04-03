@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const DeleteIcon = ({ size = 18, ...props }) => (
+export const Delete = ({ size = 18, ...props }) => (
    <svg
       xmlns="http://www.w3.org/2000/svg"
       width={size}

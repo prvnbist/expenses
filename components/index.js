@@ -1,4 +1,4 @@
-export * from './tab'
-export * from './stat'
+export * from './button'
 export * from './table'
-export * from './form'
+export * from './loader'
+export * from './tableLoader'
