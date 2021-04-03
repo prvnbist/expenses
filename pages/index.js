@@ -103,47 +103,17 @@ const IndexPage = () => {
             </fieldset>
          </section>
          {!loading && !loading_aggregate && (
-            <section tw="mt-3 mb-2 flex items-center justify-between">
-               <span tw="flex items-center">
-                  Page{' '}
-                  <fieldset tw="mx-2">
-                     <input
-                        type="text"
-                        onChange={goto}
-                        id="current_page"
-                        name="current_page"
-                        placeholder="Ex. 9"
-                        value={Math.ceil(variables.offset / variables.limit)}
-                        tw="text-center w-10 bg-gray-700 h-10 rounded px-2"
-                     />
-                  </fieldset>
-                  of{' '}
-                  {Math.ceil(
-                     transactions_aggregate?.aggregate?.count / variables.limit
-                  ) || 0}
-               </span>
-               <Button.Group>
-                  <Button.Text
-                     onClick={prevPage}
-                     disabled={variables.offset - 10 < 0}
-                  >
-                     Prev
-                  </Button.Text>
-                  <Button.Text
-                     onClick={nextPage}
-                     disabled={
-                        variables.offset + 10 >
-                        transactions_aggregate?.aggregate?.count
-                     }
-                  >
-                     Next
-                  </Button.Text>
-               </Button.Group>
-            </section>
+            <Filters
+               goto={goto}
+               nextPage={nextPage}
+               prevPage={prevPage}
+               variables={variables}
+               transactions_aggregate={transactions_aggregate}
+            />
          )}
          <section
-            tw="hidden md:block overflow-y-auto"
             style={{ maxHeight: '520px' }}
+            tw="hidden md:block overflow-y-auto"
          >
             {loading ? (
                <TableLoader />
@@ -169,61 +139,16 @@ const IndexPage = () => {
             )}
          </section>
          {!loading && !loading_aggregate && (
-            <section tw="mt-3 mb-2 flex items-center justify-between">
-               <span tw="flex items-center">
-                  Page{' '}
-                  <fieldset tw="mx-2">
-                     <input
-                        type="text"
-                        onChange={goto}
-                        id="current_page"
-                        name="current_page"
-                        placeholder="Ex. 9"
-                        value={Math.ceil(variables.offset / variables.limit)}
-                        tw="text-center w-10 bg-gray-700 h-10 rounded px-2"
-                     />
-                  </fieldset>
-                  of{' '}
-                  {Math.ceil(
-                     transactions_aggregate?.aggregate?.count / variables.limit
-                  ) || 0}
-               </span>
-               <Button.Group>
-                  <Button.Text
-                     onClick={prevPage}
-                     disabled={variables.offset - 10 < 0}
-                  >
-                     Prev
-                  </Button.Text>
-                  <Button.Text
-                     onClick={nextPage}
-                     disabled={
-                        variables.offset + 10 >
-                        transactions_aggregate?.aggregate?.count
-                     }
-                  >
-                     Next
-                  </Button.Text>
-               </Button.Group>
-            </section>
+            <Filters
+               goto={goto}
+               nextPage={nextPage}
+               prevPage={prevPage}
+               variables={variables}
+               transactions_aggregate={transactions_aggregate}
+            />
          )}
          {open && (
-            <section tw="fixed left-0 top-0 bottom-0 z-10 bg-gray-800 shadow-xl w-screen md:w-6/12 lg:w-5/12 xl:w-4/12">
-               <header tw="flex items-center justify-between px-3 h-16 border-b border-gray-700">
-                  <h1 tw="text-xl">Add Transactions</h1>
-                  <Button.Icon
-                     onClick={() => {
-                        setEdit({})
-                        toggle(!open)
-                     }}
-                  >
-                     <Icon.Close tw="stroke-current" />
-                  </Button.Icon>
-               </header>
-               <main tw="px-3">
-                  <Form close={toggle} transaction={edit} setEdit={setEdit} />
-               </main>
-            </section>
+            <AddTransaction edit={edit} setEdit={setEdit} toggle={toggle} />
          )}
       </Layout>
    )
@@ -365,5 +290,74 @@ const CardView = ({ transactions, methods, remove, update }) => {
             </li>
          ))}
       </ul>
+   )
+}
+
+const Filters = ({
+   goto,
+   variables,
+   transactions_aggregate,
+   nextPage,
+   prevPage,
+}) => {
+   return (
+      <section tw="mt-3 mb-2 flex items-center justify-between">
+         <span tw="flex items-center">
+            Page{' '}
+            <fieldset tw="mx-2">
+               <input
+                  type="text"
+                  onChange={goto}
+                  id="current_page"
+                  name="current_page"
+                  placeholder="Ex. 9"
+                  value={Math.ceil(variables.offset / variables.limit)}
+                  tw="text-center w-10 bg-gray-700 h-10 rounded px-2"
+               />
+            </fieldset>
+            of{' '}
+            {Math.ceil(
+               transactions_aggregate?.aggregate?.count / variables.limit
+            ) || 0}
+         </span>
+         <Button.Group>
+            <Button.Text
+               onClick={prevPage}
+               disabled={variables.offset - 10 < 0}
+            >
+               Prev
+            </Button.Text>
+            <Button.Text
+               onClick={nextPage}
+               disabled={
+                  variables.offset + 10 >
+                  transactions_aggregate?.aggregate?.count
+               }
+            >
+               Next
+            </Button.Text>
+         </Button.Group>
+      </section>
+   )
+}
+
+const AddTransaction = ({ edit, setEdit, toggle }) => {
+   return (
+      <section tw="fixed left-0 top-0 bottom-0 z-10 bg-gray-800 shadow-xl w-screen md:w-6/12 lg:w-5/12 xl:w-4/12">
+         <header tw="flex items-center justify-between px-3 h-16 border-b border-gray-700">
+            <h1 tw="text-xl">Add Transactions</h1>
+            <Button.Icon
+               onClick={() => {
+                  setEdit({})
+                  toggle(!open)
+               }}
+            >
+               <Icon.Close tw="stroke-current" />
+            </Button.Icon>
+         </header>
+         <main tw="px-3">
+            <Form close={toggle} transaction={edit} setEdit={setEdit} />
+         </main>
+      </section>
    )
 }
