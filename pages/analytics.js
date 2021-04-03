@@ -38,27 +38,27 @@ const Analytics = () => {
             <Metrics methods={methods} />
          </header>
          <Styles.Main>
-            <section tw="bg-gray-900 px-3 py-3 rounded">
+            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
                <h2 tw="text-2xl mb-2">Expenses By Categories</h2>
                <ExpensesByCategories methods={methods} />
             </section>
-            <section tw="bg-gray-900 px-3 py-3 rounded">
+            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
                <h2 tw="text-2xl mb-2">Expenses By Years</h2>
                <ExpensesByYears methods={methods} />
             </section>
-            <section tw="bg-gray-900 px-3 py-3 rounded">
+            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
                <h2 tw="text-2xl mb-2">Expenses By Months</h2>
                <ExpensesByMonths methods={methods} />
             </section>
-            <section tw="bg-gray-900 px-3 py-3 rounded">
+            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
                <h2 tw="text-2xl mb-2">Incomes By Categories</h2>
                <IncomesByCategories methods={methods} />
             </section>
-            <section tw="bg-gray-900 px-3 py-3 rounded">
+            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
                <h2 tw="text-2xl mb-2">Incomes By Years</h2>
                <IncomesByYears methods={methods} />
             </section>
-            <section tw="bg-gray-900 px-3 py-3 rounded">
+            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
                <h2 tw="text-2xl mb-2">Incomes By Months</h2>
                <IncomesByMonths methods={methods} />
             </section>
