@@ -141,84 +141,31 @@ const IndexPage = () => {
                </Button.Group>
             </section>
          )}
-         <section tw="overflow-y-auto" style={{ maxHeight: '520px' }}>
+         <section
+            tw="hidden md:block overflow-y-auto"
+            style={{ maxHeight: '520px' }}
+         >
             {loading ? (
                <TableLoader />
             ) : (
-               <Table>
-                  <Table.Head>
-                     <Table.Row>
-                        <Table.HCell>Title</Table.HCell>
-                        <Table.HCell is_right>Credit</Table.HCell>
-                        <Table.HCell is_right>Debit</Table.HCell>
-                        <Table.HCell is_right>Date</Table.HCell>
-                        <Table.HCell>Category</Table.HCell>
-                        <Table.HCell>Payment Method</Table.HCell>
-                        <Table.HCell>Account</Table.HCell>
-                        <Table.HCell>Actions</Table.HCell>
-                     </Table.Row>
-                  </Table.Head>
-                  <Table.Body>
-                     {transactions.map((transaction, index) => (
-                        <Table.Row key={transaction.id} odd={index % 2 === 0}>
-                           <Table.Cell>{transaction.title}</Table.Cell>
-                           <Table.Cell is_right>
-                              <span tw="font-medium text-indigo-400">
-                                 {transaction.type === 'income'
-                                    ? '+ ' +
-                                      methods.format_currency(
-                                         Number(transaction.amount) || 0
-                                      )
-                                    : ''}
-                              </span>
-                           </Table.Cell>
-                           <Table.Cell is_right>
-                              <span tw="font-medium text-red-400">
-                                 {transaction.type === 'expense'
-                                    ? '- ' +
-                                      methods.format_currency(
-                                         Number(transaction.amount) || 0
-                                      )
-                                    : ''}
-                              </span>
-                           </Table.Cell>
-                           <Table.Cell is_right>
-                              {methods.format_date(transaction.date)}
-                           </Table.Cell>
-                           <Table.Cell>
-                              {transaction.category?.title || ''}
-                           </Table.Cell>
-                           <Table.Cell>
-                              {transaction.payment_method?.title || ''}
-                           </Table.Cell>
-                           <Table.Cell>
-                              {transaction.account?.title || ''}
-                           </Table.Cell>
-                           <Table.Cell>
-                              <Button.Group>
-                                 <Button.Icon
-                                    is_small
-                                    onClick={() => update(transaction)}
-                                 >
-                                    <Icon.Edit size={16} tw="stroke-current" />
-                                 </Button.Icon>
-                                 <Button.Icon is_small>
-                                    <Icon.Delete
-                                       size={16}
-                                       tw="stroke-current"
-                                       onClick={() =>
-                                          remove({
-                                             variables: { id: transaction.id },
-                                          })
-                                       }
-                                    />
-                                 </Button.Icon>
-                              </Button.Group>
-                           </Table.Cell>
-                        </Table.Row>
-                     ))}
-                  </Table.Body>
-               </Table>
+               <TableView
+                  remove={remove}
+                  update={update}
+                  methods={methods}
+                  transactions={transactions}
+               />
+            )}
+         </section>
+         <section tw="md:hidden">
+            {loading ? (
+               <div>loading...</div>
+            ) : (
+               <CardView
+                  remove={remove}
+                  update={update}
+                  methods={methods}
+                  transactions={transactions}
+               />
             )}
          </section>
          {!loading && !loading_aggregate && (
@@ -283,3 +230,140 @@ const IndexPage = () => {
 }
 
 export default IndexPage
+
+const TableView = ({ transactions, methods, remove, update }) => {
+   return (
+      <Table>
+         <Table.Head>
+            <Table.Row>
+               <Table.HCell>Title</Table.HCell>
+               <Table.HCell is_right>Credit</Table.HCell>
+               <Table.HCell is_right>Debit</Table.HCell>
+               <Table.HCell is_right>Date</Table.HCell>
+               <Table.HCell>Category</Table.HCell>
+               <Table.HCell>Payment Method</Table.HCell>
+               <Table.HCell>Account</Table.HCell>
+               <Table.HCell>Actions</Table.HCell>
+            </Table.Row>
+         </Table.Head>
+         <Table.Body>
+            {transactions.map((transaction, index) => (
+               <Table.Row key={transaction.id} odd={index % 2 === 0}>
+                  <Table.Cell>{transaction.title}</Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-indigo-400">
+                        {transaction.type === 'income'
+                           ? '+ ' +
+                             methods.format_currency(
+                                Number(transaction.amount) || 0
+                             )
+                           : ''}
+                     </span>
+                  </Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-red-400">
+                        {transaction.type === 'expense'
+                           ? '- ' +
+                             methods.format_currency(
+                                Number(transaction.amount) || 0
+                             )
+                           : ''}
+                     </span>
+                  </Table.Cell>
+                  <Table.Cell is_right>
+                     {methods.format_date(transaction.date)}
+                  </Table.Cell>
+                  <Table.Cell>{transaction.category?.title || ''}</Table.Cell>
+                  <Table.Cell>
+                     {transaction.payment_method?.title || ''}
+                  </Table.Cell>
+                  <Table.Cell>{transaction.account?.title || ''}</Table.Cell>
+                  <Table.Cell>
+                     <Button.Group>
+                        <Button.Icon
+                           is_small
+                           onClick={() => update(transaction)}
+                        >
+                           <Icon.Edit size={16} tw="stroke-current" />
+                        </Button.Icon>
+                        <Button.Icon is_small>
+                           <Icon.Delete
+                              size={16}
+                              tw="stroke-current"
+                              onClick={() =>
+                                 remove({
+                                    variables: { id: transaction.id },
+                                 })
+                              }
+                           />
+                        </Button.Icon>
+                     </Button.Group>
+                  </Table.Cell>
+               </Table.Row>
+            ))}
+         </Table.Body>
+      </Table>
+   )
+}
+
+const CardView = ({ transactions, methods, remove, update }) => {
+   return (
+      <ul tw="space-y-2">
+         {transactions.map(transaction => (
+            <li key={transaction.id} tw="list-none bg-gray-700 rounded p-3">
+               <header tw="flex items-center justify-between">
+                  <h3 tw="text-lg">{transaction.title}</h3>
+                  <Button.Group>
+                     <Button.Icon is_small onClick={() => update(transaction)}>
+                        <Icon.Edit size={16} tw="stroke-current" />
+                     </Button.Icon>
+                     <Button.Icon is_small>
+                        <Icon.Delete
+                           size={16}
+                           tw="stroke-current"
+                           onClick={() =>
+                              remove({
+                                 variables: { id: transaction.id },
+                              })
+                           }
+                        />
+                     </Button.Icon>
+                  </Button.Group>
+               </header>
+               <main tw="mt-3">
+                  <section tw="mb-2 flex justify-between">
+                     <span
+                        title={
+                           transaction.type === 'expense' ? 'Debit' : 'Credit'
+                        }
+                        css={[
+                           tw`font-medium`,
+                           transaction.type === 'expense'
+                              ? tw`text-red-400`
+                              : tw`text-indigo-400`,
+                        ]}
+                     >
+                        {transaction.type === 'expense' ? '- ' : '+ '}
+                        {methods.format_currency(
+                           Number(transaction.amount) || 0
+                        )}
+                     </span>
+                     <span>{methods.format_date(transaction.date)}</span>
+                  </section>
+                  <section tw="pt-2 divide-x divide-gray-800 border-t border-gray-800 grid grid-cols-3 text-center">
+                     <span title="Category">
+                        {transaction.category?.title || 'N/A'}
+                     </span>
+                     <span title="Payment Method">
+                        {transaction.payment_method?.title || 'N/A'}
+                     </span>
+                     <span title="Account">
+                        {transaction.account?.title || 'N/A'}
+                     </span>
+                  </section>
+               </main>
+            </li>
+         ))}
+      </ul>
+   )
+}
