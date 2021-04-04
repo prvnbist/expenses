@@ -204,6 +204,10 @@ export const ACCOUNTS = gql`
       accounts {
          id
          title
+         expense_count
+         expense_sum
+         income_count
+         income_sum
       }
    }
 `

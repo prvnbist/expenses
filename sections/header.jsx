@@ -13,6 +13,11 @@ const Header = () => {
                is_active={router.asPath === '/'}
             />
             <Route
+               path="/accounts"
+               title="Accounts"
+               is_active={router.asPath === '/accounts'}
+            />
+            <Route
                path="/analytics"
                title="Analytics"
                is_active={router.asPath === '/analytics'}

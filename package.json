@@ -23,8 +23,7 @@
       "react": "^16.13.1",
       "react-dom": "^16.13.1",
       "styled-components": "5.1.1",
-      "subscriptions-transport-ws": "^0.9.18",
-      "ws": "^7.4.4"
+      "subscriptions-transport-ws": "^0.9.18"
    },
    "devDependencies": {
       "tailwindcss": "^2.0.3",
