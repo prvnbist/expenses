@@ -18,7 +18,7 @@ const IndexPage = () => {
    const [edit, setEdit] = React.useState({})
    const [keyword, setKeyword] = React.useState('')
    const [variables, setVariables] = React.useState({
-      order_by: { date: 'desc', title: 'asc' },
+      order_by: { raw_date: 'desc', title: 'asc' },
       offset: 0,
       limit: 10,
    })
@@ -195,14 +195,10 @@ const TableView = ({ transactions, methods, remove, update }) => {
                            : ''}
                      </span>
                   </Table.Cell>
-                  <Table.Cell is_right>
-                     {methods.format_date(transaction.date)}
-                  </Table.Cell>
-                  <Table.Cell>{transaction.category?.title || ''}</Table.Cell>
-                  <Table.Cell>
-                     {transaction.payment_method?.title || ''}
-                  </Table.Cell>
-                  <Table.Cell>{transaction.account?.title || ''}</Table.Cell>
+                  <Table.Cell is_right>{transaction.date}</Table.Cell>
+                  <Table.Cell>{transaction.category || ''}</Table.Cell>
+                  <Table.Cell>{transaction.payment_method || ''}</Table.Cell>
+                  <Table.Cell>{transaction.account || ''}</Table.Cell>
                   <Table.Cell>
                      <Button.Group>
                         <Button.Icon

@@ -42,35 +42,26 @@ export const TRANSACTIONS = gql`
    subscription transactions(
       $limit: Int = 10
       $offset: Int = 0
-      $where: transactions_bool_exp = {}
-      $order_by: [transactions_order_by!] = {}
+      $where: transactions_view_bool_exp = {}
+      $order_by: [transactions_view_order_by!] = {}
    ) {
-      transactions(
+      transactions: transactions_view(
          where: $where
          order_by: $order_by
          limit: $limit
          offset: $offset
       ) {
          id
-         date
          type
+         date
          title
          amount
+         account
          account_id
-         account {
-            id
-            title
-         }
+         category
          category_id
-         category {
-            id
-            title
-         }
+         payment_method
          payment_method_id
-         payment_method {
-            id
-            title
-         }
       }
    }
 `
