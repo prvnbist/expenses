@@ -65,6 +65,7 @@ const client = new ApolloClient({
 })
 
 const App = ({ Component, pageProps }) => {
+   const [isAuthenticating, setIsAuthenticating] = React.useState(true)
    const [authenticated, setAuthenticated] = React.useState(false)
 
    React.useEffect(() => {
@@ -72,7 +73,10 @@ const App = ({ Component, pageProps }) => {
       if (secret && secret === process.env.HASURA_KEY) {
          setAuthenticated(true)
       }
+      setIsAuthenticating(false)
    }, [])
+
+   if (isAuthenticating) return null
    return (
       <ApolloProvider client={client}>
          <GlobalStyles />
