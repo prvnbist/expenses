@@ -57,6 +57,7 @@ export const TRANSACTIONS = gql`
          title
          amount
          account
+         raw_date
          account_id
          category
          category_id

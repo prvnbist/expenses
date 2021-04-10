@@ -1,14 +1,13 @@
 import tw from 'twin.macro'
+import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
-import { Button, Table, TableLoader } from '../components'
+import { Button, TableLoader } from '../components'
+import { useTransactions } from '../hooks/useTransactions'
 
-export const CardView = ({
-   is_loading,
-   transactions,
-   methods,
-   remove,
-   update,
-}) => {
+export const CardView = () => {
+   const { methods } = useConfig()
+   const { update, remove, is_loading, transactions } = useTransactions()
+
    if (is_loading) return <TableLoader />
    return (
       <ul tw="space-y-2">

@@ -13,9 +13,10 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 import '../styles/global.css'
+import { Button } from '../components'
 import { ConfigProvider } from '../context'
 import GlobalStyles from '../styles/global'
-import { Button } from '../components'
+import { TransactionsProvider } from '../hooks/useTransactions'
 
 const wssLink = process.browser
    ? new WebSocketLink(
@@ -82,7 +83,9 @@ const App = ({ Component, pageProps }) => {
          <GlobalStyles />
          <ConfigProvider>
             {authenticated ? (
-               <Component {...pageProps} />
+               <TransactionsProvider>
+                  <Component {...pageProps} />
+               </TransactionsProvider>
             ) : (
                <Login setAuthenticated={setAuthenticated} />
             )}

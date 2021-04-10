@@ -1,13 +1,14 @@
 import tw, { styled } from 'twin.macro'
 import { useMutation, useSubscription } from '@apollo/client'
 
-import { Button } from '../components'
 import {
    ACCOUNTS,
    CATEGORIES,
    INSERT_TRANSACTION,
    PAYMENT_METHODS,
 } from '../graphql'
+import { Button } from '../components'
+import { useTransactions } from '../hooks/useTransactions'
 
 const Styles = {
    Fieldset: styled.fieldset`
@@ -24,7 +25,8 @@ const Styles = {
    `,
 }
 
-export const Form = ({ close, setEdit, transaction = {} }) => {
+export const Form = () => {
+   const { editForm, setIsFormOpen, setEditForm } = useTransactions()
    const [form, setForm] = React.useState({
       title: '',
       amount: '',
@@ -36,8 +38,8 @@ export const Form = ({ close, setEdit, transaction = {} }) => {
    })
    const [upsert, { loading }] = useMutation(INSERT_TRANSACTION, {
       onCompleted: () => {
-         setEdit({})
-         close(false)
+         setEditForm({})
+         setIsFormOpen(false)
       },
       onError: error => {
          console.log('insert -> error -> ', error)
@@ -50,22 +52,23 @@ export const Form = ({ close, setEdit, transaction = {} }) => {
    )
 
    React.useEffect(() => {
-      if (Object.keys(transaction).length > 0) {
+      if (Object.keys(editForm).length > 0) {
          const {
             __typename,
             account,
             payment_method,
             category,
             date,
+            raw_date,
             ...rest
-         } = transaction
+         } = editForm
          setForm(existing => ({
             ...existing,
             ...rest,
-            date: date.slice(0, 10),
+            date: raw_date.slice(0, 10),
          }))
       }
-   }, [transaction])
+   }, [editForm])
 
    const isFormValid =
       form.title &&
