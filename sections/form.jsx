@@ -1,4 +1,5 @@
 import tw, { styled } from 'twin.macro'
+import { useToasts } from 'react-toast-notifications'
 import { useMutation, useSubscription } from '@apollo/client'
 
 import {
@@ -26,6 +27,7 @@ const Styles = {
 }
 
 export const Form = () => {
+   const { addToast } = useToasts()
    const { editForm, setIsFormOpen, setEditForm } = useTransactions()
    const [form, setForm] = React.useState({
       title: '',
@@ -40,8 +42,16 @@ export const Form = () => {
       onCompleted: () => {
          setEditForm({})
          setIsFormOpen(false)
+         const isNew = Object.keys(editForm || {}).length > 0
+         addToast(
+            `Successfully ${isNew ? 'updated' : 'created'} a new transaction.`,
+            { appearance: 'success' }
+         )
       },
       onError: error => {
+         addToast('Failed to create a new transaction.', {
+            appearance: 'error',
+         })
          console.log('insert -> error -> ', error)
       },
    })

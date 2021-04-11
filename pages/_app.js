@@ -8,8 +8,9 @@ import {
 } from '@apollo/client'
 import tw from 'twin.macro'
 import fetch from 'node-fetch'
-import { getMainDefinition } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/client/link/ws'
+import { ToastProvider } from 'react-toast-notifications'
+import { getMainDefinition } from '@apollo/client/utilities'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 import '../styles/global.css'
@@ -79,18 +80,24 @@ const App = ({ Component, pageProps }) => {
 
    if (isAuthenticating) return null
    return (
-      <ApolloProvider client={client}>
-         <GlobalStyles />
-         <ConfigProvider>
-            {authenticated ? (
-               <TransactionsProvider>
-                  <Component {...pageProps} />
-               </TransactionsProvider>
-            ) : (
-               <Login setAuthenticated={setAuthenticated} />
-            )}
-         </ConfigProvider>
-      </ApolloProvider>
+      <ToastProvider
+         autoDismiss
+         placement="top-center"
+         autoDismissTimeout={3000}
+      >
+         <ApolloProvider client={client}>
+            <GlobalStyles />
+            <ConfigProvider>
+               {authenticated ? (
+                  <TransactionsProvider>
+                     <Component {...pageProps} />
+                  </TransactionsProvider>
+               ) : (
+                  <Login setAuthenticated={setAuthenticated} />
+               )}
+            </ConfigProvider>
+         </ApolloProvider>
+      </ToastProvider>
    )
 }
 

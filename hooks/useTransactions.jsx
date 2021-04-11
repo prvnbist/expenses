@@ -1,4 +1,5 @@
 import React from 'react'
+import { useToasts } from 'react-toast-notifications'
 import { useMutation, useSubscription } from '@apollo/client'
 
 import {
@@ -10,6 +11,7 @@ import {
 const Context = React.createContext()
 
 export const TransactionsProvider = ({ children }) => {
+   const { addToast } = useToasts()
    const [editForm, setEditForm] = React.useState({})
    const [isFormOpen, setIsFormOpen] = React.useState(false)
    const [variables, setVariables] = React.useState({
@@ -26,7 +28,14 @@ export const TransactionsProvider = ({ children }) => {
       data: { transactions = [] } = {},
    } = useSubscription(TRANSACTIONS, { variables })
    const [remove] = useMutation(DELETE_TRANSACTION, {
-      onError: error => console.log('delete -> error ->', error),
+      onCompleted: () =>
+         addToast('Successfully deleted the transaction.', {
+            appearance: 'success',
+         }),
+      onError: error => {
+         console.log('delete -> error ->', error)
+         addToast('Failed to delete the transaction.', { appearance: 'error' })
+      },
    })
 
    const update = transaction => {
