@@ -29,22 +29,18 @@ export const TableView = () => {
                   <Table.Cell>{transaction.title}</Table.Cell>
                   <Table.Cell is_right>
                      <span tw="font-medium text-indigo-400">
-                        {transaction.type === 'income'
-                           ? '+ ' +
-                             methods.format_currency(
-                                Number(transaction.amount) || 0
-                             )
-                           : ''}
+                        {!!transaction.credit &&
+                           `+ ${methods.format_currency(
+                              Number(transaction.credit)
+                           )}`}
                      </span>
                   </Table.Cell>
                   <Table.Cell is_right>
                      <span tw="font-medium text-red-400">
-                        {transaction.type === 'expense'
-                           ? '- ' +
-                             methods.format_currency(
-                                Number(transaction.amount) || 0
-                             )
-                           : ''}
+                        {!!transaction.debit &&
+                           `- ${methods.format_currency(
+                              Number(transaction.debit)
+                           )}`}
                      </span>
                   </Table.Cell>
                   <Table.Cell is_right>{transaction.date}</Table.Cell>

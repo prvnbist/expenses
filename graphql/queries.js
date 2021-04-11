@@ -55,6 +55,8 @@ export const TRANSACTIONS = gql`
          type
          date
          title
+         debit
+         credit
          amount
          account
          raw_date
