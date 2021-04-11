@@ -23,7 +23,7 @@ const Styles = {
       ${({ is_small }) => (is_small ? tw`h-8 w-8` : tw`h-10 w-10`)}
    `,
    Text: styled.button`
-      ${tw`h-10 px-4 flex flex-shrink-0 items-center justify-center rounded-lg bg-gray-700 hover:(bg-gray-600)`}
+      ${tw`h-10 px-4 flex flex-shrink-0 items-center justify-center rounded-lg bg-gray-700 hover:(bg-gray-600) `}
       &[disabled] {
          ${tw`bg-gray-500 cursor-not-allowed text-gray-700`}
       }
