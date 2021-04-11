@@ -54,14 +54,12 @@ export const CardView = () => {
                   </section>
                   <section tw="pt-2 divide-x divide-gray-800 border-t border-gray-800 grid grid-cols-3 text-center">
                      <span title="Category">
-                        {transaction.category?.title || 'N/A'}
+                        {transaction.category || 'N/A'}
                      </span>
                      <span title="Payment Method">
-                        {transaction.payment_method?.title || 'N/A'}
+                        {transaction.payment_method || 'N/A'}
                      </span>
-                     <span title="Account">
-                        {transaction.account?.title || 'N/A'}
-                     </span>
+                     <span title="Account">{transaction.account || 'N/A'}</span>
                   </section>
                </main>
             </li>
