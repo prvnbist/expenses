@@ -50,9 +50,9 @@ export const TransactionsProvider = ({ children }) => {
             ...existing.where,
             _or: [
                { title: { _ilike: `%${keyword}%` } },
-               { account: { title: { _ilike: `%${keyword}%` } } },
-               { payment_method: { title: { _ilike: `%${keyword}%` } } },
-               { category: { title: { _ilike: `%${keyword}%` } } },
+               { account: { _ilike: `%${keyword}%` } },
+               { payment_method: { _ilike: `%${keyword}%` } },
+               { category: { _ilike: `%${keyword}%` } },
             ],
          },
       }))
