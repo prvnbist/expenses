@@ -1,5 +1,4 @@
-import { css } from 'styled-components'
-import tw, { styled } from 'twin.macro'
+import tw, { styled, css } from 'twin.macro'
 
 import { Loader } from './loader'
 
@@ -9,10 +8,20 @@ export const Button = {
       <Styles.Icon {...props}>{children}</Styles.Icon>
    ),
    Text: ({ children, ...props }) => (
-      <Styles.Text disabled={props.is_disabled || props.is_disabled} {...props}>
+      <Styles.Text disabled={props.is_disabled || props.is_loading} {...props}>
          {props.is_loading && <Loader />}
          {children}
       </Styles.Text>
+   ),
+   Combo: ({ children, ...props }) => (
+      <Styles.Combo
+         disabled={props.is_disabled || props.is_disabled}
+         {...props}
+      >
+         {props.icon_left && <span>{props.icon_left}</span>}
+         {children}
+         {props.icon_right && <span>{props.icon_right}</span>}
+      </Styles.Combo>
    ),
 }
 
@@ -32,5 +41,19 @@ const Styles = {
          css`
             color: transparent !important;
          `}
+   `,
+   Combo: styled.button`
+      ${tw`h-10 flex flex-shrink-0 items-center justify-center rounded-lg bg-gray-700 hover:(bg-gray-600) `}
+      &[disabled] {
+         ${tw`bg-gray-500 cursor-not-allowed text-gray-700`}
+      }
+      span {
+         ${tw`h-10 w-10 flex items-center justify-center`}
+      }
+      ${({ icon_right, icon_left }) => css`
+         ${icon_right && tw`pl-4`}
+         ${icon_left && tw`pr-4`}
+         ${icon_right && icon_left && tw`px-0`}
+      `}
    `,
 }
