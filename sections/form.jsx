@@ -91,7 +91,7 @@ export const Form = () => {
    const handleSubmit = () => {
       if (!isFormValid) return
 
-      const { payment_method_id, ...rest } = form
+      const { debit, credit, payment_method_id, ...rest } = form
       upsert({
          variables: {
             object: {
