@@ -55,9 +55,10 @@ export default IndexPage
 const Filters = () => {
    const {
       goto,
+      limit,
+      offset,
       prevPage,
       nextPage,
-      variables,
       is_loading,
       transactions_aggregate,
    } = useTransactions()
@@ -74,28 +75,20 @@ const Filters = () => {
                   id="current_page"
                   name="current_page"
                   placeholder="Ex. 9"
-                  value={Math.ceil(variables.offset / variables.limit)}
+                  value={Math.ceil(offset / limit)}
                   tw="text-center w-10 bg-gray-700 h-10 rounded px-2"
                />
             </fieldset>
             of{' '}
-            {Math.ceil(
-               transactions_aggregate?.aggregate?.count / variables.limit
-            ) || 0}
+            {Math.ceil(transactions_aggregate?.aggregate?.count / limit) || 0}
          </span>
          <Button.Group>
-            <Button.Text
-               onClick={prevPage}
-               disabled={variables.offset - 10 < 0}
-            >
+            <Button.Text onClick={prevPage} disabled={offset - 10 < 0}>
                Prev
             </Button.Text>
             <Button.Text
                onClick={nextPage}
-               disabled={
-                  variables.offset + 10 >
-                  transactions_aggregate?.aggregate?.count
-               }
+               disabled={offset + 10 > transactions_aggregate?.aggregate?.count}
             >
                Next
             </Button.Text>
