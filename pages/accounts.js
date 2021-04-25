@@ -28,7 +28,7 @@ const Accounts = () => {
                   </Table.Head>
                   <Table.Body>
                      {accounts.map((account, index) => (
-                        <Table.Row odd={index % 2 === 0}>
+                        <Table.Row key={account.id} odd={index % 2 === 0}>
                            <Table.Cell>{account.title}</Table.Cell>
                            <Table.Cell is_right>
                               <span tw="font-medium text-red-400">
