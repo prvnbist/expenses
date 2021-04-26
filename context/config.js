@@ -1,3 +1,4 @@
+import React from 'react'
 import { format } from 'date-fns'
 import { useSubscription } from '@apollo/client'
 
