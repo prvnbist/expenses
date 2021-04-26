@@ -35,6 +35,7 @@ const IndexPage = () => {
             </fieldset>
          </section>
          <Filters />
+         <FilterBy />
          <section
             style={{ maxHeight: '520px' }}
             tw="hidden md:block overflow-y-auto"
@@ -93,6 +94,44 @@ const Filters = () => {
                Next
             </Button.Text>
          </Button.Group>
+      </section>
+   )
+}
+
+const FilterBy = () => {
+   const { where, setWhere } = useTransactions()
+
+   return (
+      <section tw="mt-2 mb-3 flex items-center space-x-2">
+         <h3 tw="font-normal text-sm uppercase tracking-wider">Filter By:</h3>
+         <ul tw="flex flex-wrap gap-2">
+            {Object.keys(where).map(
+               key =>
+                  !Array.isArray(where[key]) && (
+                     <li
+                        key={key}
+                        title={key}
+                        tw="flex space-x-2 items-center bg-gray-700 px-2 py-1 rounded"
+                     >
+                        <span>{where[key]?._eq}</span>
+                        <button
+                           onClick={() =>
+                              setWhere(existing => {
+                                 delete existing[key]
+                                 return { ...existing }
+                              })
+                           }
+                           tw="rounded-full p-1 hover:(bg-gray-800)"
+                        >
+                           <Icon.Close
+                              size={16}
+                              tw="stroke-current cursor-pointer"
+                           />
+                        </button>
+                     </li>
+                  )
+            )}
+         </ul>
       </section>
    )
 }

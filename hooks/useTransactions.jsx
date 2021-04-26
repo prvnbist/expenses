@@ -25,13 +25,17 @@ export const TransactionsProvider = ({ children }) => {
    const {
       loading: loading_aggregate,
       data: { transactions_aggregate = {} } = {},
-   } = useSubscription(TRANSACTIONS_AGGREGATE)
+   } = useSubscription(TRANSACTIONS_AGGREGATE, {
+      variables: {
+         where: { ...where },
+      },
+   })
    const { loading, data: { transactions = [] } = {} } = useSubscription(
       TRANSACTIONS,
       {
          variables: {
             limit,
-            where,
+            where: { ...where },
             offset,
             order_by: orderBy,
          },

@@ -6,7 +6,21 @@ import { useTransactions } from '../hooks/useTransactions'
 
 export const TableView = () => {
    const { methods } = useConfig()
-   const { is_loading, transactions, remove, update } = useTransactions()
+   const {
+      is_loading,
+      transactions,
+      remove,
+      update,
+      setWhere,
+   } = useTransactions()
+
+   const viewBy = (key, value) => {
+      if (!value) return
+      setWhere(existing => ({
+         ...existing,
+         [key]: { _eq: value },
+      }))
+   }
 
    if (is_loading) return <TableLoader />
    return (
@@ -44,9 +58,32 @@ export const TableView = () => {
                      </span>
                   </Table.Cell>
                   <Table.Cell is_right>{transaction.date}</Table.Cell>
-                  <Table.Cell>{transaction.category || ''}</Table.Cell>
-                  <Table.Cell>{transaction.payment_method || ''}</Table.Cell>
-                  <Table.Cell>{transaction.account || ''}</Table.Cell>
+                  <Table.Cell>
+                     <Tag
+                        title={transaction.category}
+                        onClick={() => viewBy('category', transaction.category)}
+                     >
+                        {transaction.category}
+                     </Tag>
+                  </Table.Cell>
+                  <Table.Cell>
+                     <Tag
+                        title={transaction.payment_method}
+                        onClick={() =>
+                           viewBy('payment_method', transaction.payment_method)
+                        }
+                     >
+                        {transaction.payment_method}
+                     </Tag>
+                  </Table.Cell>
+                  <Table.Cell>
+                     <Tag
+                        title={transaction.account}
+                        onClick={() => viewBy('account', transaction.account)}
+                     >
+                        {transaction.account}
+                     </Tag>
+                  </Table.Cell>
                   <Table.Cell>
                      <Button.Group>
                         <Button.Icon
@@ -74,3 +111,5 @@ export const TableView = () => {
       </Table>
    )
 }
+
+const Tag = tw.button`rounded px-1 bg-indigo-200 text-indigo-900 cursor-pointer text-sm font-medium focus:(bg-indigo-300)`

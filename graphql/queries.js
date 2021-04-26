@@ -70,8 +70,10 @@ export const TRANSACTIONS = gql`
 `
 
 export const TRANSACTIONS_AGGREGATE = gql`
-   subscription transactions_aggregate {
-      transactions_aggregate {
+   subscription transactions_aggregate(
+      $where: transactions_view_bool_exp = {}
+   ) {
+      transactions_aggregate: transactions_view_aggregate(where: $where) {
          aggregate {
             count
          }

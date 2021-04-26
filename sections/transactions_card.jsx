@@ -6,9 +6,23 @@ import { useTransactions } from '../hooks/useTransactions'
 
 export const CardView = () => {
    const { methods } = useConfig()
-   const { update, remove, is_loading, transactions } = useTransactions()
+   const {
+      is_loading,
+      transactions,
+      remove,
+      update,
+      setWhere,
+   } = useTransactions()
 
-   if (is_loading) return <TableLoader />
+   const viewBy = (key, value) => {
+      if (!value) return
+      setWhere(existing => ({
+         ...existing,
+         [key]: { _eq: value },
+      }))
+   }
+
+   if (is_loading) return <span>Loading...</span>
    return (
       <ul tw="space-y-2">
          {transactions.map(transaction => (
@@ -53,13 +67,29 @@ export const CardView = () => {
                      <span>{methods.format_date(transaction.date)}</span>
                   </section>
                   <section tw="pt-2 divide-x divide-gray-800 border-t border-gray-800 grid grid-cols-3 text-center">
-                     <span title="Category">
+                     <span
+                        title="Category"
+                        tw="cursor-pointer"
+                        onClick={() => viewBy('category', transaction.category)}
+                     >
                         {transaction.category || 'N/A'}
                      </span>
-                     <span title="Payment Method">
+                     <span
+                        title="Payment Method"
+                        tw="cursor-pointer"
+                        onClick={() =>
+                           viewBy('payment_method', transaction.payment_method)
+                        }
+                     >
                         {transaction.payment_method || 'N/A'}
                      </span>
-                     <span title="Account">{transaction.account || 'N/A'}</span>
+                     <span
+                        title="Account"
+                        tw="cursor-pointer"
+                        onClick={() => viewBy('account', transaction.account)}
+                     >
+                        {transaction.account || 'N/A'}
+                     </span>
                   </section>
                </main>
             </li>
