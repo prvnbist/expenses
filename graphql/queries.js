@@ -76,6 +76,22 @@ export const TRANSACTIONS_AGGREGATE = gql`
       transactions_aggregate: transactions_view_aggregate(where: $where) {
          aggregate {
             count
+            sum {
+               credit
+               debit
+            }
+            avg {
+               credit
+               debit
+            }
+            max {
+               credit
+               debit
+            }
+            min {
+               credit
+               debit
+            }
          }
       }
    }

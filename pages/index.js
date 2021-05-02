@@ -1,13 +1,15 @@
 import React from 'react'
-import tw from 'twin.macro'
+import tw, { styled } from 'twin.macro'
 import { usePagination } from 'react-use-pagination'
 
-import { Button } from '../components'
+import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
+import { Button, Table } from '../components'
 import { useTransactions } from '../hooks/useTransactions'
 import { Layout, Form, TableView, CardView } from '../sections'
 
 const IndexPage = () => {
+   const { methods } = useConfig()
    const [keyword, setKeyword] = React.useState('')
    const {
       limit,
@@ -48,14 +50,20 @@ const IndexPage = () => {
          </section>
          <Filters pagination={pagination} />
          <FilterBy />
-         <section
-            style={{ maxHeight: '520px' }}
-            tw="hidden md:block overflow-y-auto"
-         >
-            <TableView />
-         </section>
-         <section tw="md:hidden">
-            <CardView />
+         <section tw="flex flex-col md:flex-row">
+            <main
+               style={{ maxHeight: '520px' }}
+               tw="flex-1 hidden md:block overflow-y-auto"
+            >
+               <TableView />
+            </main>
+            <main tw="md:hidden">
+               <CardView />
+            </main>
+            <Analytics
+               methods={methods}
+               transactions={transactions_aggregate}
+            />
          </section>
          <Filters pagination={pagination} />
          <AddTransaction />
@@ -183,5 +191,123 @@ const AddTransaction = () => {
             <Form />
          </main>
       </section>
+   )
+}
+
+const Styles = {
+   Analytics: styled.aside`
+      width: 340px;
+      @media screen and (max-width: 640px) {
+         width: 100%;
+      }
+   `,
+}
+
+const Analytics = ({ methods, transactions }) => {
+   return (
+      <Styles.Analytics tw="mt-4 md:(ml-3 mt-0)">
+         <Table>
+            <Table.Head>
+               <Table.HCell>Title</Table.HCell>
+               <Table.HCell is_right>Value</Table.HCell>
+            </Table.Head>
+            <Table.Body>
+               <Table.Row odd>
+                  <Table.Cell>Transactions</Table.Cell>
+                  <Table.Cell is_right>
+                     {transactions?.aggregate?.count}
+                  </Table.Cell>
+               </Table.Row>
+               <Table.Row>
+                  <Table.Cell>Debit</Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-red-400">
+                        -{' '}
+                        {methods.format_currency(
+                           Number(transactions?.aggregate?.sum?.debit || 0)
+                        )}
+                     </span>
+                  </Table.Cell>
+               </Table.Row>
+               <Table.Row odd>
+                  <Table.Cell>Average Debit</Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-red-400">
+                        -{' '}
+                        {methods.format_currency(
+                           Number(transactions?.aggregate?.avg?.debit || 0)
+                        )}
+                     </span>
+                  </Table.Cell>
+               </Table.Row>
+               <Table.Row>
+                  <Table.Cell>Minimum Debit</Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-red-400">
+                        -{' '}
+                        {methods.format_currency(
+                           Number(transactions?.aggregate?.min?.debit || 0)
+                        )}
+                     </span>
+                  </Table.Cell>
+               </Table.Row>
+               <Table.Row odd>
+                  <Table.Cell>Maximum Debit</Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-red-400">
+                        -{' '}
+                        {methods.format_currency(
+                           Number(transactions?.aggregate?.max?.debit || 0)
+                        )}
+                     </span>
+                  </Table.Cell>
+               </Table.Row>
+               <Table.Row>
+                  <Table.Cell>Credit</Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-indigo-400">
+                        +{' '}
+                        {methods.format_currency(
+                           Number(transactions?.aggregate?.sum?.credit || 0)
+                        )}
+                     </span>
+                  </Table.Cell>
+               </Table.Row>
+               <Table.Row odd>
+                  <Table.Cell>Average Credit</Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-indigo-400">
+                        +{' '}
+                        {methods.format_currency(
+                           Number(transactions?.aggregate?.avg?.credit || 0)
+                        )}
+                     </span>
+                  </Table.Cell>
+               </Table.Row>
+               <Table.Row>
+                  <Table.Cell>Minimum Credit</Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-indigo-400">
+                        +{' '}
+                        {methods.format_currency(
+                           Number(transactions?.aggregate?.min?.credit || 0)
+                        )}
+                     </span>
+                  </Table.Cell>
+               </Table.Row>
+               <Table.Row odd>
+                  <Table.Cell>Maximum Credit</Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-indigo-400">
+                        +{' '}
+                        {methods.format_currency(
+                           Number(transactions?.aggregate?.max?.credit || 0)
+                        )}
+                     </span>
+                  </Table.Cell>
+               </Table.Row>
+            </Table.Body>
+         </Table>
+      </Styles.Analytics>
    )
 }
