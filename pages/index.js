@@ -1,5 +1,6 @@
 import React from 'react'
 import tw from 'twin.macro'
+import { usePagination } from 'react-use-pagination'
 
 import { Button } from '../components'
 import * as Icon from '../assets/icons'
@@ -8,7 +9,18 @@ import { Layout, Form, TableView, CardView } from '../sections'
 
 const IndexPage = () => {
    const [keyword, setKeyword] = React.useState('')
-   const { onSearch, isFormOpen, setIsFormOpen } = useTransactions()
+   const {
+      limit,
+      onSearch,
+      isFormOpen,
+      setIsFormOpen,
+      transactions_aggregate,
+   } = useTransactions()
+
+   const pagination = usePagination({
+      totalItems: transactions_aggregate?.aggregate?.count || 0,
+      initialPageSize: limit,
+   })
 
    return (
       <Layout>
@@ -34,7 +46,7 @@ const IndexPage = () => {
                />
             </fieldset>
          </section>
-         <Filters />
+         <Filters pagination={pagination} />
          <FilterBy />
          <section
             style={{ maxHeight: '520px' }}
@@ -45,7 +57,7 @@ const IndexPage = () => {
          <section tw="md:hidden">
             <CardView />
          </section>
-         <Filters />
+         <Filters pagination={pagination} />
          <AddTransaction />
       </Layout>
    )
@@ -53,16 +65,27 @@ const IndexPage = () => {
 
 export default IndexPage
 
-const Filters = () => {
+const Filters = ({ pagination }) => {
    const {
-      goto,
       limit,
-      offset,
-      prevPage,
-      nextPage,
+      setOffset,
       is_loading,
       transactions_aggregate,
    } = useTransactions()
+
+   React.useEffect(() => {
+      setOffset(pagination.startIndex)
+   }, [pagination.startIndex])
+
+   const pageCount = Math.floor(
+      transactions_aggregate?.aggregate?.count / limit
+   )
+   const handlePageChange = e => {
+      const { value } = e.target
+      if (Number(value) < 0 || Number(value) > pageCount) return
+
+      pagination.setPage(Number(e.target.value))
+   }
 
    if (is_loading) return null
    return (
@@ -72,24 +95,27 @@ const Filters = () => {
             <fieldset tw="mx-2">
                <input
                   type="text"
-                  onChange={goto}
                   id="current_page"
                   name="current_page"
                   placeholder="Ex. 9"
-                  value={Math.ceil(offset / limit)}
+                  onChange={handlePageChange}
+                  value={pagination.currentPage}
                   tw="text-center w-10 bg-gray-700 h-10 rounded px-2"
                />
             </fieldset>
-            of{' '}
-            {Math.ceil(transactions_aggregate?.aggregate?.count / limit) || 0}
+            of&nbsp;
+            {pageCount || 0}
          </span>
          <Button.Group>
-            <Button.Text onClick={prevPage} disabled={offset - 10 < 0}>
+            <Button.Text
+               onClick={pagination.setPreviousPage}
+               disabled={!pagination.previousEnabled}
+            >
                Prev
             </Button.Text>
             <Button.Text
-               onClick={nextPage}
-               disabled={offset + 10 > transactions_aggregate?.aggregate?.count}
+               onClick={pagination.setNextPage}
+               disabled={!pagination.nextEnabled}
             >
                Next
             </Button.Text>

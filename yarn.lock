@@ -2506,6 +2506,11 @@ react-transition-group@^4.4.1:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-use-pagination@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-use-pagination/-/react-use-pagination-1.1.0.tgz#022b8098077e215400c6360483f51741ea1ed040"
+  integrity sha512-hyRMtQSAxNfvU6PCYfkeoIcZ0cAwIFbDOCPbjmfBrkVuVQcSLq9+ySfMv6cDoJkTXRtXHf+EtuWVNrA5M8Qotw==
+
 react@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"

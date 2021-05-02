@@ -70,31 +70,15 @@ export const TransactionsProvider = ({ children }) => {
       }))
    }
 
-   const prevPage = () => {
-      if (offset - 10 < 0) return
-      setOffset(offset - 10)
-   }
-   const nextPage = () => {
-      if (offset + 10 > transactions_aggregate?.aggregate?.count) return
-      setOffset(offset + 10)
-   }
-
-   const goto = e => {
-      const page = e.target.value || 0
-      setOffset(Number(page) * limit)
-   }
    return (
       <Context.Provider
          value={{
-            goto,
             where,
             offset,
             limit,
             orderBy,
             update,
             remove,
-            nextPage,
-            prevPage,
             editForm,
             onSearch,
             setLimit,
