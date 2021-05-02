@@ -9,7 +9,7 @@ import {
    INSERT_TRANSACTION,
    PAYMENT_METHODS,
 } from '../graphql'
-import { Button } from '../components'
+import { Button, Select } from '../components'
 import { useTransactions } from '../hooks/useTransactions'
 
 const Styles = {
@@ -21,9 +21,6 @@ const Styles = {
    `,
    Text: styled.input`
       ${tw`bg-gray-700 h-10 rounded px-2`}
-   `,
-   Select: styled.select`
-      ${tw`bg-gray-700 h-10 rounded`}
    `,
 }
 
@@ -152,84 +149,82 @@ export const Form = () => {
                onChange={e => handleChange(e.target.name, e.target.value)}
             />
          </Styles.Fieldset>
-         <section tw="flex items-center gap-2">
-            <Styles.Fieldset>
-               <Styles.Label htmlFor="type">Type</Styles.Label>
-               <section tw="bg-gray-700 px-1 h-10 flex items-center rounded">
-                  <button
-                     css={[
-                        tw`px-2 h-8 flex-1 rounded`,
-                        form.type === 'expense' && tw`bg-gray-800`,
-                     ]}
-                     onClick={() => handleChange('type', 'expense')}
-                  >
-                     Expense
-                  </button>
-                  <button
-                     css={[
-                        tw`px-2 h-8 flex-1 rounded`,
-                        form.type === 'income' && tw`bg-gray-800`,
-                     ]}
-                     onClick={() => handleChange('type', 'income')}
-                  >
-                     Income
-                  </button>
-               </section>
-            </Styles.Fieldset>
-            <Styles.Fieldset>
-               <Styles.Label htmlFor="category">Category</Styles.Label>
-               <Styles.Select
-                  name="category_id"
-                  id="category_id"
-                  value={form.category_id}
-                  onChange={e => handleChange(e.target.name, e.target.value)}
+         <Styles.Fieldset>
+            <Styles.Label htmlFor="type">Type</Styles.Label>
+            <section tw="bg-gray-700 px-1 h-10 flex items-center rounded">
+               <button
+                  css={[
+                     tw`px-2 h-8 flex-1 rounded`,
+                     form.type === 'expense' && tw`bg-gray-800`,
+                  ]}
+                  onClick={() => handleChange('type', 'expense')}
                >
-                  <option value="">Select a category</option>
-                  {categories
-                     .filter(node => node.type === form.type)
-                     .map(category => (
-                        <option key={category.id} value={category.id}>
-                           {category.title}
-                        </option>
-                     ))}
-               </Styles.Select>
-            </Styles.Fieldset>
-         </section>
+                  Expense
+               </button>
+               <button
+                  css={[
+                     tw`px-2 h-8 flex-1 rounded`,
+                     form.type === 'income' && tw`bg-gray-800`,
+                  ]}
+                  onClick={() => handleChange('type', 'income')}
+               >
+                  Income
+               </button>
+            </section>
+         </Styles.Fieldset>
+         <Styles.Fieldset>
+            <Styles.Label htmlFor="category">Category</Styles.Label>
+            <Select
+               placeholder="Search categories"
+               on_deselect={() => handleChange('category_id', null)}
+               on_select={option => handleChange('category_id', option.id)}
+               selected={categories.find(
+                  category => category.id === form.category_id
+               )}
+            >
+               {categories
+                  .filter(node => node.type === form.type)
+                  .map(option => (
+                     <Select.Option key={option.id} option={option} />
+                  ))}
+            </Select>
+         </Styles.Fieldset>
          {form.type === 'expense' && (
             <Styles.Fieldset>
                <Styles.Label htmlFor="payment_method">
                   Payment Method
                </Styles.Label>
-               <Styles.Select
-                  name="payment_method_id"
-                  id="payment_method_id"
-                  value={form.payment_method_id}
-                  onChange={e => handleChange(e.target.name, e.target.value)}
+               <Select
+                  placeholder="Search payment method"
+                  on_deselect={() => handleChange('payment_method_id', null)}
+                  on_select={option =>
+                     handleChange('payment_method_id', option.id)
+                  }
+                  selected={payment_methods.find(
+                     payment_method =>
+                        payment_method.id === form.payment_method_id
+                  )}
                >
-                  <option value="">Select a payment method</option>
-                  {payment_methods.map(payment_method => (
-                     <option key={payment_method.id} value={payment_method.id}>
-                        {payment_method.title}
-                     </option>
+                  {payment_methods.map(option => (
+                     <Select.Option key={option.id} option={option} />
                   ))}
-               </Styles.Select>
+               </Select>
             </Styles.Fieldset>
          )}
          <Styles.Fieldset>
             <Styles.Label htmlFor="account">Account</Styles.Label>
-            <Styles.Select
-               name="account_id"
-               id="account_id"
-               value={form.account_id}
-               onChange={e => handleChange(e.target.name, e.target.value)}
+            <Select
+               placeholder="Search accounts"
+               on_deselect={() => handleChange('account_id', null)}
+               on_select={option => handleChange('account_id', option.id)}
+               selected={accounts.find(
+                  account => account.id === form.account_id
+               )}
             >
-               <option value="">Select an account</option>
-               {accounts.map(account => (
-                  <option key={account.id} value={account.id}>
-                     {account.title}
-                  </option>
+               {accounts.map(option => (
+                  <Select.Option key={option.id} option={option} />
                ))}
-            </Styles.Select>
+            </Select>
          </Styles.Fieldset>
          <div tw="h-4" />
          <Button.Text

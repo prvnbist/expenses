@@ -197,7 +197,7 @@ export const INCOMES_BY_YEARS = gql`
 
 export const ACCOUNTS = gql`
    subscription accounts {
-      accounts {
+      accounts(order_by: { title: asc }) {
          id
          title
          expense_count
