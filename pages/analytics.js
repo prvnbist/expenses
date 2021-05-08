@@ -21,7 +21,7 @@ const Styles = {
    `,
    Metrics: tw.ul`flex flex-wrap items-center gap-3 `,
    Metric: styled.li`
-      ${tw`pt-2 pb-3 px-3 flex flex-col flex-shrink-0 rounded w-full md:w-56 h-24`}
+      ${tw`pt-2 pb-3 px-3 flex flex-col flex-shrink-0 rounded w-full md:w-64 h-24`}
       > span {
          ${tw`uppercase font-medium tracking-wider`}
       }
