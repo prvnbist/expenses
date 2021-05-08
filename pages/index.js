@@ -28,9 +28,12 @@ const IndexPage = () => {
       <Layout>
          <header tw="flex items-center justify-between">
             <h1 tw="text-3xl mt-4 mb-3">Transactions</h1>
-            <Button.Icon onClick={() => setIsFormOpen(!isFormOpen)}>
-               <Icon.Add tw="stroke-current" />
-            </Button.Icon>
+            <Button.Combo
+               icon_left={<Icon.Add tw="stroke-current" />}
+               onClick={() => setIsFormOpen(!isFormOpen)}
+            >
+               Add
+            </Button.Combo>
          </header>
          <section tw="mt-3 mb-2">
             <fieldset>
