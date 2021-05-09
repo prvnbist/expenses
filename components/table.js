@@ -34,9 +34,10 @@ const Styles = {
       `
    ),
    Cell: styled.td(
-      ({ is_right }) => css`
-         ${tw`px-3 font-light h-12 whitespace-nowrap`}
+      ({ is_right, no_padding }) => css`
+         ${tw`font-light h-12 whitespace-nowrap`}
          ${is_right && tw`text-right`}
+         ${!no_padding && tw`px-3`}
       `
    ),
    HCell: styled.th(

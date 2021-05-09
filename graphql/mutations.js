@@ -24,3 +24,11 @@ export const DELETE_TRANSACTION = gql`
       }
    }
 `
+
+export const DELETE_TRANSACTIONS = gql`
+   mutation delete_transactions($where: transactions_bool_exp!) {
+      delete_transactions(where: $where) {
+         affected_rows
+      }
+   }
+`

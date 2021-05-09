@@ -1,4 +1,5 @@
-import tw from 'twin.macro'
+import React from 'react'
+import tw, { styled } from 'twin.macro'
 import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
 import { Button, Table, TableLoader } from '../components'
@@ -7,11 +8,13 @@ import { useTransactions } from '../hooks/useTransactions'
 export const TableView = () => {
    const { methods } = useConfig()
    const {
-      is_loading,
-      transactions,
       remove,
       update,
       setWhere,
+      is_loading,
+      transactions,
+      on_row_select,
+      is_row_selected,
    } = useTransactions()
 
    const viewBy = (key, value) => {
@@ -27,6 +30,7 @@ export const TableView = () => {
       <Table>
          <Table.Head>
             <Table.Row>
+               <Table.HCell></Table.HCell>
                <Table.HCell>Title</Table.HCell>
                <Table.HCell is_right>Credit</Table.HCell>
                <Table.HCell is_right>Debit</Table.HCell>
@@ -40,6 +44,23 @@ export const TableView = () => {
          <Table.Body>
             {transactions.map((transaction, index) => (
                <Table.Row key={transaction.id} odd={index % 2 === 0}>
+                  <Table.Cell no_padding>
+                     <Styles.Checkbox
+                        is_selected={is_row_selected(transaction)}
+                     >
+                        <input
+                           readOnly
+                           type="checkbox"
+                           id={`row__select__${index + 1}`}
+                           name={`row__select__${index + 1}`}
+                           checked={is_row_selected(transaction)}
+                        />
+                        <label
+                           htmlFor={`row__select__${index + 1}`}
+                           onClick={() => on_row_select(transaction)}
+                        />
+                     </Styles.Checkbox>
+                  </Table.Cell>
                   <Table.Cell>{transaction.title}</Table.Cell>
                   <Table.Cell is_right>
                      <span tw="font-medium text-indigo-400">
@@ -113,3 +134,23 @@ export const TableView = () => {
 }
 
 const Tag = tw.button`rounded px-1 bg-indigo-200 text-indigo-900 cursor-pointer text-sm font-medium focus:(bg-indigo-300)`
+
+const Styles = {
+   Checkbox: styled.span`
+      ${tw`flex h-10 w-10 items-center justify-center`}
+      input {
+         opacity: 0;
+         display: none;
+         visibility: hidden;
+      }
+      label {
+         ${tw`inline-flex h-5 w-5 rounded bg-gray-600 relative p-1 cursor-pointer`}
+         :after {
+            content: '';
+            position: absolute;
+            ${tw`h-3 w-3 rounded`}
+            ${({ is_selected }) => is_selected && tw`bg-white`}
+         }
+      }
+   `,
+}

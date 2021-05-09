@@ -53,6 +53,7 @@ const IndexPage = () => {
          </section>
          <Filters pagination={pagination} />
          <FilterBy />
+         <BulkActions />
          <section tw="flex flex-col md:flex-row">
             <main
                style={{ maxHeight: '520px' }}
@@ -138,9 +139,13 @@ const Filters = ({ pagination }) => {
 const FilterBy = () => {
    const { where, setWhere } = useTransactions()
 
+   if (
+      Object.keys(where).filter(key => !Array.isArray(where[key])).length === 0
+   )
+      return null
    return (
       <section tw="mt-2 mb-3 flex items-center space-x-2">
-         <h3 tw="font-normal text-sm uppercase tracking-wider">Filter By:</h3>
+         <h3 tw="text-lg">Filter By:</h3>
          <ul tw="flex flex-wrap gap-2">
             {Object.keys(where).map(
                key =>
@@ -193,6 +198,31 @@ const AddTransaction = () => {
          <main tw="px-3">
             <Form />
          </main>
+      </section>
+   )
+}
+
+const BulkActions = () => {
+   const { selected, bulk } = useTransactions()
+   if (selected.length === 0) return null
+   return (
+      <section tw="hidden md:block mb-3">
+         <h2 tw="text-lg">
+            Bulk Actions
+            {selected.length > 0 && (
+               <span tw="text-gray-400">({selected.length} selected)</span>
+            )}
+         </h2>
+         <section tw="mt-2 flex gap-3">
+            <Button.Combo
+               variant="danger"
+               onClick={bulk.delete}
+               icon_left={<Icon.Delete tw="stroke-current" />}
+            >
+               Delete
+            </Button.Combo>
+            <Button.Text onClick={bulk.reset}>Clear</Button.Text>
+         </section>
       </section>
    )
 }
