@@ -1,3 +1,4 @@
+export * from './tabs'
 export * from './button'
 export * from './table'
 export * from './loader'
