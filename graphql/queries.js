@@ -223,3 +223,49 @@ export const ACCOUNTS = gql`
       }
    }
 `
+
+export const MONTHLY_EXPENSE_REPORT = gql`
+   subscription monthly_expense_report(
+      $where: monthly_expense_report_bool_exp = {}
+      $order_by: [monthly_expense_report_order_by!] = {}
+   ) {
+      monthly_expense_report(where: $where, order_by: $order_by) {
+         month
+         year
+         title
+         count
+         amount
+      }
+   }
+`
+
+export const MONTHLY_INCOME_REPORT = gql`
+   subscription monthly_expense_report(
+      $where: monthly_income_report_bool_exp = {}
+      $order_by: [monthly_income_report_order_by!] = {}
+   ) {
+      monthly_income_report(where: $where, order_by: $order_by) {
+         month
+         year
+         title
+         count
+         amount
+      }
+   }
+`
+
+export const EXPENSE_YEARS = gql`
+   query expense_years_list {
+      expense_years_list(order_by: { year: desc }) {
+         year
+      }
+   }
+`
+
+export const INCOME_YEARS = gql`
+   query income_years_list {
+      income_years_list(order_by: { year: desc }) {
+         year
+      }
+   }
+`
