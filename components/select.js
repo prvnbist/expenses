@@ -5,10 +5,10 @@ import * as Icon from '../assets/icons'
 
 const Select = ({
    on_select,
-   on_deselect,
    selected = {},
    children = [],
    placeholder = '',
+   on_deselect = null,
 }) => {
    const [search, setSearch] = React.useState('')
    const [isOpen, setIsOpen] = React.useState(false)
@@ -27,15 +27,20 @@ const Select = ({
             {selected?.id && selected?.title && (
                <div tw="flex space-x-2 items-center bg-gray-800 px-2 py-1 rounded w-full justify-between md:(w-auto)">
                   <p tw="truncate">{selected.title}</p>
-                  <button
-                     onClick={() => {
-                        on_deselect()
-                        setSearch('')
-                     }}
-                     tw="rounded-full p-1 hover:(bg-gray-700)"
-                  >
-                     <Icon.Close size={16} tw="stroke-current cursor-pointer" />
-                  </button>
+                  {on_deselect && (
+                     <button
+                        onClick={() => {
+                           setSearch('')
+                           on_deselect && on_deselect()
+                        }}
+                        tw="rounded-full p-1 hover:(bg-gray-700)"
+                     >
+                        <Icon.Close
+                           size={16}
+                           tw="stroke-current cursor-pointer"
+                        />
+                     </button>
+                  )}
                </div>
             )}
             <input
@@ -56,8 +61,9 @@ const Select = ({
             {children
                .filter(node =>
                   node.props.option?.title
+                     .toString()
                      .toLowerCase()
-                     .includes(search.toLowerCase())
+                     .includes(search.toString().toLowerCase())
                )
                .map(node => ({
                   ...node,
@@ -74,7 +80,13 @@ const Select = ({
    )
 }
 
-const List = ({ isOpen, children = [], on_deselect, setIsOpen, setSearch }) => {
+const List = ({
+   isOpen,
+   children = [],
+   on_deselect = null,
+   setIsOpen,
+   setSearch,
+}) => {
    if (!isOpen) return null
    return (
       <ul tw="z-10 w-full absolute mt-2 shadow-lg rounded bg-gray-700 max-h-48 overflow-y-auto p-2 space-y-1">
@@ -82,15 +94,17 @@ const List = ({ isOpen, children = [], on_deselect, setIsOpen, setSearch }) => {
             <li>No options available!</li>
          ) : (
             <>
-               <Styles.Option
-                  onClick={() => {
-                     on_deselect()
-                     setIsOpen(false)
-                     setSearch('')
-                  }}
-               >
-                  Select a category
-               </Styles.Option>
+               {on_deselect && (
+                  <Styles.Option
+                     onClick={() => {
+                        on_deselect()
+                        setIsOpen(false)
+                        setSearch('')
+                     }}
+                  >
+                     Select a category
+                  </Styles.Option>
+               )}
                {children}
             </>
          )}
