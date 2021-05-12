@@ -1,6 +1,6 @@
 import tw, { styled } from 'twin.macro'
 
-export const Loader = () => <Styles.Loader>Loading...</Styles.Loader>
+export const Loader = () => <Styles.Loader />
 
 const Styles = {
    Loader: styled.div`
