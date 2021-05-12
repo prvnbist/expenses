@@ -89,7 +89,7 @@ const List = ({
 }) => {
    if (!isOpen) return null
    return (
-      <ul tw="z-10 w-full absolute mt-2 shadow-lg rounded bg-gray-700 max-h-48 overflow-y-auto p-2 space-y-1">
+      <Styles.Options>
          {children.length === 0 ? (
             <li>No options available!</li>
          ) : (
@@ -108,7 +108,7 @@ const List = ({
                {children}
             </>
          )}
-      </ul>
+      </Styles.Options>
    )
 }
 
@@ -133,6 +133,13 @@ Select.Option = Option
 export { Select }
 
 const Styles = {
+   Options: styled.ul`
+      ${tw`z-10 w-full absolute mt-2 shadow-lg rounded bg-gray-700 max-h-48 overflow-y-auto p-2 space-y-1`}
+      @media screen and (max-width:567px) {
+         top: -13rem;
+         ${tw`border border-gray-600 border-2`}
+      }
+   `,
    Option: styled.li`
       ${tw`rounded cursor-pointer flex items-center h-8 px-3 hover:bg-gray-800`};
       ${({ is_selected }) => is_selected && tw`bg-gray-800`}
