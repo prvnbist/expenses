@@ -78,12 +78,8 @@ const IndexPage = () => {
 export default IndexPage
 
 const Filters = ({ pagination }) => {
-   const {
-      limit,
-      setOffset,
-      is_loading,
-      transactions_aggregate,
-   } = useTransactions()
+   const { limit, setOffset, is_loading, transactions_aggregate } =
+      useTransactions()
 
    React.useEffect(() => {
       setOffset(pagination.startIndex)
@@ -183,8 +179,8 @@ const AddTransaction = () => {
 
    if (!isFormOpen) return null
    return (
-      <section tw="fixed left-0 top-0 bottom-0 z-10 bg-gray-800 shadow-xl w-screen md:w-6/12 lg:w-5/12 xl:w-4/12">
-         <header tw="flex items-center justify-between px-3 h-16 border-b border-gray-700">
+      <section tw="overflow-y-auto pb-3 fixed left-0 top-0 bottom-0 z-10 bg-gray-800 shadow-xl w-full md:w-6/12 lg:w-5/12 xl:w-4/12">
+         <header tw="sticky top-0 flex items-center justify-between px-3 h-16 bg-gray-800 border-b border-gray-700">
             <h1 tw="text-xl">Add Transactions</h1>
             <Button.Icon
                onClick={() => {
