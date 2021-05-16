@@ -270,17 +270,6 @@ const Analytics = ({ methods, transactions }) => {
                   </Table.Cell>
                </Table.Row>
                <Table.Row>
-                  <Table.Cell>Minimum Debit</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-red-400">
-                        -{' '}
-                        {methods.format_currency(
-                           Number(transactions?.aggregate?.min?.debit || 0)
-                        )}
-                     </span>
-                  </Table.Cell>
-               </Table.Row>
-               <Table.Row odd>
                   <Table.Cell>Maximum Debit</Table.Cell>
                   <Table.Cell is_right>
                      <span tw="font-medium text-red-400">
@@ -291,7 +280,7 @@ const Analytics = ({ methods, transactions }) => {
                      </span>
                   </Table.Cell>
                </Table.Row>
-               <Table.Row>
+               <Table.Row odd>
                   <Table.Cell>Credit</Table.Cell>
                   <Table.Cell is_right>
                      <span tw="font-medium text-indigo-400">
@@ -302,24 +291,13 @@ const Analytics = ({ methods, transactions }) => {
                      </span>
                   </Table.Cell>
                </Table.Row>
-               <Table.Row odd>
+               <Table.Row>
                   <Table.Cell>Average Credit</Table.Cell>
                   <Table.Cell is_right>
                      <span tw="font-medium text-indigo-400">
                         +{' '}
                         {methods.format_currency(
                            Number(transactions?.aggregate?.avg?.credit || 0)
-                        )}
-                     </span>
-                  </Table.Cell>
-               </Table.Row>
-               <Table.Row>
-                  <Table.Cell>Minimum Credit</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-indigo-400">
-                        +{' '}
-                        {methods.format_currency(
-                           Number(transactions?.aggregate?.min?.credit || 0)
                         )}
                      </span>
                   </Table.Cell>

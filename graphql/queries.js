@@ -88,10 +88,6 @@ export const TRANSACTIONS_AGGREGATE = gql`
                credit
                debit
             }
-            min {
-               credit
-               debit
-            }
          }
       }
    }
