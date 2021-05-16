@@ -1,10 +1,19 @@
 import React from 'react'
 import tw, { styled } from 'twin.macro'
 import { useSubscription } from '@apollo/client'
+import {
+   Line,
+   YAxis,
+   XAxis,
+   Tooltip,
+   LineChart,
+   CartesianGrid,
+   ResponsiveContainer,
+} from 'recharts'
 
 import { Layout } from '../sections'
 import { useConfig } from '../context'
-import { Table, TableLoader } from '../components'
+import { Loader, Table, TableLoader, Tabs } from '../components'
 import {
    OVERALL,
    EXPENSES_BY_YEARS,
@@ -16,9 +25,41 @@ import {
 } from '../graphql'
 
 const Styles = {
-   Main: styled.main`
-      ${tw`grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mt-3`}
-   `,
+   Chart: {
+      Main: styled.main`
+         ${tw`grid gap-3`}
+         grid-auto-rows: 300px;
+         grid-template-columns: repeat(4, 1fr);
+         grid-template-areas:
+            'section1 section1 section1 section1'
+            'section2 section2 section3 section3'
+            'section4 section4 section5 section5'
+            'section6 section6 section6 section6';
+         > section:nth-of-type(1) {
+            grid-area: section1;
+         }
+         > section:nth-of-type(2) {
+            grid-area: section2;
+         }
+         > section:nth-of-type(3) {
+            grid-area: section3;
+         }
+         > section:nth-of-type(4) {
+            grid-area: section4;
+         }
+         > section:nth-of-type(5) {
+            grid-area: section5;
+         }
+         > section:nth-of-type(6) {
+            grid-area: section6;
+         }
+
+         @media screen and (max-width: 767px) {
+            grid-template-columns: 1fr;
+            grid-template-areas: 'section1' 'section2' 'section3' 'section4' 'section5' 'section6';
+         }
+      `,
+   },
    Metrics: tw.ul`flex flex-wrap items-center gap-3 `,
    Metric: styled.li`
       ${tw`pt-2 pb-3 px-3 flex flex-col flex-shrink-0 rounded w-full md:w-64 h-24`}
@@ -32,45 +73,33 @@ const Styles = {
 }
 
 const Analytics = () => {
-   const { methods } = useConfig()
    return (
       <Layout>
          <header>
-            <Metrics methods={methods} />
+            <Metrics />
          </header>
-         <Styles.Main>
-            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
-               <h2 tw="text-2xl mb-2">Expenses By Categories</h2>
-               <ExpensesByCategories methods={methods} />
-            </section>
-            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
-               <h2 tw="text-2xl mb-2">Expenses By Years</h2>
-               <ExpensesByYears methods={methods} />
-            </section>
-            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
-               <h2 tw="text-2xl mb-2">Expenses By Months</h2>
-               <ExpensesByMonths methods={methods} />
-            </section>
-            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
-               <h2 tw="text-2xl mb-2">Incomes By Categories</h2>
-               <IncomesByCategories methods={methods} />
-            </section>
-            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
-               <h2 tw="text-2xl mb-2">Incomes By Years</h2>
-               <IncomesByYears methods={methods} />
-            </section>
-            <section tw="overflow-x-auto bg-gray-900 px-3 py-3 rounded">
-               <h2 tw="text-2xl mb-2">Incomes By Months</h2>
-               <IncomesByMonths methods={methods} />
-            </section>
-         </Styles.Main>
+         <Tabs>
+            <Tabs.List>
+               <Tabs.ListItem>Charts View</Tabs.ListItem>
+               <Tabs.ListItem>Table View</Tabs.ListItem>
+            </Tabs.List>
+            <Tabs.Panels>
+               <Tabs.Panel>
+                  <ChartsView />
+               </Tabs.Panel>
+               <Tabs.Panel>
+                  <TableView />
+               </Tabs.Panel>
+            </Tabs.Panels>
+         </Tabs>
       </Layout>
    )
 }
 
 export default Analytics
 
-const Metrics = ({ methods }) => {
+const Metrics = () => {
+   const { methods } = useConfig()
    const [overall, setOverall] = React.useState({
       'Total Income': 0,
       'Total Expense': 0,
@@ -127,184 +156,303 @@ const Metrics = ({ methods }) => {
    )
 }
 
-const ExpensesByCategories = ({ methods }) => {
-   const {
-      loading,
-      data: { expenses_by_categories = {} } = {},
-   } = useSubscription(EXPENSES_BY_CATEGORIES)
-   if (loading) return <TableLoader cols={3} cols={3} />
+const CHART_HEIGHT = 242
+
+const ChartsView = () => {
    return (
-      <Table>
-         <Table.Head>
-            <Table.Row noBg>
-               <Table.HCell>Category</Table.HCell>
-               <Table.HCell is_right>Amount</Table.HCell>
-               <Table.HCell is_right>Total</Table.HCell>
-            </Table.Row>
-         </Table.Head>
-         <Table.Body>
-            {expenses_by_categories.nodes.map((node, index) => (
-               <Table.Row key={node.title} odd={index % 2 === 0}>
-                  <Table.Cell>{node.title}</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-red-400">
-                        - {methods.format_currency(Number(node.amount) || 0)}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell is_right>{node.count}</Table.Cell>
-               </Table.Row>
-            ))}
-         </Table.Body>
-      </Table>
+      <Styles.Chart.Main>
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Expenses By Categories</h2>
+            <ExpensesByCategoriesChart />
+         </section>
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Expenses By Year</h2>
+            <ExpensesByYearChart />
+         </section>
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Expenses By Months</h2>
+            <ExpensesByMonthChart />
+         </section>
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Incomes By Categories</h2>
+            <IncomesByCategoriesChart />
+         </section>
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Incomes By Years</h2>
+            <IncomesByYearsChart />
+         </section>
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Incomes By Months</h2>
+            <IncomesByMonthsChart />
+         </section>
+      </Styles.Chart.Main>
    )
 }
 
-const ExpensesByYears = ({ methods }) => {
-   const { loading, data: { expenses_by_years = {} } = {} } = useSubscription(
-      EXPENSES_BY_YEARS
-   )
-   if (loading) return <TableLoader cols={3} cols={3} />
+const ExpensesByCategoriesChart = () => {
+   const { loading, data: { expenses_by_categories = {} } = {} } =
+      useSubscription(EXPENSES_BY_CATEGORIES)
+   return <Chart loading={loading} data={expenses_by_categories.nodes} />
+}
+
+const ExpensesByYearChart = () => {
+   const { loading, data: { expenses_by_years = {} } = {} } =
+      useSubscription(EXPENSES_BY_YEARS)
+   return <Chart loading={loading} data={expenses_by_years.nodes} />
+}
+
+const ExpensesByMonthChart = () => {
+   const { loading, data: { expenses_by_months = {} } = {} } =
+      useSubscription(EXPENSES_BY_MONTHS)
+   return <Chart loading={loading} data={expenses_by_months.nodes} />
+}
+
+const IncomesByCategoriesChart = () => {
+   const { loading, data: { incomes_by_categories = {} } = {} } =
+      useSubscription(INCOMES_BY_CATEGORIES)
+   return <Chart loading={loading} data={incomes_by_categories.nodes} />
+}
+
+const IncomesByYearsChart = () => {
+   const { loading, data: { incomes_by_years = {} } = {} } =
+      useSubscription(INCOMES_BY_YEARS)
+   return <Chart loading={loading} data={incomes_by_years.nodes} />
+}
+
+const IncomesByMonthsChart = () => {
+   const { loading, data: { incomes_by_months = {} } = {} } =
+      useSubscription(INCOMES_BY_MONTHS)
+   return <Chart loading={loading} data={incomes_by_months.nodes} />
+}
+
+const Chart = ({ loading, data }) => {
+   const { methods } = useConfig()
+   if (loading) return <Loader />
    return (
-      <Table>
-         <Table.Head>
-            <Table.Row noBg>
-               <Table.HCell>Year</Table.HCell>
-               <Table.HCell is_right>Amount</Table.HCell>
-               <Table.HCell is_right>Total</Table.HCell>
-            </Table.Row>
-         </Table.Head>
-         <Table.Body>
-            {expenses_by_years.nodes.map((node, index) => (
-               <Table.Row key={node.year} odd={index % 2 === 0}>
-                  <Table.Cell>{node.year}</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-red-400">
-                        - {methods.format_currency(Number(node.amount) || 0)}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell is_right>{node.count}</Table.Cell>
-               </Table.Row>
-            ))}
-         </Table.Body>
-      </Table>
+      <main>
+         <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
+            <LineChart data={data}>
+               <Tooltip
+                  cursor={{ fill: '#111827' }}
+                  content={<CustomTooltip methods={methods} />}
+               />
+               <XAxis dataKey="title" fontSize={14} />
+               <YAxis
+                  width={40}
+                  type="number"
+                  fontSize={14}
+                  dataKey="amount"
+                  ticformat_k={tick => {
+                     return methods.format_k(tick)
+                  }}
+               />
+               <Line dataKey="amount" stroke="#dff75f" strokeWidth={1} />
+               <CartesianGrid stroke="rgba(255,255,255,0.10)" />
+            </LineChart>
+         </ResponsiveContainer>
+      </main>
    )
 }
 
-const ExpensesByMonths = ({ methods }) => {
-   const { loading, data: { expenses_by_months = {} } = {} } = useSubscription(
-      EXPENSES_BY_MONTHS
-   )
-   if (loading) return <TableLoader cols={3} cols={3} />
+const CustomTooltip = ({ active, payload, methods }) => {
+   if (!active || payload.length === 0) return ''
+
+   const { title, amount, count } = payload[0].payload
    return (
-      <Table>
-         <Table.Head>
-            <Table.Row noBg>
-               <Table.HCell>Year</Table.HCell>
-               <Table.HCell is_right>Amount</Table.HCell>
-               <Table.HCell is_right>Total</Table.HCell>
-            </Table.Row>
-         </Table.Head>
-         <Table.Body>
-            {expenses_by_months.nodes.map((node, index) => (
-               <Table.Row key={node.title} odd={index % 2 === 0}>
-                  <Table.Cell>{node.title}</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-red-400">
-                        - {methods.format_currency(Number(node.amount) || 0)}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell is_right>{node.count}</Table.Cell>
-               </Table.Row>
-            ))}
-         </Table.Body>
-      </Table>
+      <section tw="bg-gray-700 rounded p-2 gap-2 flex flex-col">
+         <span>Title: {title}</span>
+         <span>Amount: {methods.format_currency(amount || 0)}</span>
+         <span>Total: {count}</span>
+      </section>
    )
 }
 
-const IncomesByCategories = ({ methods }) => {
-   const {
-      loading,
-      data: { incomes_by_categories = {} } = {},
-   } = useSubscription(INCOMES_BY_CATEGORIES)
-   if (loading) return <TableLoader cols={3} cols={3} />
+const TableView = () => {
    return (
-      <Table>
-         <Table.Head>
-            <Table.Row noBg>
-               <Table.HCell>Category</Table.HCell>
-               <Table.HCell is_right>Amount</Table.HCell>
-               <Table.HCell is_right>Total</Table.HCell>
-            </Table.Row>
-         </Table.Head>
-         <Table.Body>
-            {incomes_by_categories.nodes.map((node, index) => (
-               <Table.Row key={node.title} odd={index % 2 === 0}>
-                  <Table.Cell>{node.title}</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-indigo-400">
-                        + {methods.format_currency(Number(node.amount) || 0)}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell is_right>{node.count}</Table.Cell>
-               </Table.Row>
-            ))}
-         </Table.Body>
-      </Table>
+      <main tw="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Expenses By Categories</h2>
+            <ExpensesByCategoriesTable />
+         </section>
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Expenses By Year</h2>
+            <ExpensesByYearTable />
+         </section>
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Expenses By Months</h2>
+            <ExpensesByMonthTable />
+         </section>
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Incomes By Categories</h2>
+            <IncomesByCategoriesTable />
+         </section>
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Incomes By Years</h2>
+            <IncomesByYearsTable />
+         </section>
+         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+            <h2 tw="text-xl h-12 flex items-center">Incomes By Months</h2>
+            <IncomesByMonthsTable />
+         </section>
+      </main>
    )
 }
 
-const IncomesByYears = ({ methods }) => {
-   const { loading, data: { incomes_by_years = {} } = {} } = useSubscription(
-      INCOMES_BY_YEARS
+const ExpensesByCategoriesTable = () => {
+   const { loading, data: { expenses_by_categories = {} } = {} } =
+      useSubscription(EXPENSES_BY_CATEGORIES)
+   const columns = React.useMemo(
+      () => [
+         { title: 'Categories' },
+         { title: 'Amount', is_right: true },
+         { title: 'Count', is_right: true },
+      ],
+      []
    )
-   if (loading) return <TableLoader cols={3} cols={3} />
    return (
-      <Table>
-         <Table.Head>
-            <Table.Row noBg>
-               <Table.HCell>Year</Table.HCell>
-               <Table.HCell is_right>Amount</Table.HCell>
-               <Table.HCell is_right>Total</Table.HCell>
-            </Table.Row>
-         </Table.Head>
-         <Table.Body>
-            {incomes_by_years.nodes.map((node, index) => (
-               <Table.Row key={node.year} odd={index % 2 === 0}>
-                  <Table.Cell>{node.year}</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-indigo-400">
-                        + {methods.format_currency(Number(node.amount) || 0)}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell is_right>{node.count}</Table.Cell>
-               </Table.Row>
-            ))}
-         </Table.Body>
-      </Table>
+      <TableWrapper
+         type="expense"
+         columns={columns}
+         loading={loading}
+         data={expenses_by_categories.nodes}
+      />
    )
 }
 
-const IncomesByMonths = ({ methods }) => {
-   const { loading, data: { incomes_by_months = {} } = {} } = useSubscription(
-      INCOMES_BY_MONTHS
+const ExpensesByYearTable = () => {
+   const { loading, data: { expenses_by_years = {} } = {} } =
+      useSubscription(EXPENSES_BY_YEARS)
+   const columns = React.useMemo(
+      () => [
+         { title: 'Year' },
+         { title: 'Amount', is_right: true },
+         { title: 'Count', is_right: true },
+      ],
+      []
    )
+   return (
+      <TableWrapper
+         type="expense"
+         columns={columns}
+         loading={loading}
+         data={expenses_by_years.nodes}
+      />
+   )
+}
+
+const ExpensesByMonthTable = () => {
+   const { loading, data: { expenses_by_months = {} } = {} } =
+      useSubscription(EXPENSES_BY_MONTHS)
+   const columns = React.useMemo(
+      () => [
+         { title: 'Month' },
+         { title: 'Amount', is_right: true },
+         { title: 'Count', is_right: true },
+      ],
+      []
+   )
+   return (
+      <TableWrapper
+         type="expense"
+         columns={columns}
+         loading={loading}
+         data={expenses_by_months.nodes}
+      />
+   )
+}
+
+const IncomesByCategoriesTable = () => {
+   const { loading, data: { incomes_by_categories = {} } = {} } =
+      useSubscription(INCOMES_BY_CATEGORIES)
+   const columns = React.useMemo(
+      () => [
+         { title: 'Categories' },
+         { title: 'Amount', is_right: true },
+         { title: 'Count', is_right: true },
+      ],
+      []
+   )
+   return (
+      <TableWrapper
+         type="income"
+         columns={columns}
+         loading={loading}
+         data={incomes_by_categories.nodes}
+      />
+   )
+}
+
+const IncomesByYearsTable = () => {
+   const { loading, data: { incomes_by_years = {} } = {} } =
+      useSubscription(INCOMES_BY_YEARS)
+   const columns = React.useMemo(
+      () => [
+         { title: 'Year' },
+         { title: 'Amount', is_right: true },
+         { title: 'Count', is_right: true },
+      ],
+      []
+   )
+   return (
+      <TableWrapper
+         type="income"
+         columns={columns}
+         loading={loading}
+         data={incomes_by_years.nodes}
+      />
+   )
+}
+
+const IncomesByMonthsTable = () => {
+   const { loading, data: { incomes_by_months = {} } = {} } =
+      useSubscription(INCOMES_BY_MONTHS)
+   const columns = React.useMemo(
+      () => [
+         { title: 'Month' },
+         { title: 'Amount', is_right: true },
+         { title: 'Count', is_right: true },
+      ],
+      []
+   )
+   return (
+      <TableWrapper
+         type="income"
+         columns={columns}
+         loading={loading}
+         data={incomes_by_months.nodes}
+      />
+   )
+}
+
+const TableWrapper = ({ loading, type, columns = [], data = [] }) => {
+   const { methods } = useConfig()
    if (loading) return <TableLoader cols={3} />
    return (
       <Table>
          <Table.Head>
             <Table.Row noBg>
-               <Table.HCell>Year</Table.HCell>
-               <Table.HCell is_right>Amount</Table.HCell>
-               <Table.HCell is_right>Total</Table.HCell>
+               {columns.map(column => (
+                  <Table.HCell is_right={column?.is_right}>
+                     {column.title}
+                  </Table.HCell>
+               ))}
             </Table.Row>
          </Table.Head>
          <Table.Body>
-            {incomes_by_months.nodes.map((node, index) => (
+            {data.map((node, index) => (
                <Table.Row key={node.title} odd={index % 2 === 0}>
                   <Table.Cell>{node.title}</Table.Cell>
                   <Table.Cell is_right>
-                     <span tw="font-medium text-indigo-400">
-                        + {methods.format_currency(Number(node.amount) || 0)}
+                     <span
+                        css={[
+                           tw`font-medium`,
+                           type === 'expense'
+                              ? tw`text-red-400`
+                              : tw`text-indigo-400`,
+                        ]}
+                     >
+                        {type === 'expense' ? '- ' : '+ '}
+                        {methods.format_currency(Number(node.amount) || 0)}
                      </span>
                   </Table.Cell>
                   <Table.Cell is_right>{node.count}</Table.Cell>

@@ -54,9 +54,19 @@ export const ConfigProvider = ({ children }) => {
 
    const format_date = date => format(new Date(date), state.date)
 
+   const format_k = num => {
+      return Math.abs(num) > 999
+         ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + 'k'
+         : Math.sign(num) * Math.abs(num)
+   }
+
    return (
       <ConfigContext.Provider
-         value={{ state, dispatch, methods: { format_currency, format_date } }}
+         value={{
+            state,
+            dispatch,
+            methods: { format_currency, format_date, format_k },
+         }}
       >
          {children}
       </ConfigContext.Provider>
