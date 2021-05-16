@@ -238,11 +238,11 @@ const Chart = ({ loading, data }) => {
                />
                <XAxis dataKey="title" fontSize={14} />
                <YAxis
-                  width={40}
+                  width={46}
                   type="number"
                   fontSize={14}
                   dataKey="amount"
-                  ticformat_k={tick => {
+                  tickFormatter={tick => {
                      return methods.format_k(tick)
                   }}
                />
