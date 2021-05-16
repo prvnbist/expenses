@@ -119,7 +119,7 @@ export const EXPENSES_BY_CATEGORIES = gql`
 
 export const EXPENSES_BY_YEARS = gql`
    subscription expenses_by_years {
-      expenses_by_years: expenses_by_year_aggregate(order_by: { year: desc }) {
+      expenses_by_years: expenses_by_year_aggregate(order_by: { title: desc }) {
          aggregate {
             count
             sum {
@@ -127,7 +127,7 @@ export const EXPENSES_BY_YEARS = gql`
             }
          }
          nodes {
-            year
+            title
             count
             amount
          }
@@ -195,7 +195,7 @@ export const INCOMES_BY_CATEGORIES = gql`
 
 export const INCOMES_BY_YEARS = gql`
    subscription incomes_by_years {
-      incomes_by_years: incomes_by_year_aggregate(order_by: { year: desc }) {
+      incomes_by_years: incomes_by_year_aggregate(order_by: { title: desc }) {
          aggregate {
             count
             sum {
@@ -203,7 +203,7 @@ export const INCOMES_BY_YEARS = gql`
             }
          }
          nodes {
-            year
+            title
             count
             amount
          }
