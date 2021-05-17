@@ -95,7 +95,7 @@ export const TRANSACTIONS_AGGREGATE = gql`
 
 export const EXPENSES_BY_CATEGORIES = gql`
    subscription expenses_by_categories {
-      expenses_by_categories: expenses_by_category_aggregate(
+      expenses_by_categories: analytics_expenses_by_category_aggregate(
          order_by: { amount: desc }
       ) {
          aggregate {
@@ -115,7 +115,9 @@ export const EXPENSES_BY_CATEGORIES = gql`
 
 export const EXPENSES_BY_YEARS = gql`
    subscription expenses_by_years {
-      expenses_by_years: expenses_by_year_aggregate(order_by: { title: desc }) {
+      expenses_by_years: analytics_expenses_by_year_aggregate(
+         order_by: { title: desc }
+      ) {
          aggregate {
             count
             sum {
@@ -133,7 +135,7 @@ export const EXPENSES_BY_YEARS = gql`
 
 export const EXPENSES_BY_MONTHS = gql`
    subscription expenses_by_months {
-      expenses_by_months: expenses_by_month_aggregate(
+      expenses_by_months: analytics_expenses_by_month_aggregate(
          order_by: { month: asc }
       ) {
          aggregate {
@@ -153,7 +155,9 @@ export const EXPENSES_BY_MONTHS = gql`
 
 export const INCOMES_BY_MONTHS = gql`
    subscription incomes_by_months {
-      incomes_by_months: incomes_by_month_aggregate(order_by: { month: asc }) {
+      incomes_by_months: analytics_incomes_by_month_aggregate(
+         order_by: { month: asc }
+      ) {
          aggregate {
             count
             sum {
@@ -171,7 +175,7 @@ export const INCOMES_BY_MONTHS = gql`
 
 export const INCOMES_BY_CATEGORIES = gql`
    subscription incomes_by_categories {
-      incomes_by_categories: incomes_by_category_aggregate(
+      incomes_by_categories: analytics_incomes_by_category_aggregate(
          order_by: { amount: desc }
       ) {
          aggregate {
@@ -191,7 +195,9 @@ export const INCOMES_BY_CATEGORIES = gql`
 
 export const INCOMES_BY_YEARS = gql`
    subscription incomes_by_years {
-      incomes_by_years: incomes_by_year_aggregate(order_by: { title: desc }) {
+      incomes_by_years: analytics_incomes_by_year_aggregate(
+         order_by: { title: desc }
+      ) {
          aggregate {
             count
             sum {
@@ -222,10 +228,13 @@ export const ACCOUNTS = gql`
 
 export const MONTHLY_EXPENSE_REPORT = gql`
    subscription monthly_expense_report(
-      $where: monthly_expense_report_bool_exp = {}
-      $order_by: [monthly_expense_report_order_by!] = {}
+      $where: analytics_monthly_expense_report_bool_exp = {}
+      $order_by: [analytics_monthly_expense_report_order_by!] = {}
    ) {
-      monthly_expense_report(where: $where, order_by: $order_by) {
+      monthly_expense_report: analytics_monthly_expense_report(
+         where: $where
+         order_by: $order_by
+      ) {
          month
          year
          title
@@ -236,11 +245,14 @@ export const MONTHLY_EXPENSE_REPORT = gql`
 `
 
 export const MONTHLY_INCOME_REPORT = gql`
-   subscription monthly_expense_report(
-      $where: monthly_income_report_bool_exp = {}
-      $order_by: [monthly_income_report_order_by!] = {}
+   subscription monthly_income_report(
+      $where: analytics_monthly_income_report_bool_exp = {}
+      $order_by: [analytics_monthly_income_report_order_by!] = {}
    ) {
-      monthly_income_report(where: $where, order_by: $order_by) {
+      monthly_income_report: analytics_monthly_income_report(
+         where: $where
+         order_by: $order_by
+      ) {
          month
          year
          title
@@ -252,7 +264,9 @@ export const MONTHLY_INCOME_REPORT = gql`
 
 export const EXPENSE_YEARS = gql`
    query expense_years_list {
-      expense_years_list(order_by: { year: desc }) {
+      expense_years_list: analytics_expense_years_list(
+         order_by: { year: desc }
+      ) {
          year
       }
    }
@@ -260,7 +274,7 @@ export const EXPENSE_YEARS = gql`
 
 export const INCOME_YEARS = gql`
    query income_years_list {
-      income_years_list(order_by: { year: desc }) {
+      income_years_list: analytics_income_years_list(order_by: { year: desc }) {
          year
       }
    }
