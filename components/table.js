@@ -34,17 +34,19 @@ const Styles = {
       `
    ),
    Cell: styled.td(
-      ({ is_right, no_padding }) => css`
+      ({ is_right, is_center, no_padding }) => css`
          ${tw`font-light h-12 whitespace-nowrap`}
          ${is_right && tw`text-right`}
          ${!no_padding && tw`px-3`}
+         ${is_center && tw`flex justify-center`}
       `
    ),
    HCell: styled.th(
-      ({ is_right }) =>
+      ({ is_right, is_center }) =>
          css`
             ${tw`bg-gray-800 sticky top-0 h-8 px-3 text-left text-sm text-gray-500 uppercase font-medium tracking-wider whitespace-nowrap`}
             ${is_right && tw`text-right`}
+            ${is_center && tw`flex justify-center`}
          `
    ),
 }

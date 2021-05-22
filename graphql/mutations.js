@@ -32,3 +32,25 @@ export const DELETE_TRANSACTIONS = gql`
       }
    }
 `
+
+export const UPSERT_ACCOUNT = gql`
+   mutation upsert_account($objects: [accounts_insert_input!]!) {
+      upsert_account: insert_accounts(
+         objects: $objects
+         on_conflict: {
+            constraint: accounts_pkey
+            update_columns: [title, balance]
+         }
+      ) {
+         affected_rows
+      }
+   }
+`
+
+export const DELETE_ACCOUNT = gql`
+   mutation delete_account($id: uuid!) {
+      delete_account: delete_accounts_by_pk(id: $id) {
+         id
+      }
+   }
+`
