@@ -7,10 +7,9 @@ import { Layout } from '../sections'
 import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
 import { ACCOUNTS, DELETE_ACCOUNT, UPSERT_ACCOUNT } from '../graphql'
-import { Button, Table, TableLoader } from '../components'
+import { Button, Loader, Table, TableLoader } from '../components'
 
 const Accounts = () => {
-   const { methods } = useConfig()
    const { addToast } = useToasts()
    const [account, setAccount] = React.useState({})
    const [isFormOpen, setIsFormOpen] = React.useState(false)
@@ -36,70 +35,27 @@ const Accounts = () => {
                Add
             </Button.Combo>
          </header>
-         <section style={{ maxHeight: '520px' }}>
-            {loading ? (
-               <TableLoader cols={4} />
-            ) : (
-               <Table>
-                  <Table.Head>
-                     <Table.Row>
-                        <Table.HCell>Account</Table.HCell>
-                        <Table.HCell is_right>Balance</Table.HCell>
-                        <Table.HCell is_right>Total Expense</Table.HCell>
-                        <Table.HCell is_right>Total Income</Table.HCell>
-                        <Table.HCell is_center>Actions</Table.HCell>
-                     </Table.Row>
-                  </Table.Head>
-                  <Table.Body>
-                     {accounts.map((account, index) => (
-                        <Table.Row key={account.id} odd={index % 2 === 0}>
-                           <Table.Cell>{account.title}</Table.Cell>
-                           <Table.Cell is_right>
-                              {methods.format_currency(account.balance)}
-                           </Table.Cell>
-                           <Table.Cell is_right>
-                              <span tw="font-medium text-red-400">
-                                 -{' '}
-                                 {methods.format_currency(account.expense_sum)}{' '}
-                                 ({account.expense_count})
-                              </span>
-                           </Table.Cell>
-                           <Table.Cell is_right>
-                              <span tw="font-medium text-indigo-400">
-                                 + {methods.format_currency(account.income_sum)}{' '}
-                                 ({account.income_count})
-                              </span>
-                           </Table.Cell>
-                           <Table.Cell is_center>
-                              <Button.Group>
-                                 <Button.Icon
-                                    is_small
-                                    onClick={() => {
-                                       setAccount(account)
-                                       setIsFormOpen(true)
-                                    }}
-                                 >
-                                    <Icon.Edit size={16} tw="stroke-current" />
-                                 </Button.Icon>
-                                 <Button.Icon
-                                    is_small
-                                    onClick={() =>
-                                       remove({ variables: { id: account.id } })
-                                    }
-                                 >
-                                    <Icon.Delete
-                                       size={16}
-                                       tw="stroke-current"
-                                    />
-                                 </Button.Icon>
-                              </Button.Group>
-                           </Table.Cell>
-                        </Table.Row>
-                     ))}
-                  </Table.Body>
-               </Table>
-            )}
-         </section>
+         <main
+            style={{ maxHeight: '520px' }}
+            tw="flex-1 hidden md:block overflow-y-auto"
+         >
+            <TableView
+               remove={remove}
+               loading={loading}
+               accounts={accounts}
+               setAccount={setAccount}
+               setIsFormOpen={setIsFormOpen}
+            />
+         </main>
+         <main tw="md:hidden">
+            <CardView
+               remove={remove}
+               loading={loading}
+               accounts={accounts}
+               setAccount={setAccount}
+               setIsFormOpen={setIsFormOpen}
+            />
+         </main>
          <ManageAccount
             account={account}
             setAccount={setAccount}
@@ -111,6 +67,125 @@ const Accounts = () => {
 }
 
 export default Accounts
+
+const TableView = ({
+   setAccount,
+   setIsFormOpen,
+   remove,
+   loading,
+   accounts,
+}) => {
+   const { methods } = useConfig()
+   if (loading) return <TableLoader cols={4} />
+   return (
+      <Table>
+         <Table.Head>
+            <Table.Row>
+               <Table.HCell>Account</Table.HCell>
+               <Table.HCell is_right>Balance</Table.HCell>
+               <Table.HCell is_right>Total Expense</Table.HCell>
+               <Table.HCell is_right>Total Income</Table.HCell>
+               <Table.HCell is_center>Actions</Table.HCell>
+            </Table.Row>
+         </Table.Head>
+         <Table.Body>
+            {accounts.map((account, index) => (
+               <Table.Row key={account.id} odd={index % 2 === 0}>
+                  <Table.Cell>{account.title}</Table.Cell>
+                  <Table.Cell is_right>
+                     {methods.format_currency(account.balance)}
+                  </Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-red-400">
+                        - {methods.format_currency(account.expense_sum)} (
+                        {account.expense_count})
+                     </span>
+                  </Table.Cell>
+                  <Table.Cell is_right>
+                     <span tw="font-medium text-indigo-400">
+                        + {methods.format_currency(account.income_sum)} (
+                        {account.income_count})
+                     </span>
+                  </Table.Cell>
+                  <Table.Cell is_center>
+                     <Button.Group>
+                        <Button.Icon
+                           is_small
+                           onClick={() => {
+                              setAccount(account)
+                              setIsFormOpen(true)
+                           }}
+                        >
+                           <Icon.Edit size={16} tw="stroke-current" />
+                        </Button.Icon>
+                        <Button.Icon
+                           is_small
+                           onClick={() =>
+                              remove({ variables: { id: account.id } })
+                           }
+                        >
+                           <Icon.Delete size={16} tw="stroke-current" />
+                        </Button.Icon>
+                     </Button.Group>
+                  </Table.Cell>
+               </Table.Row>
+            ))}
+         </Table.Body>
+      </Table>
+   )
+}
+
+const CardView = ({ setAccount, setIsFormOpen, remove, loading, accounts }) => {
+   const { methods } = useConfig()
+
+   if (loading) return <Loader />
+   return (
+      <ul tw="space-y-2">
+         {accounts.map(account => (
+            <li key={account.id} tw="list-none bg-gray-700 rounded p-3">
+               <header tw="flex items-center justify-between">
+                  <h3 tw="text-lg">
+                     {account.title} ({methods.format_currency(account.balance)}
+                     )
+                  </h3>
+                  <Button.Group>
+                     <Button.Icon
+                        is_small
+                        onClick={() => {
+                           setAccount(account)
+                           setIsFormOpen(true)
+                        }}
+                     >
+                        <Icon.Edit size={16} tw="stroke-current" />
+                     </Button.Icon>
+                     <Button.Icon is_small>
+                        <Icon.Delete
+                           size={16}
+                           tw="stroke-current"
+                           onClick={() =>
+                              remove({ variables: { id: account.id } })
+                           }
+                        />
+                     </Button.Icon>
+                  </Button.Group>
+               </header>
+               <main tw="mt-3">
+                  <section tw="pt-2 divide-x divide-gray-800 border-t border-gray-800 grid grid-cols-2 text-center">
+                     <span title="Total Expenses" tw="text-red-400">
+                        - {methods.format_currency(account.expense_sum)}(
+                        {account.expense_count})
+                     </span>
+                     <span title="Total Income" tw="text-indigo-400">
+                        + {methods.format_currency(account.income_sum)}(
+                        {account.income_count})
+                     </span>
+                  </section>
+               </main>
+            </li>
+         ))}
+      </ul>
+   )
+}
 
 const Styles = {
    Fieldset: styled.fieldset`
