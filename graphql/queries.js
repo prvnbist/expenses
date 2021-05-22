@@ -218,6 +218,7 @@ export const ACCOUNTS = gql`
       accounts(order_by: { title: asc }) {
          id
          title
+         balance
          expense_count
          expense_sum
          income_count

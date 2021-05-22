@@ -16,12 +16,13 @@ const Accounts = () => {
          </header>
          <section style={{ maxHeight: '520px' }}>
             {loading ? (
-               <TableLoader />
+               <TableLoader cols={4} />
             ) : (
                <Table>
                   <Table.Head>
                      <Table.Row>
                         <Table.HCell>Account</Table.HCell>
+                        <Table.HCell is_right>Balance</Table.HCell>
                         <Table.HCell is_right>Total Expense</Table.HCell>
                         <Table.HCell is_right>Total Income</Table.HCell>
                      </Table.Row>
@@ -30,6 +31,9 @@ const Accounts = () => {
                      {accounts.map((account, index) => (
                         <Table.Row key={account.id} odd={index % 2 === 0}>
                            <Table.Cell>{account.title}</Table.Cell>
+                           <Table.Cell is_right>
+                              {methods.format_currency(account.balance)}
+                           </Table.Cell>
                            <Table.Cell is_right>
                               <span tw="font-medium text-red-400">
                                  -{' '}
