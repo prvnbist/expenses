@@ -16,6 +16,8 @@ const IndexPage = () => {
       onSearch,
       isFormOpen,
       setIsFormOpen,
+      isSortPanelOpen,
+      setIsSortPanelOpen,
       transactions_aggregate,
    } = useTransactions()
 
@@ -35,7 +37,7 @@ const IndexPage = () => {
                Add
             </Button.Combo>
          </header>
-         <section tw="mt-3 mb-2">
+         <section tw="mt-3 mb-2 flex items-center justify-between">
             <fieldset>
                <input
                   type="text"
@@ -50,6 +52,21 @@ const IndexPage = () => {
                   tw="bg-gray-700 h-10 rounded px-2"
                />
             </fieldset>
+            <section>
+               <Button.Combo
+                  icon_right={
+                     isSortPanelOpen ? (
+                        <Icon.Up tw="stroke-current" />
+                     ) : (
+                        <Icon.Down tw="stroke-current" />
+                     )
+                  }
+                  onClick={() => setIsSortPanelOpen(!isSortPanelOpen)}
+               >
+                  Sort
+               </Button.Combo>
+               {isSortPanelOpen && <SortBy />}
+            </section>
          </section>
          <Filters pagination={pagination} />
          <FilterBy />
@@ -316,5 +333,83 @@ const Analytics = ({ methods, transactions }) => {
             </Table.Body>
          </Table>
       </Styles.Analytics>
+   )
+}
+
+const SortBy = () => {
+   const { on_sort, orderBy } = useTransactions()
+   return (
+      <ul tw="absolute right-0 mt-2 mr-4 z-10 bg-gray-700 py-2 rounded shadow-xl">
+         <SortByOption
+            field="title"
+            title="Title"
+            on_sort={on_sort}
+            active={orderBy?.title}
+         />
+         <SortByOption
+            field="credit"
+            title="Credit"
+            on_sort={on_sort}
+            active={orderBy?.credit}
+         />
+         <SortByOption
+            field="debit"
+            title="Debit"
+            on_sort={on_sort}
+            active={orderBy?.debit}
+         />
+         <SortByOption
+            title="Date"
+            field="raw_date"
+            on_sort={on_sort}
+            active={orderBy?.raw_date}
+         />
+         <SortByOption
+            field="category"
+            title="Category"
+            on_sort={on_sort}
+            active={orderBy?.category}
+         />
+         <SortByOption
+            on_sort={on_sort}
+            field="payment_method"
+            title="Payment Method"
+            active={orderBy?.payment_method}
+         />
+         <SortByOption
+            title="Account"
+            field="account"
+            on_sort={on_sort}
+            active={orderBy?.account}
+         />
+      </ul>
+   )
+}
+
+const SortByOption = ({ field, title, active, on_sort }) => {
+   return (
+      <li tw="cursor-pointer flex items-center justify-between pl-3 pr-2 h-10 space-x-4">
+         <span>{title}</span>
+         <section tw="space-x-1">
+            <button
+               onClick={() => on_sort(field, 'asc')}
+               css={[
+                  tw`py-1 px-2 rounded text-sm hover:(bg-gray-800)`,
+                  active === 'asc' && tw`bg-gray-800`,
+               ]}
+            >
+               Asc
+            </button>
+            <button
+               onClick={() => on_sort(field, 'desc')}
+               css={[
+                  tw`py-1 px-2 rounded text-sm hover:(bg-gray-800)`,
+                  active === 'desc' && tw`bg-gray-800`,
+               ]}
+            >
+               Desc
+            </button>
+         </section>
+      </li>
    )
 }

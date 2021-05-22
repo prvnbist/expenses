@@ -19,7 +19,8 @@ export const TransactionsProvider = ({ children }) => {
    const [editForm, setEditForm] = React.useState({})
    const [selected, setSelected] = React.useState([])
    const [isFormOpen, setIsFormOpen] = React.useState(false)
-   const [orderBy] = React.useState({
+   const [isSortPanelOpen, setIsSortPanelOpen] = React.useState(false)
+   const [orderBy, setOrderBy] = React.useState({
       title: 'asc',
       raw_date: 'desc',
    })
@@ -39,7 +40,7 @@ export const TransactionsProvider = ({ children }) => {
             limit,
             where: { ...where },
             offset,
-            order_by: orderBy,
+            order_by: { ...orderBy },
          },
       }
    )
@@ -113,6 +114,16 @@ export const TransactionsProvider = ({ children }) => {
       },
    }
 
+   const on_sort = (field, direction) => {
+      setOrderBy(existing => {
+         if (existing && field in existing && existing[field] === direction) {
+            delete existing[field]
+            return { ...existing }
+         }
+         return { ...existing, [field]: direction }
+      })
+   }
+
    return (
       <Context.Provider
          value={{
@@ -123,6 +134,7 @@ export const TransactionsProvider = ({ children }) => {
             orderBy,
             update,
             remove,
+            on_sort,
             editForm,
             onSearch,
             setLimit,
@@ -136,6 +148,8 @@ export const TransactionsProvider = ({ children }) => {
             setIsFormOpen,
             on_row_select,
             is_row_selected,
+            isSortPanelOpen,
+            setIsSortPanelOpen,
             transactions_aggregate,
             is_loading: loading || loading_aggregate,
          }}
