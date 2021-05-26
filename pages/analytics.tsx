@@ -1,5 +1,6 @@
 import React from 'react'
-import tw, { styled } from 'twin.macro'
+import tw from 'twin.macro'
+import styled from 'styled-components'
 import { useSubscription } from '@apollo/client'
 import {
    Line,
@@ -72,7 +73,7 @@ const Styles = {
    `,
 }
 
-const Analytics = () => {
+const Analytics = (): JSX.Element => {
    return (
       <Layout>
          <header>
@@ -98,7 +99,7 @@ const Analytics = () => {
 
 export default Analytics
 
-const Metrics = () => {
+const Metrics = (): JSX.Element => {
    const { methods } = useConfig()
    const [overall, setOverall] = React.useState({
       'Total Income': 0,
@@ -158,7 +159,7 @@ const Metrics = () => {
 
 const CHART_HEIGHT = 242
 
-const ChartsView = () => {
+const ChartsView = (): JSX.Element => {
    return (
       <Styles.Chart.Main>
          <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
@@ -189,43 +190,54 @@ const ChartsView = () => {
    )
 }
 
-const ExpensesByCategoriesChart = () => {
+const ExpensesByCategoriesChart = (): JSX.Element => {
    const { loading, data: { expenses_by_categories = {} } = {} } =
       useSubscription(EXPENSES_BY_CATEGORIES)
    return <Chart loading={loading} data={expenses_by_categories.nodes} />
 }
 
-const ExpensesByYearChart = () => {
+const ExpensesByYearChart = (): JSX.Element => {
    const { loading, data: { expenses_by_years = {} } = {} } =
       useSubscription(EXPENSES_BY_YEARS)
    return <Chart loading={loading} data={expenses_by_years.nodes} />
 }
 
-const ExpensesByMonthChart = () => {
+const ExpensesByMonthChart = (): JSX.Element => {
    const { loading, data: { expenses_by_months = {} } = {} } =
       useSubscription(EXPENSES_BY_MONTHS)
    return <Chart loading={loading} data={expenses_by_months.nodes} />
 }
 
-const IncomesByCategoriesChart = () => {
+const IncomesByCategoriesChart = (): JSX.Element => {
    const { loading, data: { incomes_by_categories = {} } = {} } =
       useSubscription(INCOMES_BY_CATEGORIES)
    return <Chart loading={loading} data={incomes_by_categories.nodes} />
 }
 
-const IncomesByYearsChart = () => {
+const IncomesByYearsChart = (): JSX.Element => {
    const { loading, data: { incomes_by_years = {} } = {} } =
       useSubscription(INCOMES_BY_YEARS)
    return <Chart loading={loading} data={incomes_by_years.nodes} />
 }
 
-const IncomesByMonthsChart = () => {
+const IncomesByMonthsChart = (): JSX.Element => {
    const { loading, data: { incomes_by_months = {} } = {} } =
       useSubscription(INCOMES_BY_MONTHS)
    return <Chart loading={loading} data={incomes_by_months.nodes} />
 }
 
-const Chart = ({ loading, data }) => {
+interface IChartData {
+   title: string
+   count: number
+   amount: number
+}
+
+interface IChart {
+   loading: boolean
+   data: IChartData[]
+}
+
+const Chart = ({ loading, data }: IChart): JSX.Element => {
    const { methods } = useConfig()
    if (loading) return <Loader />
    return (
@@ -234,7 +246,13 @@ const Chart = ({ loading, data }) => {
             <LineChart data={data}>
                <Tooltip
                   cursor={{ fill: '#111827' }}
-                  content={<CustomTooltip methods={methods} />}
+                  content={({ active, payload }) => (
+                     <CustomTooltip
+                        active={active}
+                        methods={methods}
+                        payload={payload}
+                     />
+                  )}
                />
                <XAxis dataKey="title" fontSize={14} />
                <YAxis
@@ -254,8 +272,20 @@ const Chart = ({ loading, data }) => {
    )
 }
 
-const CustomTooltip = ({ active, payload, methods }) => {
-   if (!active || payload.length === 0) return ''
+interface ICustomTooltip {
+   payload?: any
+   active?: boolean
+   methods: {
+      format_currency: (x: number) => string
+   }
+}
+
+const CustomTooltip = ({
+   active,
+   payload,
+   methods,
+}: ICustomTooltip): JSX.Element => {
+   if (!active || payload.length === 0) return <section />
 
    const { title, amount, count } = payload[0].payload
    return (
@@ -298,7 +328,7 @@ const TableView = () => {
    )
 }
 
-const ExpensesByCategoriesTable = () => {
+const ExpensesByCategoriesTable = (): JSX.Element => {
    const { loading, data: { expenses_by_categories = {} } = {} } =
       useSubscription(EXPENSES_BY_CATEGORIES)
    const columns = React.useMemo(
@@ -319,7 +349,7 @@ const ExpensesByCategoriesTable = () => {
    )
 }
 
-const ExpensesByYearTable = () => {
+const ExpensesByYearTable = (): JSX.Element => {
    const { loading, data: { expenses_by_years = {} } = {} } =
       useSubscription(EXPENSES_BY_YEARS)
    const columns = React.useMemo(
@@ -340,7 +370,7 @@ const ExpensesByYearTable = () => {
    )
 }
 
-const ExpensesByMonthTable = () => {
+const ExpensesByMonthTable = (): JSX.Element => {
    const { loading, data: { expenses_by_months = {} } = {} } =
       useSubscription(EXPENSES_BY_MONTHS)
    const columns = React.useMemo(
@@ -361,7 +391,7 @@ const ExpensesByMonthTable = () => {
    )
 }
 
-const IncomesByCategoriesTable = () => {
+const IncomesByCategoriesTable = (): JSX.Element => {
    const { loading, data: { incomes_by_categories = {} } = {} } =
       useSubscription(INCOMES_BY_CATEGORIES)
    const columns = React.useMemo(
@@ -382,7 +412,7 @@ const IncomesByCategoriesTable = () => {
    )
 }
 
-const IncomesByYearsTable = () => {
+const IncomesByYearsTable = (): JSX.Element => {
    const { loading, data: { incomes_by_years = {} } = {} } =
       useSubscription(INCOMES_BY_YEARS)
    const columns = React.useMemo(
@@ -403,7 +433,7 @@ const IncomesByYearsTable = () => {
    )
 }
 
-const IncomesByMonthsTable = () => {
+const IncomesByMonthsTable = (): JSX.Element => {
    const { loading, data: { incomes_by_months = {} } = {} } =
       useSubscription(INCOMES_BY_MONTHS)
    const columns = React.useMemo(
@@ -424,7 +454,20 @@ const IncomesByMonthsTable = () => {
    )
 }
 
-const TableWrapper = ({ loading, type, columns = [], data = [] }) => {
+interface IColumns {
+   title: string
+   is_right?: boolean
+}
+
+interface ITableWrapper {
+   loading: boolean
+   data: IChartData[]
+   columns: IColumns[]
+   type: 'income' | 'expense'
+}
+
+const TableWrapper = (props: ITableWrapper): JSX.Element => {
+   const { type, loading, data = [], columns = [] } = props
    const { methods } = useConfig()
    if (loading) return <TableLoader cols={3} />
    return (

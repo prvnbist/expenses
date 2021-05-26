@@ -1,5 +1,5 @@
 import { Layout } from '../sections'
 
-const ErrorPage = () => <Layout>Not found</Layout>
+const ErrorPage = (): JSX.Element => <Layout>Not found</Layout>
 
 export default ErrorPage
