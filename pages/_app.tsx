@@ -9,6 +9,7 @@ import {
 } from '@apollo/client'
 import tw from 'twin.macro'
 import fetch from 'node-fetch'
+import type { AppProps } from 'next/app'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { ToastProvider } from 'react-toast-notifications'
 import { getMainDefinition } from '@apollo/client/utilities'
@@ -67,7 +68,7 @@ const client = new ApolloClient({
    cache: new InMemoryCache(),
 })
 
-const App = ({ Component, pageProps }) => {
+const App = ({ Component, pageProps }: AppProps): JSX.Element => {
    const [isAuthenticating, setIsAuthenticating] = React.useState(true)
    const [authenticated, setAuthenticated] = React.useState(false)
 
@@ -104,7 +105,11 @@ const App = ({ Component, pageProps }) => {
 
 export default App
 
-const Login = ({ setAuthenticated }) => {
+interface LoginProps {
+   setAuthenticated: (x: boolean) => void
+}
+
+const Login = ({ setAuthenticated }: LoginProps): JSX.Element => {
    const [key, setKey] = React.useState('')
    const [saveKey, setSaveKey] = React.useState(false)
    const [error, setError] = React.useState('')
@@ -142,7 +147,7 @@ const Login = ({ setAuthenticated }) => {
                   type="checkbox"
                   id="remember"
                   name="remember"
-                  value={saveKey}
+                  checked={saveKey}
                   onChange={() => setSaveKey(!saveKey)}
                />
                <label htmlFor="remember" tw="ml-2 text-gray-500 ">

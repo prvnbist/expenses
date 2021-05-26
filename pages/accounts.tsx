@@ -1,5 +1,6 @@
 import React from 'react'
-import tw, { styled } from 'twin.macro'
+import tw from 'twin.macro'
+import styled from 'styled-components'
 import { useToasts } from 'react-toast-notifications'
 import { useMutation, useSubscription } from '@apollo/client'
 
@@ -9,7 +10,7 @@ import * as Icon from '../assets/icons'
 import { ACCOUNTS, DELETE_ACCOUNT, UPSERT_ACCOUNT } from '../graphql'
 import { Button, Loader, Table, TableLoader } from '../components'
 
-const Accounts = () => {
+const Accounts = (): JSX.Element => {
    const { addToast } = useToasts()
    const [account, setAccount] = React.useState({})
    const [isFormOpen, setIsFormOpen] = React.useState(false)
@@ -68,13 +69,37 @@ const Accounts = () => {
 
 export default Accounts
 
+interface IAccountInput {
+   id?: string
+   title?: string
+   balance?: number
+}
+
+interface IAccount {
+   id: string
+   title: string
+   balance: number
+   expense_sum: number
+   expense_count: number
+   income_sum: number
+   income_count: number
+}
+
+interface ITableOrCardView {
+   loading: boolean
+   accounts: IAccount[]
+   setIsFormOpen: (x: boolean) => void
+   setAccount: (x: IAccountInput) => void
+   remove: (x: { variables: { id: string } }) => void
+}
+
 const TableView = ({
    setAccount,
    setIsFormOpen,
    remove,
    loading,
    accounts,
-}) => {
+}: ITableOrCardView): JSX.Element => {
    const { methods } = useConfig()
    if (loading) return <TableLoader cols={4} />
    return (
@@ -135,7 +160,13 @@ const TableView = ({
    )
 }
 
-const CardView = ({ setAccount, setIsFormOpen, remove, loading, accounts }) => {
+const CardView = ({
+   setAccount,
+   setIsFormOpen,
+   remove,
+   loading,
+   accounts,
+}: ITableOrCardView): JSX.Element => {
    const { methods } = useConfig()
 
    if (loading) return <Loader />
@@ -199,12 +230,19 @@ const Styles = {
    `,
 }
 
+interface IManageAccount {
+   isFormOpen: boolean
+   account: IAccountInput
+   setIsFormOpen: (x: boolean) => void
+   setAccount: (x: IAccountInput | {}) => void | IAccountInput
+}
+
 const ManageAccount = ({
-   account = {},
+   account,
    setAccount,
    isFormOpen,
    setIsFormOpen,
-}) => {
+}: IManageAccount): JSX.Element => {
    const { addToast } = useToasts()
    const [upsert, { loading }] = useMutation(UPSERT_ACCOUNT, {
       onCompleted: () => {

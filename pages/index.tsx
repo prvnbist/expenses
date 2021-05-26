@@ -1,5 +1,6 @@
 import React from 'react'
-import tw, { styled } from 'twin.macro'
+import tw from 'twin.macro'
+import styled from 'styled-components'
 import { usePagination } from 'react-use-pagination'
 
 import { useConfig } from '../context'
@@ -8,7 +9,7 @@ import { Button, Table } from '../components'
 import { useTransactions } from '../hooks/useTransactions'
 import { Layout, Form, TableView, CardView } from '../sections'
 
-const IndexPage = () => {
+const IndexPage = (): JSX.Element => {
    const { methods } = useConfig()
    const [keyword, setKeyword] = React.useState('')
    const {
@@ -94,7 +95,21 @@ const IndexPage = () => {
 
 export default IndexPage
 
-const Filters = ({ pagination }) => {
+interface IPagination {
+   startIndex: number
+   currentPage: number
+   previousEnabled: boolean
+   nextEnabled: boolean
+   setPage: (x: number) => void
+   setNextPage: (x: number) => void
+   setPreviousPage: (x: number) => void
+}
+
+interface IFilters {
+   pagination: IPagination
+}
+
+const Filters = ({ pagination }: IFilters): JSX.Element => {
    const { limit, setOffset, is_loading, transactions_aggregate } =
       useTransactions()
 
@@ -149,7 +164,7 @@ const Filters = ({ pagination }) => {
    )
 }
 
-const FilterBy = () => {
+const FilterBy = (): JSX.Element => {
    const { where, setWhere } = useTransactions()
 
    if (
@@ -191,7 +206,7 @@ const FilterBy = () => {
    )
 }
 
-const AddTransaction = () => {
+const AddTransaction = (): JSX.Element => {
    const { setEditForm, isFormOpen, setIsFormOpen } = useTransactions()
 
    if (!isFormOpen) return null
@@ -215,7 +230,7 @@ const AddTransaction = () => {
    )
 }
 
-const BulkActions = () => {
+const BulkActions = (): JSX.Element => {
    const { selected, bulk } = useTransactions()
    if (selected.length === 0) return null
    return (
@@ -249,7 +264,40 @@ const Styles = {
    `,
 }
 
-const Analytics = ({ methods, transactions }) => {
+interface IAggregateSum {
+   credit: number
+   debit: number
+}
+
+interface IAggregateAvg {
+   credit: number
+   debit: number
+}
+
+interface IAggregateMax {
+   credit: number
+   debit: number
+}
+
+interface IAggregate {
+   count: number
+   sum: IAggregateSum
+   avg: IAggregateAvg
+   max: IAggregateMax
+}
+
+interface ITransactions {
+   aggregate: IAggregate
+}
+
+interface IAnalytics {
+   transactions: ITransactions
+   methods: {
+      format_currency: (x: number) => string
+   }
+}
+
+const Analytics = ({ methods, transactions }: IAnalytics): JSX.Element => {
    return (
       <Styles.Analytics tw="mt-4 md:(ml-3 mt-0)">
          <Table>
@@ -336,7 +384,7 @@ const Analytics = ({ methods, transactions }) => {
    )
 }
 
-const SortBy = () => {
+const SortBy = (): JSX.Element => {
    const { on_sort, orderBy } = useTransactions()
    return (
       <ul tw="absolute right-0 mt-2 mr-4 z-10 bg-gray-700 py-2 rounded shadow-xl">
@@ -386,7 +434,19 @@ const SortBy = () => {
    )
 }
 
-const SortByOption = ({ field, title, active, on_sort }) => {
+interface ISortByOption {
+   field: string
+   title: string
+   active: 'asc' | 'desc'
+   on_sort: (x: string, y: string) => void
+}
+
+const SortByOption = ({
+   field,
+   title,
+   active,
+   on_sort,
+}: ISortByOption): JSX.Element => {
    return (
       <li tw="cursor-pointer flex items-center justify-between pl-3 pr-2 h-10 space-x-4">
          <span>{title}</span>

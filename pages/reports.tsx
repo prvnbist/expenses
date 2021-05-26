@@ -12,7 +12,7 @@ import {
    MONTHLY_INCOME_REPORT,
 } from '../graphql'
 
-const Reports = () => {
+const Reports = (): JSX.Element => {
    const { methods } = useConfig()
 
    return (
@@ -42,7 +42,13 @@ const Reports = () => {
 
 export default Reports
 
-const MonthlyExpensesReport = ({ methods }) => {
+interface IProps {
+   methods: {
+      format_currency: (x: number) => string
+   }
+}
+
+const MonthlyExpensesReport = ({ methods }: IProps): JSX.Element => {
    const [year, setYear] = React.useState(() => new Date().getFullYear())
    const { data: { expense_years_list = [] } = {} } = useQuery(EXPENSE_YEARS)
    const { loading, data: { monthly_expense_report = [] } = {} } =
@@ -106,7 +112,7 @@ const MonthlyExpensesReport = ({ methods }) => {
    )
 }
 
-const MonthlyIncomeReport = ({ methods }) => {
+const MonthlyIncomeReport = ({ methods }: IProps): JSX.Element => {
    const [year, setYear] = React.useState(() => new Date().getFullYear())
    const { data: { income_years_list = [] } = {} } = useQuery(INCOME_YEARS)
    const { loading, data: { monthly_income_report = [] } = {} } =
