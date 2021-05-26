@@ -9,9 +9,46 @@ import {
    TRANSACTIONS_AGGREGATE,
 } from '../graphql'
 
-const Context = React.createContext()
+const Context = React.createContext(null)
 
-export const TransactionsProvider = ({ children }) => {
+interface ITransactionsProvider {
+   children: React.ReactNode
+}
+
+interface ITransaction {
+   id?: string
+   type: 'income' | 'expense'
+   date?: string
+   title: string
+   debit?: number
+   credit?: number
+   amount: number
+   raw_date: string
+   account?: string
+   account_id?: string
+   category?: string
+   category_id?: string
+   payment_method?: string
+   payment_method_id?: string
+}
+
+interface IUpdate {
+   transaction: ITransaction
+}
+
+interface ISort {
+   title?: 'asc' | 'desc'
+   credit?: 'asc' | 'desc'
+   debit?: 'asc' | 'desc'
+   raw_date?: 'asc' | 'desc'
+   category?: 'asc' | 'desc'
+   payment_method?: 'asc' | 'desc'
+   account?: 'asc' | 'desc'
+}
+
+export const TransactionsProvider = ({
+   children,
+}: ITransactionsProvider): JSX.Element => {
    const { addToast } = useToasts()
    const [where, setWhere] = React.useState({})
    const [limit, setLimit] = React.useState(10)
@@ -67,12 +104,12 @@ export const TransactionsProvider = ({ children }) => {
       },
    })
 
-   const update = transaction => {
+   const update = (transaction: IUpdate): void => {
       setEditForm(transaction)
       setIsFormOpen(true)
    }
 
-   const onSearch = keyword => {
+   const onSearch = (keyword: string): void => {
       setWhere(existing => ({
          ...existing,
          _or: [
@@ -85,7 +122,7 @@ export const TransactionsProvider = ({ children }) => {
    }
 
    const on_row_select = React.useCallback(
-      row => {
+      (row: ITransaction): void => {
          if (selected.findIndex(node => node.id === row.id) !== -1) {
             setSelected(existing => [
                ...existing.filter(node => node.id !== row.id),
@@ -98,13 +135,14 @@ export const TransactionsProvider = ({ children }) => {
    )
 
    const is_row_selected = React.useCallback(
-      row => selected.findIndex(node => node.id === row.id) !== -1,
+      (row: ITransaction): boolean =>
+         selected.findIndex(node => node.id === row.id) !== -1,
       [selected]
    )
 
    const bulk = {
       reset: () => setSelected([]),
-      delete: () => {
+      delete: (): void => {
          if (selected.length === 0) return
          removeMultiple({
             variables: {
@@ -114,7 +152,7 @@ export const TransactionsProvider = ({ children }) => {
       },
    }
 
-   const on_sort = (field, direction) => {
+   const on_sort = (field: string, direction: 'asc' | 'desc'): void => {
       setOrderBy(existing => {
          if (existing && field in existing && existing[field] === direction) {
             delete existing[field]
