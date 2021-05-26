@@ -438,7 +438,7 @@ interface ISortByOption {
    field: string
    title: string
    active: 'asc' | 'desc'
-   on_sort: (x: string, y: string) => void
+   on_sort: (x: string, y: 'asc' | 'desc') => void
 }
 
 const SortByOption = ({

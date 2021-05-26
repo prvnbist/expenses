@@ -4,7 +4,7 @@ import { useSubscription } from '@apollo/client'
 
 import { SETTINGS } from '../graphql'
 
-const ConfigContext = React.createContext()
+const ConfigContext = React.createContext(null)
 
 const initialState = {
    currency: 'INR',
@@ -21,8 +21,11 @@ const reducers = (state, { type, payload }) => {
          return state
    }
 }
+interface IConfigProvider {
+   children: React.ReactNode
+}
 
-export const ConfigProvider = ({ children }) => {
+export const ConfigProvider = ({ children }: IConfigProvider): JSX.Element => {
    const [state, dispatch] = React.useReducer(reducers, initialState)
    useSubscription(SETTINGS, {
       onSubscriptionData: ({
@@ -46,17 +49,18 @@ export const ConfigProvider = ({ children }) => {
       },
    })
 
-   const format_currency = amount =>
+   const format_currency = (amount: number): string =>
       new Intl.NumberFormat('en-US', {
          style: 'currency',
          currency: state.currency,
       }).format(amount)
 
-   const format_date = date => format(new Date(date), state.date)
+   const format_date = (date: string): string =>
+      format(new Date(date), state.date)
 
-   const format_k = num => {
+   const format_k = (num: number): number | string => {
       return Math.abs(num) > 999
-         ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + 'k'
+         ? Math.sign(num) * Number((Math.abs(num) / 1000).toFixed(1)) + 'k'
          : Math.sign(num) * Math.abs(num)
    }
 
