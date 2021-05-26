@@ -2,7 +2,11 @@ import tw from 'twin.macro'
 
 import { Table } from './table'
 
-export const TableLoader = ({ cols = null }) => (
+interface ITableLoader {
+   cols?: number
+}
+
+export const TableLoader = ({ cols = null }: ITableLoader): JSX.Element => (
    <Table>
       <Table.Head>
          <Table.Row>
