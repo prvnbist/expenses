@@ -149,13 +149,13 @@ const Filters = ({ pagination }: IFilters): JSX.Element => {
          <Button.Group>
             <Button.Text
                onClick={pagination.setPreviousPage}
-               disabled={!pagination.previousEnabled}
+               is_disabled={!pagination.previousEnabled}
             >
                Prev
             </Button.Text>
             <Button.Text
                onClick={pagination.setNextPage}
-               disabled={!pagination.nextEnabled}
+               is_disabled={!pagination.nextEnabled}
             >
                Next
             </Button.Text>

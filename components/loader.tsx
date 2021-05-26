@@ -1,6 +1,7 @@
-import tw, { styled } from 'twin.macro'
+import tw from 'twin.macro'
+import styled from 'styled-components'
 
-export const Loader = () => <Styles.Loader />
+export const Loader = (): JSX.Element => <Styles.Loader />
 
 const Styles = {
    Loader: styled.div`

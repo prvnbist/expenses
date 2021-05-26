@@ -1,7 +1,24 @@
 import React from 'react'
-import tw, { styled } from 'twin.macro'
+import tw from 'twin.macro'
+import styled from 'styled-components'
 
 import * as Icon from '../assets/icons'
+
+interface IOption {
+   id?: string
+   title?: string
+}
+
+interface ISelect {
+   selected: {
+      id?: string
+      title?: string
+   }
+   placeholder?: string
+   children: React.ReactNode
+   on_select: (x: IOption) => void
+   on_deselect: () => void
+}
 
 const Select = ({
    on_select,
@@ -9,7 +26,7 @@ const Select = ({
    children = [],
    placeholder = '',
    on_deselect = null,
-}) => {
+}: ISelect): JSX.Element => {
    const [search, setSearch] = React.useState('')
    const [isOpen, setIsOpen] = React.useState(false)
    if (!Array.isArray(children)) {
@@ -59,13 +76,13 @@ const Select = ({
             on_deselect={on_deselect}
          >
             {children
-               .filter(node =>
+               .filter((node: any) =>
                   node.props.option?.title
                      .toString()
                      .toLowerCase()
                      .includes(search.toString().toLowerCase())
                )
-               .map(node => ({
+               .map((node: any) => ({
                   ...node,
                   props: {
                      ...node.props,
@@ -80,13 +97,21 @@ const Select = ({
    )
 }
 
+interface IList {
+   isOpen: boolean
+   on_deselect: () => void
+   setSearch: (x: string) => void
+   setIsOpen: (x: boolean) => void
+   children: React.ReactNode | any
+}
+
 const List = ({
    isOpen,
    children = [],
    on_deselect = null,
    setIsOpen,
    setSearch,
-}) => {
+}: IList): JSX.Element => {
    if (!isOpen) return null
    return (
       <Styles.Options>
@@ -112,7 +137,16 @@ const List = ({
    )
 }
 
-const Option = ({ option = {}, ...props }) => {
+interface IOptionItem {
+   option: IOption
+   selected: IOption
+   on_deselect: () => void
+   setSearch: (x: string) => void
+   on_select: (x: IOption) => void
+   setIsOpen: (x: boolean) => void
+}
+
+const Option = ({ option = {}, ...props }: IOptionItem): JSX.Element => {
    if (!option?.title) return
    return (
       <Styles.Option

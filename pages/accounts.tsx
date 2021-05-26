@@ -189,14 +189,13 @@ const CardView = ({
                      >
                         <Icon.Edit size={16} tw="stroke-current" />
                      </Button.Icon>
-                     <Button.Icon is_small>
-                        <Icon.Delete
-                           size={16}
-                           tw="stroke-current"
-                           onClick={() =>
-                              remove({ variables: { id: account.id } })
-                           }
-                        />
+                     <Button.Icon
+                        is_small
+                        onClick={() =>
+                           remove({ variables: { id: account.id } })
+                        }
+                     >
+                        <Icon.Delete size={16} tw="stroke-current" />
                      </Button.Icon>
                   </Button.Group>
                </header>

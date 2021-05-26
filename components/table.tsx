@@ -1,16 +1,45 @@
-import tw, { css, styled } from 'twin.macro'
+import tw from 'twin.macro'
+import styled, { css } from 'styled-components'
 
-export const Table = ({ children }) => <Styles.Table>{children}</Styles.Table>
+interface IChildren {
+   children: React.ReactNode
+}
 
-const Head = ({ children }) => <Styles.Head>{children}</Styles.Head>
-const Body = ({ children }) => <tbody>{children}</tbody>
-const Row = ({ children, ...props }) => (
+export const Table = ({ children }: IChildren): JSX.Element => (
+   <Styles.Table>{children}</Styles.Table>
+)
+
+const Head = ({ children }: IChildren): JSX.Element => (
+   <Styles.Head>{children}</Styles.Head>
+)
+const Body = ({ children }: IChildren): JSX.Element => <tbody>{children}</tbody>
+
+interface IRow {
+   odd?: boolean
+   children: React.ReactNode
+}
+
+const Row = ({ children, ...props }: IRow): JSX.Element => (
    <Styles.Row {...props}>{children}</Styles.Row>
 )
-const Cell = ({ children, ...props }) => (
+
+interface ICell {
+   is_right?: boolean
+   is_center?: boolean
+   children: React.ReactNode
+}
+
+const Cell = ({ children, ...props }: ICell): JSX.Element => (
    <Styles.Cell {...props}>{children}</Styles.Cell>
 )
-const HCell = ({ children, ...props }) => (
+
+interface HCell {
+   is_right?: boolean
+   is_center?: boolean
+   children: React.ReactNode
+}
+
+const HCell = ({ children, ...props }: HCell): JSX.Element => (
    <Styles.HCell {...props}>{children}</Styles.HCell>
 )
 

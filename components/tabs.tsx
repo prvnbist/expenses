@@ -1,5 +1,6 @@
 import React from 'react'
-import tw, { css, styled } from 'twin.macro'
+import tw from 'twin.macro'
+import styled, { css } from 'styled-components'
 
 const Styles = {
    Tabs: styled.div``,
@@ -31,8 +32,17 @@ const Styles = {
    ),
 }
 
-const Context = React.createContext()
-const reducers = (state, { type, payload }) => {
+const Context = React.createContext(null)
+
+interface IAction {
+   type: 'SWITCH'
+   payload: number
+}
+
+const initial = { active: 1 }
+
+const reducers = (state: typeof initial, action: IAction) => {
+   const { type, payload } = action
    switch (type) {
       case 'SWITCH':
          return { ...state, active: payload }
@@ -43,8 +53,8 @@ const reducers = (state, { type, payload }) => {
 
 const useTabs = () => React.useContext(Context)
 
-export const Tabs = ({ defaultTab = null, children }) => {
-   const [state, dispatch] = React.useReducer(reducers, { active: 1 })
+export const Tabs = ({ defaultTab = null, children = [] }) => {
+   const [state, dispatch] = React.useReducer(reducers, initial)
    React.useEffect(() => {
       if (defaultTab && defaultTab > 0 && defaultTab <= children.length) {
          dispatch({ type: 'SWITCH', payload: defaultTab })
