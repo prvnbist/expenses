@@ -27,7 +27,9 @@ const wssLink = process.browser
            reconnect: true,
            connectionParams: {
               headers: {
-                 'x-hasura-admin-secret': `${process.env.HASURA_KEY}`,
+                 ...(process.env.HASURA_KEY && {
+                    'x-hasura-admin-secret': `${process.env.HASURA_KEY}`,
+                 }),
               },
            },
         })
@@ -38,7 +40,9 @@ const authLink = new ApolloLink((operation, forward) => {
    operation.setContext(({ headers }) => ({
       headers: {
          ...headers,
-         'x-hasura-admin-secret': `${process.env.HASURA_KEY}`,
+         ...(process.env.HASURA_KEY && {
+            'x-hasura-admin-secret': `${process.env.HASURA_KEY}`,
+         }),
       },
    }))
    return forward(operation)
@@ -74,7 +78,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
 
    React.useEffect(() => {
       const secret = localStorage.getItem('secret')
-      if (secret && secret === process.env.HASURA_KEY) {
+      if (!process.env.HASURA_KEY) {
+         setAuthenticated(true)
+      } else if (secret && secret === process.env.HASURA_KEY) {
          setAuthenticated(true)
       }
       setIsAuthenticating(false)
