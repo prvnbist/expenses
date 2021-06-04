@@ -5,10 +5,11 @@ import { useToasts } from 'react-toast-notifications'
 import { useMutation, useSubscription } from '@apollo/client'
 
 import { Layout } from '../sections'
+import * as Svg from '../assets/svgs'
 import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
+import { Button, Loader, Table } from '../components'
 import { ACCOUNTS, DELETE_ACCOUNT, UPSERT_ACCOUNT } from '../graphql'
-import { Button, Loader, Table, TableLoader } from '../components'
 
 const Accounts = (): JSX.Element => {
    const { addToast } = useToasts()
@@ -36,27 +37,35 @@ const Accounts = (): JSX.Element => {
                Add
             </Button.Combo>
          </header>
-         <main
-            style={{ maxHeight: '520px' }}
-            tw="flex-1 hidden md:block overflow-y-auto"
-         >
-            <TableView
-               remove={remove}
-               loading={loading}
-               accounts={accounts}
-               setAccount={setAccount}
-               setIsFormOpen={setIsFormOpen}
-            />
-         </main>
-         <main tw="md:hidden">
-            <CardView
-               remove={remove}
-               loading={loading}
-               accounts={accounts}
-               setAccount={setAccount}
-               setIsFormOpen={setIsFormOpen}
-            />
-         </main>
+         {accounts.length === 0 ? (
+            <div tw="my-6 w-full flex items-center justify-center">
+               <Svg.Empty message="No accounts yet!" />
+            </div>
+         ) : (
+            <>
+               <main
+                  style={{ maxHeight: '520px' }}
+                  tw="flex-1 hidden md:block overflow-y-auto"
+               >
+                  <TableView
+                     remove={remove}
+                     loading={loading}
+                     accounts={accounts}
+                     setAccount={setAccount}
+                     setIsFormOpen={setIsFormOpen}
+                  />
+               </main>
+               <main tw="md:hidden">
+                  <CardView
+                     remove={remove}
+                     loading={loading}
+                     accounts={accounts}
+                     setAccount={setAccount}
+                     setIsFormOpen={setIsFormOpen}
+                  />
+               </main>
+            </>
+         )}
          <ManageAccount
             account={account}
             setAccount={setAccount}
@@ -101,7 +110,7 @@ const TableView = ({
    accounts,
 }: ITableOrCardView): JSX.Element => {
    const { methods } = useConfig()
-   if (loading) return <TableLoader cols={4} />
+   if (loading) return <Loader />
    return (
       <Table>
          <Table.Head>

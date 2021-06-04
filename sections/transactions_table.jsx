@@ -1,8 +1,10 @@
 import React from 'react'
 import tw, { styled } from 'twin.macro'
+
 import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
-import { Button, Table, TableLoader } from '../components'
+import * as Svg from '../assets/svgs'
+import { Button, Loader, Table } from '../components'
 import { useTransactions } from '../hooks/useTransactions'
 
 export const TableView = () => {
@@ -15,6 +17,7 @@ export const TableView = () => {
       transactions,
       on_row_select,
       is_row_selected,
+      transactions_aggregate,
    } = useTransactions()
 
    const viewBy = (key, value) => {
@@ -25,7 +28,13 @@ export const TableView = () => {
       }))
    }
 
-   if (is_loading) return <TableLoader />
+   if (is_loading) return <Loader />
+   if (transactions_aggregate?.aggregate?.count === 0)
+      return (
+         <div tw="w-full flex items-center justify-center">
+            <Svg.Empty message="No transactions yet!" />
+         </div>
+      )
    return (
       <Table>
          <Table.Head>

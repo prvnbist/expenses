@@ -13,8 +13,9 @@ import {
 } from 'recharts'
 
 import { Layout } from '../sections'
+import * as Svg from '../assets/svgs'
 import { useConfig } from '../context'
-import { Loader, Table, TableLoader, Tabs } from '../components'
+import { Loader, Table, Tabs } from '../components'
 import {
    OVERALL,
    EXPENSES_BY_YEARS,
@@ -285,7 +286,8 @@ const CustomTooltip = ({
    payload,
    methods,
 }: ICustomTooltip): JSX.Element => {
-   if (!active || payload.length === 0) return <section />
+   if (!active || !Array.isArray(payload) || payload?.length === 0)
+      return <section />
 
    const { title, amount, count } = payload[0].payload
    return (
@@ -469,7 +471,13 @@ interface ITableWrapper {
 const TableWrapper = (props: ITableWrapper): JSX.Element => {
    const { type, loading, data = [], columns = [] } = props
    const { methods } = useConfig()
-   if (loading) return <TableLoader cols={3} />
+   if (loading) return <Loader />
+   if (data.length === 0)
+      return (
+         <div tw="my-6 w-full flex items-center justify-center">
+            <Svg.Empty message="No reports yet!" />
+         </div>
+      )
    return (
       <Table>
          <Table.Head>

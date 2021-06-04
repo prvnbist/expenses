@@ -3,8 +3,9 @@ import tw from 'twin.macro'
 import { useQuery, useSubscription } from '@apollo/client'
 
 import { Layout } from '../sections'
+import * as Svg from '../assets/svgs'
 import { useConfig } from '../context'
-import { Select, Table, TableLoader, Tabs } from '../components'
+import { Loader, Select, Table, Tabs } from '../components'
 import {
    EXPENSE_YEARS,
    MONTHLY_EXPENSE_REPORT,
@@ -84,28 +85,36 @@ const MonthlyExpensesReport = ({ methods }: IProps): JSX.Element => {
          </Select>
          <section tw="mt-4">
             {loading ? (
-               <TableLoader />
+               <Loader />
             ) : (
-               <Table>
-                  <Table.Head>
-                     <Table.Row>
-                        <Table.HCell>Month</Table.HCell>
-                        <Table.HCell is_right>Count</Table.HCell>
-                        <Table.HCell is_right>Amount</Table.HCell>
-                     </Table.Row>
-                  </Table.Head>
-                  {monthly_expense_report.map((node, index) => (
-                     <Table.Row odd={index % 2 === 0}>
-                        <Table.Cell>{node.title}</Table.Cell>
-                        <Table.Cell is_right>{node.count}</Table.Cell>
-                        <Table.Cell is_right>
-                           <span tw="font-medium text-red-400">
-                              - {methods.format_currency(node.amount)}
-                           </span>
-                        </Table.Cell>
-                     </Table.Row>
-                  ))}
-               </Table>
+               <>
+                  {monthly_expense_report.length === 0 ? (
+                     <div tw="my-6 w-full flex items-center justify-center">
+                        <Svg.Empty message="No reports yet!" />
+                     </div>
+                  ) : (
+                     <Table>
+                        <Table.Head>
+                           <Table.Row>
+                              <Table.HCell>Month</Table.HCell>
+                              <Table.HCell is_right>Count</Table.HCell>
+                              <Table.HCell is_right>Amount</Table.HCell>
+                           </Table.Row>
+                        </Table.Head>
+                        {monthly_expense_report.map((node, index) => (
+                           <Table.Row odd={index % 2 === 0}>
+                              <Table.Cell>{node.title}</Table.Cell>
+                              <Table.Cell is_right>{node.count}</Table.Cell>
+                              <Table.Cell is_right>
+                                 <span tw="font-medium text-red-400">
+                                    - {methods.format_currency(node.amount)}
+                                 </span>
+                              </Table.Cell>
+                           </Table.Row>
+                        ))}
+                     </Table>
+                  )}
+               </>
             )}
          </section>
       </>
@@ -148,28 +157,36 @@ const MonthlyIncomeReport = ({ methods }: IProps): JSX.Element => {
          </Select>
          <section tw="mt-4">
             {loading ? (
-               <TableLoader />
+               <Loader />
             ) : (
-               <Table>
-                  <Table.Head>
-                     <Table.Row>
-                        <Table.HCell>Month</Table.HCell>
-                        <Table.HCell is_right>Count</Table.HCell>
-                        <Table.HCell is_right>Amount</Table.HCell>
-                     </Table.Row>
-                  </Table.Head>
-                  {monthly_income_report.map((node, index) => (
-                     <Table.Row odd={index % 2 === 0}>
-                        <Table.Cell>{node.title}</Table.Cell>
-                        <Table.Cell is_right>{node.count}</Table.Cell>
-                        <Table.Cell is_right>
-                           <span tw="font-medium text-indigo-400">
-                              + {methods.format_currency(node.amount)}
-                           </span>
-                        </Table.Cell>
-                     </Table.Row>
-                  ))}
-               </Table>
+               <>
+                  {monthly_income_report.length === 0 ? (
+                     <div tw="my-6 w-full flex items-center justify-center">
+                        <Svg.Empty message="No reports yet!" />
+                     </div>
+                  ) : (
+                     <Table>
+                        <Table.Head>
+                           <Table.Row>
+                              <Table.HCell>Month</Table.HCell>
+                              <Table.HCell is_right>Count</Table.HCell>
+                              <Table.HCell is_right>Amount</Table.HCell>
+                           </Table.Row>
+                        </Table.Head>
+                        {monthly_income_report.map((node, index) => (
+                           <Table.Row odd={index % 2 === 0}>
+                              <Table.Cell>{node.title}</Table.Cell>
+                              <Table.Cell is_right>{node.count}</Table.Cell>
+                              <Table.Cell is_right>
+                                 <span tw="font-medium text-indigo-400">
+                                    + {methods.format_currency(node.amount)}
+                                 </span>
+                              </Table.Cell>
+                           </Table.Row>
+                        ))}
+                     </Table>
+                  )}
+               </>
             )}
          </section>
       </>

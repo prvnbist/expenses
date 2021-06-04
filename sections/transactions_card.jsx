@@ -1,4 +1,5 @@
 import tw from 'twin.macro'
+import * as Svg from '../assets/svgs'
 import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
 import { Button, Loader } from '../components'
@@ -6,8 +7,14 @@ import { useTransactions } from '../hooks/useTransactions'
 
 export const CardView = () => {
    const { methods } = useConfig()
-   const { is_loading, transactions, remove, update, setWhere } =
-      useTransactions()
+   const {
+      remove,
+      update,
+      setWhere,
+      is_loading,
+      transactions,
+      transactions_aggregate,
+   } = useTransactions()
 
    const viewBy = (key, value) => {
       if (!value) return
@@ -18,6 +25,12 @@ export const CardView = () => {
    }
 
    if (is_loading) return <Loader />
+   if (transactions_aggregate?.aggregate?.count === 0)
+      return (
+         <div tw="my-6 w-full flex items-center justify-center">
+            <Svg.Empty message="No transactions yet!" />
+         </div>
+      )
    return (
       <ul tw="space-y-2">
          {transactions.map(transaction => (
