@@ -483,7 +483,7 @@ const TableWrapper = (props: ITableWrapper): JSX.Element => {
          <Table.Head>
             <Table.Row noBg>
                {columns.map(column => (
-                  <Table.HCell is_right={column?.is_right}>
+                  <Table.HCell key={column.title} is_right={column?.is_right}>
                      {column.title}
                   </Table.HCell>
                ))}

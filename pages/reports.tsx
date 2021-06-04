@@ -102,7 +102,7 @@ const MonthlyExpensesReport = ({ methods }: IProps): JSX.Element => {
                            </Table.Row>
                         </Table.Head>
                         {monthly_expense_report.map((node, index) => (
-                           <Table.Row odd={index % 2 === 0}>
+                           <Table.Row key={index} odd={index % 2 === 0}>
                               <Table.Cell>{node.title}</Table.Cell>
                               <Table.Cell is_right>{node.count}</Table.Cell>
                               <Table.Cell is_right>
@@ -174,7 +174,7 @@ const MonthlyIncomeReport = ({ methods }: IProps): JSX.Element => {
                            </Table.Row>
                         </Table.Head>
                         {monthly_income_report.map((node, index) => (
-                           <Table.Row odd={index % 2 === 0}>
+                           <Table.Row key={index} odd={index % 2 === 0}>
                               <Table.Cell>{node.title}</Table.Cell>
                               <Table.Cell is_right>{node.count}</Table.Cell>
                               <Table.Cell is_right>
