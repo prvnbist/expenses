@@ -69,6 +69,21 @@ export const TRANSACTIONS = gql`
    }
 `
 
+export const ALL_TRANSACTIONS = gql`
+   query all_transactions {
+      all_transactions: transactions_view {
+         id
+         date
+         title
+         debit
+         credit
+         account
+         category
+         payment_method
+      }
+   }
+`
+
 export const TRANSACTIONS_AGGREGATE = gql`
    subscription transactions_aggregate(
       $where: transactions_view_bool_exp = {}

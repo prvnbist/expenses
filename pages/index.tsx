@@ -1,16 +1,41 @@
 import React from 'react'
 import tw from 'twin.macro'
+import { CSVLink } from 'react-csv'
 import styled from 'styled-components'
+import { useLazyQuery } from '@apollo/client'
 import { usePagination } from 'react-use-pagination'
 
 import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
+import { ALL_TRANSACTIONS } from '../graphql'
 import { Button, Table } from '../components'
 import { useTransactions } from '../hooks/useTransactions'
 import { Layout, Form, TableView, CardView } from '../sections'
+import { useStateWithCallback } from '../hooks/useStateWithCallback'
+
+const HEADERS = [
+   { label: 'Title', key: 'title' },
+   { label: 'Credit', key: 'credit' },
+   { label: 'Debit', key: 'debit' },
+   { label: 'Date', key: 'date' },
+   { label: 'Category', key: 'category' },
+   { label: 'Payment Method', key: 'payment_method' },
+   { label: 'Account', key: 'account' },
+]
 
 const IndexPage = (): JSX.Element => {
    const { methods } = useConfig()
+   const exportRef = React.createRef()
+   const [allTransactions, setAllTransactions] = useStateWithCallback(
+      [],
+      state => {
+         if (state.length > 0) {
+            setTimeout(() => {
+               exportRef.current?.link?.click()
+            }, 1000)
+         }
+      }
+   )
    const [keyword, setKeyword] = React.useState('')
    const {
       limit,
@@ -22,10 +47,22 @@ const IndexPage = (): JSX.Element => {
       transactions_aggregate,
    } = useTransactions()
 
+   const [fetchAllTransactions] = useLazyQuery(ALL_TRANSACTIONS, {
+      onCompleted: ({ all_transactions = [] } = {}) => {
+         if (all_transactions.length > 0) {
+            setAllTransactions(all_transactions)
+         }
+      },
+   })
+
    const pagination = usePagination({
       totalItems: transactions_aggregate?.aggregate?.count || 0,
       initialPageSize: limit,
    })
+
+   const exportCSV = async () => {
+      await fetchAllTransactions()
+   }
 
    return (
       <Layout>
@@ -38,7 +75,7 @@ const IndexPage = (): JSX.Element => {
                Add
             </Button.Combo>
          </header>
-         <section tw="mt-3 mb-2 flex items-center justify-between">
+         <section tw="mt-3 mb-2 flex flex-col space-y-2 md:space-y-0 md:flex-row md:items-center md:justify-between">
             <fieldset>
                <input
                   type="text"
@@ -50,10 +87,22 @@ const IndexPage = (): JSX.Element => {
                      setKeyword(e.target.value)
                      onSearch(e.target.value)
                   }}
-                  tw="bg-gray-700 h-10 rounded px-2"
+                  tw="bg-gray-700 h-10 rounded px-2 w-full md:w-auto"
                />
             </fieldset>
-            <section>
+            <section tw="self-end flex gap-1">
+               <Button.Combo
+                  onClick={exportCSV}
+                  icon_left={<Icon.Export tw="stroke-current" />}
+               >
+                  Export
+               </Button.Combo>
+               <CSVLink
+                  ref={exportRef}
+                  headers={HEADERS}
+                  data={allTransactions}
+                  filename="transactions.csv"
+               />
                <Button.Combo
                   icon_right={
                      isSortPanelOpen ? (
@@ -387,7 +436,7 @@ const Analytics = ({ methods, transactions }: IAnalytics): JSX.Element => {
 const SortBy = (): JSX.Element => {
    const { on_sort, orderBy } = useTransactions()
    return (
-      <ul tw="absolute right-0 mt-2 mr-4 z-10 bg-gray-700 py-2 rounded shadow-xl">
+      <ul tw="absolute right-0 mt-12 mr-4 z-10 bg-gray-700 py-2 rounded shadow-xl">
          <SortByOption
             field="title"
             title="Title"
