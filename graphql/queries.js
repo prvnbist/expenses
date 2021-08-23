@@ -71,7 +71,9 @@ export const TRANSACTIONS = gql`
 
 export const ALL_TRANSACTIONS = gql`
    query all_transactions {
-      all_transactions: transactions_view {
+      all_transactions: transactions_view(
+         order_by: { title: asc, raw_date: asc }
+      ) {
          id
          date
          title
