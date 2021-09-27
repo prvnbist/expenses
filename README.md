@@ -2,6 +2,12 @@
 
 > A self-hosted app built with Hasura/Postgres, NextJS/React, Apollo Client/GraphQL.
 
+#### Status
+[![Awake Action](https://github.com/prvnbist/expenses/actions/workflows/awake.yml/badge.svg)](https://github.com/prvnbist/expenses/actions/workflows/awake.yml)
+![Dependencies](https://img.shields.io/david/prvnbist/expenses)
+![Stars](https://img.shields.io/github/stars/prvnbist/expenses.svg)
+![Github](https://img.shields.io/github/followers/prvnbist.svg?style=flat&label=Follow%20Me&maxAge=2592000)
+
 #### Features
 
 ##### Transactions
