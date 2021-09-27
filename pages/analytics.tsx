@@ -3,11 +3,12 @@ import tw from 'twin.macro'
 import styled from 'styled-components'
 import { useSubscription } from '@apollo/client'
 import {
+   Bar,
    Line,
    YAxis,
    XAxis,
    Tooltip,
-   LineChart,
+   BarChart,
    CartesianGrid,
    ResponsiveContainer,
 } from 'recharts'
@@ -193,7 +194,9 @@ const ChartsView = (): JSX.Element => {
 
 const ExpensesByCategoriesChart = (): JSX.Element => {
    const { loading, data: { expenses_by_categories = {} } = {} } =
-      useSubscription(EXPENSES_BY_CATEGORIES)
+      useSubscription(EXPENSES_BY_CATEGORIES, {
+         variables: { order_by: { title: 'asc' } },
+      })
    return <Chart loading={loading} data={expenses_by_categories.nodes} />
 }
 
@@ -244,7 +247,7 @@ const Chart = ({ loading, data }: IChart): JSX.Element => {
    return (
       <main>
          <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-            <LineChart data={data}>
+            <BarChart data={data}>
                <Tooltip
                   cursor={{ fill: '#111827' }}
                   content={({ active, payload }) => (
@@ -265,9 +268,9 @@ const Chart = ({ loading, data }: IChart): JSX.Element => {
                      return methods.format_k(tick)
                   }}
                />
-               <Line dataKey="amount" stroke="#dff75f" strokeWidth={1} />
+               <Bar barSize={32} dataKey="amount" fill="#dff75f" />
                <CartesianGrid stroke="rgba(255,255,255,0.10)" />
-            </LineChart>
+            </BarChart>
          </ResponsiveContainer>
       </main>
    )
@@ -302,27 +305,27 @@ const CustomTooltip = ({
 const TableView = () => {
    return (
       <main tw="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+         <section tw="pb-3 overflow-x-auto bg-gray-900 px-3 rounded">
             <h2 tw="text-xl h-12 flex items-center">Expenses By Categories</h2>
             <ExpensesByCategoriesTable />
          </section>
-         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+         <section tw="pb-3 overflow-x-auto bg-gray-900 px-3 rounded">
             <h2 tw="text-xl h-12 flex items-center">Expenses By Year</h2>
             <ExpensesByYearTable />
          </section>
-         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+         <section tw="pb-3 overflow-x-auto bg-gray-900 px-3 rounded">
             <h2 tw="text-xl h-12 flex items-center">Expenses By Months</h2>
             <ExpensesByMonthTable />
          </section>
-         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+         <section tw="pb-3 overflow-x-auto bg-gray-900 px-3 rounded">
             <h2 tw="text-xl h-12 flex items-center">Incomes By Categories</h2>
             <IncomesByCategoriesTable />
          </section>
-         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+         <section tw="pb-3 overflow-x-auto bg-gray-900 px-3 rounded">
             <h2 tw="text-xl h-12 flex items-center">Incomes By Years</h2>
             <IncomesByYearsTable />
          </section>
-         <section tw="overflow-x-auto bg-gray-900 px-3 rounded">
+         <section tw="pb-3 overflow-x-auto bg-gray-900 px-3 rounded">
             <h2 tw="text-xl h-12 flex items-center">Incomes By Months</h2>
             <IncomesByMonthsTable />
          </section>
@@ -332,7 +335,9 @@ const TableView = () => {
 
 const ExpensesByCategoriesTable = (): JSX.Element => {
    const { loading, data: { expenses_by_categories = {} } = {} } =
-      useSubscription(EXPENSES_BY_CATEGORIES)
+      useSubscription(EXPENSES_BY_CATEGORIES, {
+         variables: { order_by: { amount: 'desc' } },
+      })
    const columns = React.useMemo(
       () => [
          { title: 'Categories' },

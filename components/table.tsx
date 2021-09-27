@@ -64,9 +64,9 @@ const Styles = {
    ),
    Cell: styled.td(
       ({ is_right, is_center, no_padding }) => css`
-         ${tw`font-light h-12 whitespace-nowrap`}
+         ${tw`font-light h-10 whitespace-nowrap`}
          ${is_right && tw`text-right`}
-         ${!no_padding && tw`px-3`}
+         ${!no_padding && tw`px-2`}
          ${is_center && tw`flex justify-center`}
       `
    ),

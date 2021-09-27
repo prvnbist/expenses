@@ -111,9 +111,11 @@ export const TRANSACTIONS_AGGREGATE = gql`
 `
 
 export const EXPENSES_BY_CATEGORIES = gql`
-   subscription expenses_by_categories {
+   subscription expenses_by_categories(
+      $order_by: [analytics_expenses_by_category_order_by!]
+   ) {
       expenses_by_categories: analytics_expenses_by_category_aggregate(
-         order_by: { amount: desc }
+         order_by: $order_by
       ) {
          aggregate {
             count
