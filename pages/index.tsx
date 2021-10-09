@@ -1,17 +1,15 @@
-import React from 'react'
+import React, { Component } from 'react'
 import tw from 'twin.macro'
 import { CSVLink } from 'react-csv'
 import styled from 'styled-components'
-import { useLazyQuery } from '@apollo/client'
 import { usePagination } from 'react-use-pagination'
 
 import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
-import { ALL_TRANSACTIONS } from '../graphql'
-import { Button, Table } from '../components'
+import { Button, Loader, Table } from '../components'
 import { useTransactions } from '../hooks/useTransactions'
 import { Layout, Form, TableView, CardView } from '../sections'
-import { useStateWithCallback } from '../hooks/useStateWithCallback'
+import { useOnClickOutside } from '../hooks/useOnClickOutside'
 
 const HEADERS = [
    { label: 'Title', key: 'title' },
@@ -25,44 +23,24 @@ const HEADERS = [
 
 const IndexPage = (): JSX.Element => {
    const { methods } = useConfig()
-   const exportRef = React.createRef()
-   const [allTransactions, setAllTransactions] = useStateWithCallback(
-      [],
-      state => {
-         if (state.length > 0) {
-            setTimeout(() => {
-               exportRef.current?.link?.click()
-            }, 1000)
-         }
-      }
-   )
    const [keyword, setKeyword] = React.useState('')
    const {
+      where,
       limit,
       onSearch,
       isFormOpen,
       setIsFormOpen,
       isSortPanelOpen,
+      isExportPanelOpen,
       setIsSortPanelOpen,
+      setIsExportPanelOpen,
       transactions_aggregate,
    } = useTransactions()
 
-   const [fetchAllTransactions] = useLazyQuery(ALL_TRANSACTIONS, {
-      onCompleted: ({ all_transactions = [] } = {}) => {
-         if (all_transactions.length > 0) {
-            setAllTransactions(all_transactions)
-         }
-      },
-   })
-
    const pagination = usePagination({
-      totalItems: transactions_aggregate?.aggregate?.count || 0,
       initialPageSize: limit,
+      totalItems: transactions_aggregate?.aggregate?.count || 0,
    })
-
-   const exportCSV = async () => {
-      await fetchAllTransactions()
-   }
 
    return (
       <Layout>
@@ -92,17 +70,18 @@ const IndexPage = (): JSX.Element => {
             </fieldset>
             <section tw="self-end flex gap-1">
                <Button.Combo
-                  onClick={exportCSV}
-                  icon_left={<Icon.Export tw="stroke-current" />}
+                  icon_right={
+                     isExportPanelOpen ? (
+                        <Icon.Up tw="stroke-current" />
+                     ) : (
+                        <Icon.Down tw="stroke-current" />
+                     )
+                  }
+                  onClick={() => setIsExportPanelOpen(!isExportPanelOpen)}
                >
                   Export
                </Button.Combo>
-               <CSVLink
-                  ref={exportRef}
-                  headers={HEADERS}
-                  data={allTransactions}
-                  filename="transactions.csv"
-               />
+
                <Button.Combo
                   icon_right={
                      isSortPanelOpen ? (
@@ -115,9 +94,12 @@ const IndexPage = (): JSX.Element => {
                >
                   Sort
                </Button.Combo>
-               {isSortPanelOpen && <SortBy />}
             </section>
          </section>
+         {isExportPanelOpen && (
+            <Export where={where} setIsExportPanelOpen={setIsExportPanelOpen} />
+         )}
+         {isSortPanelOpen && <SortBy />}
          <Filters pagination={pagination} />
          <FilterBy />
          <BulkActions />
@@ -304,6 +286,118 @@ const BulkActions = (): JSX.Element => {
    )
 }
 
+class Export extends Component<
+   { where: {}; setIsExportPanelOpen: (value: boolean) => void },
+   { list: []; is_loading: boolean; withFilter: boolean }
+> {
+   csvRef: React.RefObject<HTMLDivElement>
+   containerRef: React.RefObject<HTMLUListElement>
+   constructor(props) {
+      super(props)
+      this.state = {
+         list: [],
+         is_loading: false,
+         withFilter: false,
+      }
+      this.containerRef = React.createRef<HTMLUListElement>()
+      this.csvRef = React.createRef<HTMLDivElement>()
+      this.handleClickOutside = this.handleClickOutside.bind(this)
+   }
+
+   componentDidMount() {
+      document.addEventListener('mousedown', this.handleClickOutside)
+   }
+
+   componentWillUnmount() {
+      document.removeEventListener('mousedown', this.handleClickOutside)
+   }
+
+   handleClickOutside(event) {
+      if (
+         this.containerRef &&
+         !this.containerRef.current.contains(event.target)
+      ) {
+         this.props.setIsExportPanelOpen(false)
+      }
+   }
+
+   download = async withFilter => {
+      this.setState({ is_loading: true, withFilter })
+      try {
+         const response = await fetch('/api/export/csv', {
+            method: 'POST',
+            headers: { 'x-hasura-admin-secret': process.env.HASURA_KEY },
+            body: JSON.stringify({ where: withFilter ? this.props.where : {} }),
+         })
+         const { success = false, list = [] } = await response.json()
+         this.setState({ list })
+         if (success) {
+            this.setState({ list }, () => {
+               setTimeout(() => {
+                  this.csvRef.current.link.click()
+                  this.setState({ is_loading: false })
+                  this.props.setIsExportPanelOpen(false)
+               })
+            })
+         }
+      } catch (error) {
+         console.error(error.message)
+         this.setState({ is_loading: false })
+         this.props.setIsExportPanelOpen(false)
+      }
+   }
+
+   render() {
+      return (
+         <>
+            <ul
+               ref={this.containerRef}
+               tw="w-[180px] absolute right-[106px] z-10 bg-gray-700 py-2 rounded shadow-xl"
+            >
+               <li
+                  onClick={() => this.download(false)}
+                  tw="hover:bg-gray-800 cursor-pointer flex items-center justify-between pl-3 pr-2 h-10 space-x-4"
+               >
+                  {this.state.is_loading && !this.state.withFilter && (
+                     <Loader />
+                  )}
+                  <span
+                     css={[
+                        this.state.is_loading &&
+                           !this.state.withFilter &&
+                           tw`text-transparent`,
+                     ]}
+                  >
+                     All
+                  </span>
+               </li>
+               <li
+                  onClick={() => this.download(true)}
+                  tw="hover:bg-gray-800 cursor-pointer flex items-center justify-between pl-3 pr-2 h-10 space-x-4"
+               >
+                  {this.state.is_loading && this.state.withFilter && <Loader />}
+                  <span
+                     css={[
+                        this.state.is_loading &&
+                           this.state.withFilter &&
+                           tw`text-transparent`,
+                     ]}
+                  >
+                     With Filters
+                  </span>
+               </li>
+            </ul>
+            <CSVLink
+               ref={this.csvRef}
+               headers={HEADERS}
+               data={this.state.list}
+               filename="transactions.csv"
+            />
+         </>
+      )
+   }
+}
+
 const Styles = {
    Analytics: styled.aside`
       width: 340px;
@@ -434,9 +528,16 @@ const Analytics = ({ methods, transactions }: IAnalytics): JSX.Element => {
 }
 
 const SortBy = (): JSX.Element => {
-   const { on_sort, orderBy } = useTransactions()
+   const ref = React.useRef()
+   const { on_sort, orderBy, setIsSortPanelOpen } = useTransactions()
+
+   useOnClickOutside(ref, () => setIsSortPanelOpen(false))
+
    return (
-      <ul tw="absolute right-0 mt-12 mr-4 z-10 bg-gray-700 py-2 rounded shadow-xl">
+      <ul
+         ref={ref}
+         tw="w-[280px] absolute right-4 mr-0 z-10 bg-gray-700 py-2 rounded shadow-xl"
+      >
          <SortByOption
             field="title"
             title="Title"

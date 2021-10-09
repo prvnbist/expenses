@@ -57,6 +57,7 @@ export const TransactionsProvider = ({
    const [selected, setSelected] = React.useState([])
    const [isFormOpen, setIsFormOpen] = React.useState(false)
    const [isSortPanelOpen, setIsSortPanelOpen] = React.useState(false)
+   const [isExportPanelOpen, setIsExportPanelOpen] = React.useState(false)
    const [orderBy, setOrderBy] = React.useState({
       title: 'asc',
       raw_date: 'desc',
@@ -187,7 +188,9 @@ export const TransactionsProvider = ({
             on_row_select,
             is_row_selected,
             isSortPanelOpen,
+            isExportPanelOpen,
             setIsSortPanelOpen,
+            setIsExportPanelOpen,
             transactions_aggregate,
             is_loading: loading || loading_aggregate,
          }}
