@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { useSubscription } from '@apollo/client'
 import {
    Bar,
-   Line,
    YAxis,
    XAxis,
    Tooltip,
