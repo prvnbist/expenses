@@ -8,9 +8,8 @@ const Styles = {
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      position: relative;
-      transform: translateZ(0);
-      margin-left: calc(50% + 12px);
+      position: absolute;
+      left: calc(50% - 12px);
       border-left: 4px solid #ffffff;
       animation: load8 1.1s infinite linear;
       border-top: 4px solid rgba(255, 255, 255, 0.2);

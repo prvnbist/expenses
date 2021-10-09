@@ -24,6 +24,7 @@ interface IText {
 interface ICombo {
    onClick: any
    variant?: 'danger'
+   is_loading?: boolean
    is_disabled?: boolean
    children: React.ReactNode
    icon_left?: React.ReactNode
@@ -48,6 +49,7 @@ export const Button = {
          disabled={props.is_disabled || props.is_disabled}
          {...props}
       >
+         {props.is_loading && <Loader />}
          {props.icon_left && <span>{props.icon_left}</span>}
          {children}
          {props.icon_right && <span>{props.icon_right}</span>}
@@ -74,7 +76,7 @@ const Styles = {
       `
    ),
    Text: styled.button`
-      ${tw`h-10 px-4 flex flex-shrink-0 items-center justify-center rounded-lg `}
+      ${tw`relative h-10 px-4 flex flex-shrink-0 items-center justify-center rounded-lg `}
       ${({ variant }) => handle_variant(variant)}
       &[disabled] {
          ${tw`bg-gray-500 cursor-not-allowed text-gray-700`}
@@ -86,7 +88,7 @@ const Styles = {
          `}
    `,
    Combo: styled.button`
-      ${tw`h-10 flex flex-shrink-0 items-center justify-center rounded-lg`}
+      ${tw`relative h-10 flex flex-shrink-0 items-center justify-center rounded-lg`}
       ${({ variant }) => handle_variant(variant)}
       &[disabled] {
          ${tw`bg-gray-500 cursor-not-allowed text-gray-700`}
@@ -99,5 +101,10 @@ const Styles = {
          ${icon_left && tw`pr-4`}
          ${icon_right && icon_left && tw`px-0`}
       `}
+      ${({ is_loading }) =>
+         is_loading &&
+         css`
+            color: transparent !important;
+         `}
    `,
 }
