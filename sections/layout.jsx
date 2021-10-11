@@ -2,11 +2,11 @@ import tw, { styled } from 'twin.macro'
 
 import Header from './header'
 
-export const Layout = ({ children }) => {
+export const Layout = ({ noPadding = false, children }) => {
    return (
       <Section>
          <Header />
-         <main tw="p-4">{children}</main>
+         <main css={[!noPadding && tw`p-4`]}>{children}</main>
       </Section>
    )
 }

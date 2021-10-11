@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import tw from 'twin.macro'
 import { CSVLink } from 'react-csv'
-import styled from 'styled-components'
 import { usePagination } from 'react-use-pagination'
 
-import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
 import { Button, Loader, Table } from '../components'
 import { useTransactions } from '../hooks/useTransactions'
@@ -22,7 +20,6 @@ const HEADERS = [
 ]
 
 const IndexPage = (): JSX.Element => {
-   const { methods } = useConfig()
    const [keyword, setKeyword] = React.useState('')
    const {
       where,
@@ -43,58 +40,59 @@ const IndexPage = (): JSX.Element => {
    })
 
    return (
-      <Layout>
-         <header tw="flex items-center justify-between">
-            <h1 tw="text-3xl mt-4 mb-3">Transactions</h1>
-            <Button.Combo
-               icon_left={<Icon.Add tw="stroke-current" />}
-               onClick={() => setIsFormOpen(!isFormOpen)}
-            >
-               Add
-            </Button.Combo>
-         </header>
-         <section tw="mt-3 mb-2 flex flex-col space-y-2 md:space-y-0 md:flex-row md:items-center md:justify-between">
-            <fieldset>
+      <Layout noPadding>
+         <section tw="mt-[-1px] h-auto border-t border-b border-gray-700 flex flex-col md:(h-12 flex-row)">
+            <fieldset tw="border-b border-gray-700 h-12 md:(flex-1 h-full border-none)">
                <input
                   type="text"
-                  name="search"
                   id="search"
+                  name="search"
                   value={keyword}
-                  placeholder="Enter your search"
                   onChange={e => {
                      setKeyword(e.target.value)
                      onSearch(e.target.value)
                   }}
-                  tw="bg-gray-700 h-10 rounded px-2 w-full md:w-auto"
+                  placeholder="Search transactions"
+                  tw="w-full h-12 bg-transparent px-3 focus:(outline-none ring-0 ring-offset-0 bg-transparent) md:(h-full)"
                />
             </fieldset>
-            <section tw="self-end flex gap-1">
-               <Button.Combo
-                  icon_right={
-                     isExportPanelOpen ? (
-                        <Icon.Up tw="stroke-current" />
-                     ) : (
-                        <Icon.Down tw="stroke-current" />
-                     )
-                  }
+            <aside tw="flex border-gray-700 h-12 divide-x divide-gray-700 md:(h-full border-l)">
+               <button
                   onClick={() => setIsExportPanelOpen(!isExportPanelOpen)}
+                  tw="flex items-center justify-center md:(justify-start) flex-1 h-full pl-5 hover:(bg-gray-700)"
                >
                   Export
-               </Button.Combo>
-
-               <Button.Combo
-                  icon_right={
-                     isSortPanelOpen ? (
+                  <span tw="h-12 w-12 flex items-center justify-center">
+                     {isExportPanelOpen ? (
                         <Icon.Up tw="stroke-current" />
                      ) : (
                         <Icon.Down tw="stroke-current" />
-                     )
-                  }
+                     )}
+                  </span>
+               </button>
+               <button
                   onClick={() => setIsSortPanelOpen(!isSortPanelOpen)}
+                  tw="flex items-center justify-center md:(justify-start) flex-1 h-full pl-5 hover:(bg-gray-700)"
                >
                   Sort
-               </Button.Combo>
-            </section>
+                  <span tw="h-12 w-12 flex items-center justify-center">
+                     {isSortPanelOpen ? (
+                        <Icon.Up tw="stroke-current" />
+                     ) : (
+                        <Icon.Down tw="stroke-current" />
+                     )}
+                  </span>
+               </button>
+               <button
+                  tw="flex items-center justify-center md:(justify-start) flex-1 h-full pr-5 hover:(bg-gray-700)"
+                  onClick={() => setIsFormOpen(!isFormOpen)}
+               >
+                  <span tw="h-12 w-12 flex items-center justify-center">
+                     <Icon.Add tw="stroke-current" />
+                  </span>
+                  Add
+               </button>
+            </aside>
          </section>
          {isExportPanelOpen && (
             <Export where={where} setIsExportPanelOpen={setIsExportPanelOpen} />
@@ -103,20 +101,13 @@ const IndexPage = (): JSX.Element => {
          <Filters pagination={pagination} />
          <FilterBy />
          <BulkActions />
-         <section tw="flex flex-col md:flex-row">
-            <main
-               style={{ maxHeight: '520px' }}
-               tw="flex-1 hidden md:block overflow-y-auto"
-            >
+         <section tw="m-4 md:(m-0) flex flex-col md:flex-row">
+            <main tw="flex-1 hidden md:block">
                <TableView />
             </main>
             <main tw="md:hidden">
                <CardView />
             </main>
-            <Analytics
-               methods={methods}
-               transactions={transactions_aggregate}
-            />
          </section>
          <Filters pagination={pagination} />
          <AddTransaction />
@@ -160,37 +151,40 @@ const Filters = ({ pagination }: IFilters): JSX.Element => {
 
    if (is_loading) return null
    return (
-      <section tw="mt-3 mb-2 flex items-center justify-between">
-         <span tw="flex items-center">
-            Page{' '}
-            <fieldset tw="mx-2">
-               <input
-                  type="text"
-                  id="current_page"
-                  name="current_page"
-                  placeholder="Ex. 9"
-                  onChange={handlePageChange}
-                  value={pagination.currentPage}
-                  tw="text-center w-10 bg-gray-700 h-10 rounded px-2"
-               />
-            </fieldset>
-            of&nbsp;
-            {pageCount || 0}
-         </span>
-         <Button.Group>
-            <Button.Text
-               onClick={pagination.setPreviousPage}
-               is_disabled={!pagination.previousEnabled}
-            >
-               Prev
-            </Button.Text>
-            <Button.Text
-               onClick={pagination.setNextPage}
-               is_disabled={!pagination.nextEnabled}
-            >
-               Next
-            </Button.Text>
-         </Button.Group>
+      <section tw="mt-[-1px] border-t border-b border-gray-700 flex h-12">
+         <button
+            onClick={pagination.setPreviousPage}
+            disabled={!pagination.previousEnabled}
+            tw="h-full px-5 border-r border-gray-700 hover:(bg-gray-700)"
+         >
+            Prev
+         </button>
+         <section tw="flex-1 flex justify-center">
+            <span tw="flex items-center">
+               Page{' '}
+               <fieldset tw="mx-2">
+                  <input
+                     type="text"
+                     id="current_page"
+                     name="current_page"
+                     placeholder="Ex. 9"
+                     onChange={handlePageChange}
+                     value={pagination.currentPage}
+                     tw="text-center max-w-[120px] bg-gray-700 h-8 rounded px-2"
+                  />
+               </fieldset>
+               of&nbsp;
+               {pageCount || 0}
+            </span>
+         </section>
+
+         <button
+            onClick={pagination.setNextPage}
+            disabled={!pagination.nextEnabled}
+            tw="h-full px-5 border-l border-gray-700 hover:(bg-gray-700)"
+         >
+            Next
+         </button>
       </section>
    )
 }
@@ -203,16 +197,16 @@ const FilterBy = (): JSX.Element => {
    )
       return null
    return (
-      <section tw="mt-2 mb-3 flex items-center space-x-2">
-         <h3 tw="text-lg">Filter By:</h3>
-         <ul tw="flex flex-wrap gap-2">
+      <section tw="mt-[-1px] h-auto border-t border-b border-gray-700 flex flex-col md:(h-12 divide-x divide-gray-700 flex-row)">
+         <h3 tw="px-3 h-10 md:(h-12) flex items-center">Filter By</h3>
+         <ul tw="h-12 pl-3 flex items-center flex-wrap gap-2">
             {Object.keys(where).map(
                key =>
                   !Array.isArray(where[key]) && (
                      <li
                         key={key}
                         title={key}
-                        tw="flex space-x-2 items-center bg-gray-700 px-2 py-1 rounded"
+                        tw="h-8 flex space-x-2 items-center bg-gray-700 px-2 rounded"
                      >
                         <span>{where[key]?._eq}</span>
                         <button
@@ -265,23 +259,30 @@ const BulkActions = (): JSX.Element => {
    const { selected, bulk } = useTransactions()
    if (selected.length === 0) return null
    return (
-      <section tw="hidden md:block mb-3">
-         <h2 tw="text-lg">
+      <section tw="mt-[-1px] h-auto border-t border-b border-gray-700 flex-col hidden md:(h-12 divide-x divide-gray-700 flex-row flex)">
+         <h2 tw="px-3 h-10 md:(h-12) flex items-center">
             Bulk Actions
             {selected.length > 0 && (
                <span tw="text-gray-400">({selected.length} selected)</span>
             )}
          </h2>
-         <section tw="mt-2 flex gap-3">
-            <Button.Combo
-               variant="danger"
+         <aside tw="ml-auto flex border-gray-700 h-12 divide-x divide-gray-700 md:(h-full border-l)">
+            <button
                onClick={bulk.delete}
-               icon_left={<Icon.Delete tw="stroke-current" />}
+               tw="flex items-center justify-center flex-1 h-12 pr-5 md:(justify-start) hover:(bg-red-500)"
             >
+               <span tw="h-12 w-12 flex items-center justify-center">
+                  <Icon.Delete tw="stroke-current" />
+               </span>
                Delete
-            </Button.Combo>
-            <Button.Text onClick={bulk.reset}>Clear</Button.Text>
-         </section>
+            </button>
+            <button
+               onClick={bulk.reset}
+               tw="flex items-center justify-center md:(justify-start) flex-1 h-12 px-5 hover:(bg-gray-700)"
+            >
+               Clear
+            </button>
+         </aside>
       </section>
    )
 }
@@ -352,7 +353,7 @@ class Export extends Component<
          <>
             <ul
                ref={this.containerRef}
-               tw="w-[180px] absolute right-[106px] z-10 bg-gray-700 py-2 rounded shadow-xl"
+               tw="w-[180px] absolute mt-2 left-2 md:(left-[unset] right-[200px]) z-10 bg-gray-700 py-2 rounded shadow-xl"
             >
                <li
                   onClick={() => this.download(false)}
@@ -398,15 +399,6 @@ class Export extends Component<
    }
 }
 
-const Styles = {
-   Analytics: styled.aside`
-      width: 340px;
-      @media screen and (max-width: 640px) {
-         width: 100%;
-      }
-   `,
-}
-
 interface IAggregateSum {
    credit: number
    debit: number
@@ -433,100 +425,6 @@ interface ITransactions {
    aggregate: IAggregate
 }
 
-interface IAnalytics {
-   transactions: ITransactions
-   methods: {
-      format_currency: (x: number) => string
-   }
-}
-
-const Analytics = ({ methods, transactions }: IAnalytics): JSX.Element => {
-   return (
-      <Styles.Analytics tw="mt-4 md:(ml-3 mt-0)">
-         <Table>
-            <Table.Head>
-               <Table.HCell>Title</Table.HCell>
-               <Table.HCell is_right>Value</Table.HCell>
-            </Table.Head>
-            <Table.Body>
-               <Table.Row odd>
-                  <Table.Cell>Transactions</Table.Cell>
-                  <Table.Cell is_right>
-                     {transactions?.aggregate?.count}
-                  </Table.Cell>
-               </Table.Row>
-               <Table.Row>
-                  <Table.Cell>Debit</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-red-400">
-                        -{' '}
-                        {methods.format_currency(
-                           Number(transactions?.aggregate?.sum?.debit || 0)
-                        )}
-                     </span>
-                  </Table.Cell>
-               </Table.Row>
-               <Table.Row odd>
-                  <Table.Cell>Average Debit</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-red-400">
-                        -{' '}
-                        {methods.format_currency(
-                           Number(transactions?.aggregate?.avg?.debit || 0)
-                        )}
-                     </span>
-                  </Table.Cell>
-               </Table.Row>
-               <Table.Row>
-                  <Table.Cell>Maximum Debit</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-red-400">
-                        -{' '}
-                        {methods.format_currency(
-                           Number(transactions?.aggregate?.max?.debit || 0)
-                        )}
-                     </span>
-                  </Table.Cell>
-               </Table.Row>
-               <Table.Row odd>
-                  <Table.Cell>Credit</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-indigo-400">
-                        +{' '}
-                        {methods.format_currency(
-                           Number(transactions?.aggregate?.sum?.credit || 0)
-                        )}
-                     </span>
-                  </Table.Cell>
-               </Table.Row>
-               <Table.Row>
-                  <Table.Cell>Average Credit</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-indigo-400">
-                        +{' '}
-                        {methods.format_currency(
-                           Number(transactions?.aggregate?.avg?.credit || 0)
-                        )}
-                     </span>
-                  </Table.Cell>
-               </Table.Row>
-               <Table.Row odd>
-                  <Table.Cell>Maximum Credit</Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-indigo-400">
-                        +{' '}
-                        {methods.format_currency(
-                           Number(transactions?.aggregate?.max?.credit || 0)
-                        )}
-                     </span>
-                  </Table.Cell>
-               </Table.Row>
-            </Table.Body>
-         </Table>
-      </Styles.Analytics>
-   )
-}
-
 const SortBy = (): JSX.Element => {
    const ref = React.useRef()
    const { on_sort, orderBy, setIsSortPanelOpen } = useTransactions()
@@ -536,7 +434,7 @@ const SortBy = (): JSX.Element => {
    return (
       <ul
          ref={ref}
-         tw="w-[280px] absolute right-4 mr-0 z-10 bg-gray-700 py-2 rounded shadow-xl"
+         tw="w-[280px] absolute right-[calc(50% - 140px)] md:right-[98px] mt-2 mr-0 z-10 bg-gray-700 py-2 rounded shadow-xl"
       >
          <SortByOption
             field="title"

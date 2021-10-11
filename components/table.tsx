@@ -50,13 +50,7 @@ const Styles = {
    Head: tw.thead`relative `,
    Row: styled.tr(
       ({ odd, noBg }) => css`
-         ${odd && tw`bg-gray-700`};
-         td:first-of-type {
-            ${tw`rounded-l`}
-         }
-         td:last-of-type {
-            ${tw`rounded-r`}
-         }
+         ${odd && tw`bg-gray-700 border-t border-b border-gray-700`};
          > th {
             ${noBg && tw`bg-transparent`}
          }
@@ -64,7 +58,7 @@ const Styles = {
    ),
    Cell: styled.td(
       ({ is_right, is_center, no_padding }) => css`
-         ${tw`font-light h-10 whitespace-nowrap`}
+         ${tw`font-light h-12 whitespace-nowrap`}
          ${is_right && tw`text-right`}
          ${!no_padding && tw`px-2`}
          ${is_center && tw`flex justify-center`}

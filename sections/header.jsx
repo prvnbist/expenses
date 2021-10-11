@@ -45,17 +45,23 @@ const Route = ({ path, title, is_active }) => (
 )
 
 const Styles = {
-   Header: tw.header`z-10 bg-gray-800 sticky top-0 flex items-center justify-center h-auto p-2 border-b border-gray-700`,
+   Header: tw.header`z-10 bg-gray-800 sticky top-0 flex items-center justify-center h-auto border-b border-gray-700 md:(h-12)`,
    NavItems: styled.ul`
-      ${tw`mx-auto h-full gap-3 flex flex-wrap`}
+      ${tw`border-gray-700 mx-auto h-auto flex flex-wrap divide-x divide-gray-700 md:(border-l border-r h-12)`}
       @media screen and (max-width: 567px) {
          ${tw`w-full grid grid-cols-2`}
       }
+      li {
+         &:last-child a,
+         &:nth-last-child(2) a {
+            ${tw`border-b-0`}
+         }
+      }
    `,
    NavLink: styled.a`
-      ${tw`cursor-pointer flex items-center justify-center px-4 h-10 rounded-lg`}
+      ${tw`border-b border-gray-700 cursor-pointer flex items-center justify-center px-4 h-12 hover:(bg-gray-700)`}
       &.active {
-         ${tw`bg-indigo-700`}
+         ${tw`bg-indigo-700 hover:(bg-indigo-700)`}
       }
       @media screen and (max-width: 567px) {
          ${tw`w-full px-0`}
