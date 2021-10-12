@@ -96,7 +96,7 @@ const IndexPage = (): JSX.Element => {
          <Filters pagination={pagination} />
          <FilterBy />
          <BulkActions />
-         <section tw="m-4 md:(m-0) flex flex-col md:flex-row">
+         <section tw="flex flex-col md:flex-row">
             <main tw="flex-1 hidden md:block">
                <TableView />
             </main>

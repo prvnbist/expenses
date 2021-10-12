@@ -14,7 +14,7 @@ export const FilterBy = (): JSX.Element => {
    return (
       <section tw="mt-[-1px] h-auto border-t border-b border-gray-700 flex flex-col md:(h-12 divide-x divide-gray-700 flex-row)">
          <h3 tw="px-3 h-10 md:(h-12) flex items-center">Filter By</h3>
-         <ul tw="h-12 pl-3 flex items-center flex-wrap gap-2">
+         <ul tw="pb-2 md:(pt-2) pl-3 flex items-center flex-wrap gap-2">
             {Object.keys(where).map(
                key =>
                   !Array.isArray(where[key]) && (

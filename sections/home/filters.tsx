@@ -59,7 +59,7 @@ export const Filters = ({ pagination }: IFilters): JSX.Element => {
                      placeholder="Ex. 9"
                      onChange={handlePageChange}
                      value={pagination.currentPage}
-                     tw="text-center max-w-[120px] bg-gray-700 h-8 rounded px-2"
+                     tw="text-center max-w-[64px] md:max-w-[120px] bg-gray-700 h-8 rounded px-2"
                   />
                </fieldset>
                of&nbsp;

@@ -38,30 +38,36 @@ export const CardView = () => {
          </div>
       )
    return (
-      <ul tw="space-y-2">
+      <ul tw="p-3 space-y-2">
          {transactions.map(transaction => (
-            <li key={transaction.id} tw="list-none bg-gray-700 rounded p-3">
-               <header tw="flex items-center justify-between">
-                  <h3 tw="text-lg">{transaction.title}</h3>
-                  <Button.Group>
-                     <Button.Icon is_small onClick={() => update(transaction)}>
-                        <Icon.Edit size={16} tw="stroke-current" />
-                     </Button.Icon>
-                     <Button.Icon is_small>
+            <li key={transaction.id} tw="list-none border border-gray-700">
+               <header tw="h-12 pl-3 flex items-center justify-between">
+                  <h3 tw="md:text-lg">{transaction.title}</h3>
+                  <aside tw="self-start h-10 border-l border-b border-gray-700 flex divide-x divide-gray-700">
+                     <button
+                        tw="h-10 w-10 flex items-center justify-center hover:(bg-gray-700)"
+                        onClick={() => update(transaction)}
+                     >
+                        <Icon.Edit
+                           size={16}
+                           tw="stroke-current text-gray-300"
+                        />
+                     </button>
+                     <button
+                        tw="h-10 w-10 flex items-center justify-center hover:(bg-red-500)"
+                        onClick={() =>
+                           remove({ variables: { id: transaction.id } })
+                        }
+                     >
                         <Icon.Delete
                            size={16}
-                           tw="stroke-current"
-                           onClick={() =>
-                              remove({
-                                 variables: { id: transaction.id },
-                              })
-                           }
+                           tw="stroke-current text-gray-300"
                         />
-                     </Button.Icon>
-                  </Button.Group>
+                     </button>
+                  </aside>
                </header>
                <main tw="mt-3">
-                  <section tw="mb-2 flex justify-between">
+                  <section tw="px-3 mb-2 flex justify-between">
                      <span
                         title={
                            transaction.type === 'expense' ? 'Debit' : 'Credit'
@@ -78,29 +84,31 @@ export const CardView = () => {
                            Number(transaction.amount) || 0
                         )}
                      </span>
-                     <span>{methods.format_date(transaction.date)}</span>
+                     <span tw="text-gray-400">
+                        {methods.format_date(transaction.date)}
+                     </span>
                   </section>
-                  <section tw="pt-2 divide-x divide-gray-800 border-t border-gray-800 grid grid-cols-3 text-center">
+                  <section tw="h-10 flex items-center divide-x divide-gray-700 border-t border-gray-700 flex text-center">
                      <span
                         title="Category"
-                        tw="cursor-pointer"
                         onClick={() => viewBy('category', transaction.category)}
+                        tw="text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-gray-700)"
                      >
                         {transaction.category || 'N/A'}
                      </span>
                      <span
                         title="Payment Method"
-                        tw="cursor-pointer"
                         onClick={() =>
                            viewBy('payment_method', transaction.payment_method)
                         }
+                        tw="text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-gray-700)"
                      >
                         {transaction.payment_method || 'N/A'}
                      </span>
                      <span
                         title="Account"
-                        tw="cursor-pointer"
                         onClick={() => viewBy('account', transaction.account)}
+                        tw="text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-gray-700)"
                      >
                         {transaction.account || 'N/A'}
                      </span>
