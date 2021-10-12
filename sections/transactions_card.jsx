@@ -1,4 +1,5 @@
 import tw from 'twin.macro'
+
 import * as Svg from '../assets/svgs'
 import { useConfig } from '../context'
 import * as Icon from '../assets/icons'
@@ -24,7 +25,12 @@ export const CardView = () => {
       }))
    }
 
-   if (is_loading) return <Loader />
+   if (is_loading)
+      return (
+         <div tw="mt-4">
+            <Loader />
+         </div>
+      )
    if (transactions_aggregate?.aggregate?.count === 0)
       return (
          <div tw="my-6 w-full flex items-center justify-center">

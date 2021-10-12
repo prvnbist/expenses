@@ -8,9 +8,9 @@ import {
    CATEGORIES,
    INSERT_TRANSACTION,
    PAYMENT_METHODS,
-} from '../graphql'
-import { Button, Select } from '../components'
-import { useTransactions } from '../hooks/useTransactions'
+} from '../../graphql'
+import { Button, Select } from '../../components'
+import { useTransactions } from '../../hooks/useTransactions'
 
 const Styles = {
    Fieldset: styled.fieldset`
@@ -27,14 +27,15 @@ const Styles = {
 export const Form = () => {
    const { addToast } = useToasts()
    const { editForm, setIsFormOpen, setEditForm } = useTransactions()
+
    const [form, setForm] = React.useState({
       title: '',
       amount: '',
-      type: 'expense',
-      date: new Date().toISOString().slice(0, 10),
       account_id: '',
+      type: 'expense',
       category_id: '',
       payment_method_id: '',
+      date: new Date().toISOString().slice(0, 10),
    })
    const [upsert, { loading }] = useMutation(INSERT_TRANSACTION, {
       onCompleted: () => {
@@ -55,9 +56,8 @@ export const Form = () => {
    })
    const { data: { categories = [] } = {} } = useSubscription(CATEGORIES)
    const { data: { accounts = [] } = {} } = useSubscription(ACCOUNTS)
-   const { data: { payment_methods = [] } = {} } = useSubscription(
-      PAYMENT_METHODS
-   )
+   const { data: { payment_methods = [] } = {} } =
+      useSubscription(PAYMENT_METHODS)
 
    React.useEffect(() => {
       if (Object.keys(editForm).length > 0) {
@@ -103,9 +103,9 @@ export const Form = () => {
                'type',
                'title',
                'amount',
+               'account_id',
                'category_id',
                'payment_method_id',
-               'account_id',
             ],
          },
       })

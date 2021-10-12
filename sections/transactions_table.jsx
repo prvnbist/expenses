@@ -28,7 +28,12 @@ export const TableView = () => {
       }))
    }
 
-   if (is_loading) return <Loader />
+   if (is_loading)
+      return (
+         <div tw="mt-4">
+            <Loader />
+         </div>
+      )
    if (transactions_aggregate?.aggregate?.count === 0)
       return (
          <div tw="w-full flex items-center justify-center">
