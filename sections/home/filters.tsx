@@ -31,49 +31,45 @@ export const Filters = ({ pagination }: IFilters): JSX.Element => {
    const pageCount = Math.floor(
       transactions_aggregate?.aggregate?.count / limit
    )
-   const handlePageChange = e => {
-      const { value } = e.target
-      if (Number(value) < 0 || Number(value) > pageCount) return
-
-      pagination.setPage(Number(e.target.value))
-   }
 
    if (is_loading) return null
    return (
-      <section tw="mt-[-1px] border-t border-b border-gray-700 flex h-12">
-         <button
-            onClick={pagination.setPreviousPage}
-            disabled={!pagination.previousEnabled}
-            tw="h-full px-5 border-r border-gray-700 hover:(bg-gray-700)"
-         >
-            Prev
-         </button>
-         <section tw="flex-1 flex justify-center">
-            <span tw="flex items-center">
-               Page{' '}
-               <fieldset tw="mx-2">
-                  <input
-                     type="text"
-                     id="current_page"
-                     name="current_page"
-                     placeholder="Ex. 9"
-                     onChange={handlePageChange}
-                     value={pagination.currentPage}
-                     tw="text-center max-w-[64px] md:max-w-[120px] bg-gray-700 h-8 rounded px-2"
-                  />
-               </fieldset>
-               of&nbsp;
-               {pageCount || 0}
-            </span>
-         </section>
-
-         <button
-            onClick={pagination.setNextPage}
-            disabled={!pagination.nextEnabled}
-            tw="h-full px-5 border-l border-gray-700 hover:(bg-gray-700)"
-         >
-            Next
-         </button>
+      <section tw="mt-[-1px] border-t border-b border-gray-700 flex items-center justify-between h-12">
+         <div tw="h-full">
+            <button
+               onClick={() => pagination.setPage(0)}
+               disabled={!pagination.previousEnabled}
+               tw="h-full px-5 border-l border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800))"
+            >
+               First
+            </button>
+            <button
+               onClick={pagination.setPreviousPage}
+               disabled={!pagination.previousEnabled}
+               tw="h-full px-5 border-l border-r border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800))"
+            >
+               Prev
+            </button>
+         </div>
+         <span>
+            Page {pagination.currentPage + 1} of {pageCount + 1}
+         </span>
+         <div tw="h-full">
+            <button
+               onClick={pagination.setNextPage}
+               disabled={!pagination.nextEnabled}
+               tw="h-full px-5 border-l border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800))"
+            >
+               Next
+            </button>
+            <button
+               disabled={!pagination.nextEnabled}
+               onClick={() => pagination.setPage(pageCount)}
+               tw="h-full px-5 border-l border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800))"
+            >
+               Last
+            </button>
+         </div>
       </section>
    )
 }
