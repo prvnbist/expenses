@@ -59,7 +59,7 @@ const Styles = {
       }
    `,
    NavLink: styled.a`
-      ${tw`border-b border-gray-700 cursor-pointer flex items-center justify-center px-4 h-12 hover:(bg-gray-700)`}
+      ${tw`border-b border-gray-700 cursor-pointer flex items-center justify-center px-4 h-10 hover:(bg-gray-700) md:(h-12)`}
       &.active {
          ${tw`bg-indigo-700 hover:(bg-indigo-700)`}
       }

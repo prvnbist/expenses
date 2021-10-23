@@ -34,19 +34,19 @@ export const Filters = ({ pagination }: IFilters): JSX.Element => {
 
    if (is_loading) return null
    return (
-      <section tw="mt-[-1px] border-t border-b border-gray-700 flex items-center justify-between h-12">
+      <section tw="mt-[-1px] border-t border-b border-gray-700 flex items-center justify-between h-10 md:(h-12)">
          <div tw="h-full">
             <button
                onClick={() => pagination.setPage(0)}
                disabled={!pagination.previousEnabled}
-               tw="h-full px-5 border-l border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800))"
+               tw="h-full px-3 border-l border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800)) md:(px-5)"
             >
                First
             </button>
             <button
                onClick={pagination.setPreviousPage}
                disabled={!pagination.previousEnabled}
-               tw="h-full px-5 border-l border-r border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800))"
+               tw="h-full px-3 border-l border-r border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800)) md:(px-5)"
             >
                Prev
             </button>
@@ -58,14 +58,14 @@ export const Filters = ({ pagination }: IFilters): JSX.Element => {
             <button
                onClick={pagination.setNextPage}
                disabled={!pagination.nextEnabled}
-               tw="h-full px-5 border-l border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800))"
+               tw="h-full px-3 border-l border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800)) md:(px-5)"
             >
                Next
             </button>
             <button
                disabled={!pagination.nextEnabled}
                onClick={() => pagination.setPage(pageCount)}
-               tw="h-full px-5 border-l border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800))"
+               tw="h-full px-3 border-l border-gray-700 hover:(bg-gray-700) disabled:(cursor-not-allowed text-gray-400 hover:(bg-gray-800)) md:(px-5)"
             >
                Last
             </button>
