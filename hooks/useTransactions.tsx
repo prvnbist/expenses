@@ -84,10 +84,13 @@ export const TransactionsProvider = ({
    )
 
    const [remove] = useMutation(DELETE_TRANSACTION, {
-      onCompleted: () =>
+      onCompleted: () => {
+         setEditForm({})
+         setIsFormOpen(false)
          addToast('Successfully deleted the transaction.', {
             appearance: 'success',
-         }),
+         })
+      },
       onError: error => {
          console.log('delete -> error ->', error)
          addToast('Failed to delete the transaction.', { appearance: 'error' })

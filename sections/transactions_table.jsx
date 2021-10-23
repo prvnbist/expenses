@@ -10,11 +10,11 @@ import { useTransactions } from '../hooks/useTransactions'
 export const TableView = () => {
    const { methods } = useConfig()
    const {
-      remove,
-      update,
       setWhere,
       is_loading,
+      setEditForm,
       transactions,
+      setIsFormOpen,
       on_row_select,
       is_row_selected,
       transactions_aggregate,
@@ -52,7 +52,6 @@ export const TableView = () => {
                <Table.HCell>Category</Table.HCell>
                <Table.HCell>Payment Method</Table.HCell>
                <Table.HCell>Account</Table.HCell>
-               <Table.HCell>Actions</Table.HCell>
             </Table.Row>
          </Table.Head>
          <Table.Body>
@@ -75,7 +74,15 @@ export const TableView = () => {
                         />
                      </Styles.Checkbox>
                   </Table.Cell>
-                  <Table.Cell>{transaction.title}</Table.Cell>
+                  <Table.Cell
+                     on_hover
+                     onClick={() => {
+                        setIsFormOpen(true)
+                        setEditForm(transaction)
+                     }}
+                  >
+                     {transaction.title}
+                  </Table.Cell>
                   <Table.Cell is_right>
                      <span tw="font-medium text-indigo-400">
                         {!!transaction.credit &&
@@ -119,27 +126,6 @@ export const TableView = () => {
                         {transaction.account}
                      </Tag>
                   </Table.Cell>
-                  <Table.Cell>
-                     <Button.Group>
-                        <Button.Icon
-                           is_small
-                           onClick={() => update(transaction)}
-                        >
-                           <Icon.Edit size={16} tw="stroke-current" />
-                        </Button.Icon>
-                        <Button.Icon is_small>
-                           <Icon.Delete
-                              size={16}
-                              tw="stroke-current"
-                              onClick={() =>
-                                 remove({
-                                    variables: { id: transaction.id },
-                                 })
-                              }
-                           />
-                        </Button.Icon>
-                     </Button.Group>
-                  </Table.Cell>
                </Table.Row>
             ))}
          </Table.Body>
@@ -151,7 +137,7 @@ const Tag = tw.button`rounded px-1 bg-indigo-200 text-indigo-900 cursor-pointer 
 
 const Styles = {
    Checkbox: styled.span`
-      ${tw`flex h-10 w-10 items-center justify-center`}
+      ${tw`flex h-10 items-center justify-center`}
       input {
          opacity: 0;
          display: none;

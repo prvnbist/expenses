@@ -14,6 +14,7 @@ interface ISelect {
       id?: string
       title?: string
    }
+   is_small?: boolean
    placeholder?: string
    children: React.ReactNode
    on_select: (x: IOption) => void
@@ -21,6 +22,7 @@ interface ISelect {
 }
 
 const Select = ({
+   is_small,
    on_select,
    selected = {},
    children = [],
@@ -30,7 +32,7 @@ const Select = ({
    const [search, setSearch] = React.useState('')
    const [isOpen, setIsOpen] = React.useState(false)
    if (!Array.isArray(children)) {
-      console.warning('Array of options is required!')
+      console.error('Array of options is required!')
       return
    }
    return (
@@ -38,11 +40,17 @@ const Select = ({
          <header
             css={[
                selected?.id ? tw`pl-1 md:pl-2` : tw`pl-1`,
-               tw`bg-gray-700 rounded pr-1 flex items-center gap-2 flex-col py-1 h-auto md:(flex-row h-10 py-0)`,
+               tw`bg-gray-700 rounded pr-1 flex items-center gap-2 flex-col py-1 h-auto`,
+               !is_small && tw`md:(flex-row h-10 py-0)`,
             ]}
          >
             {selected?.id && selected?.title && (
-               <div tw="flex space-x-2 items-center bg-gray-800 px-2 py-1 rounded w-full justify-between md:(w-auto)">
+               <div
+                  css={[
+                     tw`flex space-x-2 items-center bg-gray-800 px-2 py-1 rounded w-full justify-between`,
+                     !is_small && tw`md:(w-auto)`,
+                  ]}
+               >
                   <p tw="truncate">{selected.title}</p>
                   {on_deselect && (
                      <button
@@ -66,7 +74,10 @@ const Select = ({
                onFocus={() => setIsOpen(true)}
                onChange={e => setSearch(e.target.value)}
                placeholder={placeholder.trim() || 'Search...'}
-               tw="h-8 px-2 bg-transparent border-none focus:outline-none rounded focus:(ring-0 ring-offset-0) w-full md:(w-auto flex-1)"
+               css={[
+                  tw`h-8 px-2 bg-transparent border-none focus:outline-none rounded focus:(ring-0 ring-offset-0) w-full`,
+                  !is_small && tw`md:(w-auto flex-1)`,
+               ]}
             />
          </header>
          <List

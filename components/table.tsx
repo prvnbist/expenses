@@ -57,11 +57,12 @@ const Styles = {
       `
    ),
    Cell: styled.td(
-      ({ is_right, is_center, no_padding }) => css`
-         ${tw`font-light h-10 whitespace-nowrap`}
+      ({ is_right, is_center, no_padding, on_hover }) => css`
+         ${tw`cursor-pointer font-light h-10 whitespace-nowrap`}
          ${is_right && tw`text-right`}
-         ${!no_padding && tw`px-2`}
+         ${!no_padding && tw`px-3`}
          ${is_center && tw`flex justify-center`}
+         ${on_hover && tw`hover:(bg-gray-900)`}
       `
    ),
    HCell: styled.th(
