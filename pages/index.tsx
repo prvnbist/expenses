@@ -53,7 +53,7 @@ const IndexPage = (): JSX.Element => {
                   />
                </fieldset>
                <aside tw="flex border-gray-700 h-10 divide-x divide-gray-700 md:(h-full border-l)">
-                  {/* <button
+                  <button
                      onClick={() => setIsExportPanelOpen(!isExportPanelOpen)}
                      tw="flex items-center justify-center md:(justify-start) flex-1 h-full pl-5 hover:(bg-gray-700)"
                   >
@@ -65,7 +65,7 @@ const IndexPage = (): JSX.Element => {
                            <Icon.Down tw="stroke-current" />
                         )}
                      </span>
-                  </button> */}
+                  </button>
                   <button
                      onClick={() => setIsSortPanelOpen(!isSortPanelOpen)}
                      tw="flex items-center justify-center flex-1 h-full pl-5 hover:(bg-gray-700) md:(justify-start)"
@@ -90,12 +90,12 @@ const IndexPage = (): JSX.Element => {
                   </button>
                </aside>
             </section>
-            {/* {isExportPanelOpen && (
+            {isExportPanelOpen && (
                <Export
                   where={where}
                   setIsExportPanelOpen={setIsExportPanelOpen}
                />
-            )} */}
+            )}
             {isSortPanelOpen && <SortBy />}
          </header>
          <Styles.Main isFormOpen={isFormOpen}>
