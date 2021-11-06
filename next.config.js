@@ -1,4 +1,5 @@
 require('dotenv').config()
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
    typescript: {
@@ -7,10 +8,13 @@ module.exports = {
    future: {
       webpack5: true,
    },
-   webpack: config => {
+   webpack: (config, {isServer}) => {
       config.resolve.fallback = {
          ...config.resolve.fallback,
          fs: false,
+      }
+      if(isServer) {
+         config.externals = [nodeExternals()]
       }
 
       return config
