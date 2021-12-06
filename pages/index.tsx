@@ -47,6 +47,7 @@ const IndexPage = (): JSX.Element => {
                      onChange={e => {
                         setKeyword(e.target.value)
                         onSearch(e.target.value)
+                        pagination.setPage(0)
                      }}
                      placeholder="Search transactions"
                      tw="w-full h-10 bg-transparent px-3 focus:(outline-none ring-0 ring-offset-0 bg-transparent) md:(h-full)"
@@ -104,10 +105,10 @@ const IndexPage = (): JSX.Element => {
                <FilterBy />
                <BulkActions />
                <main tw="flex-1 hidden md:block">
-                  <TableView />
+                  <TableView resetPage={() => pagination.setPage(0)} />
                </main>
                <main tw="md:hidden">
-                  <CardView />
+                  <CardView resetPage={() => pagination.setPage(0)} />
                </main>
                <Filters pagination={pagination} />
             </main>

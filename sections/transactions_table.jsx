@@ -7,7 +7,7 @@ import * as Svg from '../assets/svgs'
 import { Button, Loader, Table } from '../components'
 import { useTransactions } from '../hooks/useTransactions'
 
-export const TableView = () => {
+export const TableView = ({ resetPage }) => {
    const { methods } = useConfig()
    const {
       setWhere,
@@ -103,7 +103,10 @@ export const TableView = () => {
                   <Table.Cell>
                      <Tag
                         title={transaction.category}
-                        onClick={() => viewBy('category', transaction.category)}
+                        onClick={() => {
+                           viewBy('category', transaction.category)
+                           resetPage()
+                        }}
                      >
                         {transaction.category}
                      </Tag>
@@ -111,9 +114,10 @@ export const TableView = () => {
                   <Table.Cell>
                      <Tag
                         title={transaction.payment_method}
-                        onClick={() =>
+                        onClick={() => {
                            viewBy('payment_method', transaction.payment_method)
-                        }
+                           resetPage()
+                        }}
                      >
                         {transaction.payment_method}
                      </Tag>
@@ -121,7 +125,10 @@ export const TableView = () => {
                   <Table.Cell>
                      <Tag
                         title={transaction.account}
-                        onClick={() => viewBy('account', transaction.account)}
+                        onClick={() => {
+                           viewBy('account', transaction.account)
+                           resetPage()
+                        }}
                      >
                         {transaction.account}
                      </Tag>

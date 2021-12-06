@@ -6,7 +6,7 @@ import * as Icon from '../assets/icons'
 import { Button, Loader } from '../components'
 import { useTransactions } from '../hooks/useTransactions'
 
-export const CardView = () => {
+export const CardView = ({ resetPage }) => {
    const { methods } = useConfig()
    const {
       remove,
@@ -91,23 +91,30 @@ export const CardView = () => {
                   <section tw="h-10 flex items-center divide-x divide-gray-700 border-t border-gray-700 flex text-center">
                      <span
                         title="Category"
-                        onClick={() => viewBy('category', transaction.category)}
+                        onClick={() => {
+                           viewBy('category', transaction.category)
+                           resetPage()
+                        }}
                         tw="text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-gray-700)"
                      >
                         {transaction.category || 'N/A'}
                      </span>
                      <span
                         title="Payment Method"
-                        onClick={() =>
+                        onClick={() => {
                            viewBy('payment_method', transaction.payment_method)
-                        }
+                           resetPage()
+                        }}
                         tw="text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-gray-700)"
                      >
                         {transaction.payment_method || 'N/A'}
                      </span>
                      <span
                         title="Account"
-                        onClick={() => viewBy('account', transaction.account)}
+                        onClick={() => {
+                           viewBy('account', transaction.account)
+                           resetPage()
+                        }}
                         tw="text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-gray-700)"
                      >
                         {transaction.account || 'N/A'}
