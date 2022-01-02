@@ -46,8 +46,7 @@ export const TableView = ({ resetPage }) => {
             <Table.Row>
                <Table.HCell></Table.HCell>
                <Table.HCell>Title</Table.HCell>
-               <Table.HCell is_right>Credit</Table.HCell>
-               <Table.HCell is_right>Debit</Table.HCell>
+               <Table.HCell is_right>Amount</Table.HCell>
                <Table.HCell is_right>Date</Table.HCell>
                <Table.HCell>Category</Table.HCell>
                <Table.HCell>Payment Method</Table.HCell>
@@ -84,19 +83,23 @@ export const TableView = ({ resetPage }) => {
                      {transaction.title}
                   </Table.Cell>
                   <Table.Cell is_right>
-                     <span tw="font-medium text-indigo-400">
-                        {!!transaction.credit &&
-                           `+ ${methods.format_currency(
-                              Number(transaction.credit)
-                           )}`}
-                     </span>
-                  </Table.Cell>
-                  <Table.Cell is_right>
-                     <span tw="font-medium text-red-400">
-                        {!!transaction.debit &&
-                           `- ${methods.format_currency(
-                              Number(transaction.debit)
-                           )}`}
+                     <span
+                        css={[
+                           tw`font-medium`,
+                           transaction.type === 'income'
+                              ? tw`text-indigo-400`
+                              : tw`text-red-400`,
+                        ]}
+                     >
+                        {`${
+                           transaction.type === 'income' ? '+ ' : '- '
+                        } ${methods.format_currency(
+                           Number(
+                              transaction.type === 'income'
+                                 ? transaction.credit
+                                 : transaction.debit
+                           )
+                        )}`}
                      </span>
                   </Table.Cell>
                   <Table.Cell is_right>{transaction.date}</Table.Cell>
@@ -140,7 +143,7 @@ export const TableView = ({ resetPage }) => {
    )
 }
 
-const Tag = tw.button`rounded px-1 bg-indigo-200 text-indigo-900 cursor-pointer text-sm font-medium focus:(bg-indigo-300)`
+const Tag = tw.button`text-xs rounded px-[6px] bg-indigo-200 text-indigo-900 cursor-pointer font-bold focus:(bg-indigo-300)`
 
 const Styles = {
    Checkbox: styled.span`
