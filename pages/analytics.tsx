@@ -27,7 +27,7 @@ import {
 const Styles = {
    Chart: {
       Main: styled.main`
-         ${tw`grid border border-gray-700`}
+         ${tw`grid border border-dark-200`}
          grid-auto-rows: 304px;
          grid-template-columns: repeat(2, 1fr);
          grid-template-areas:
@@ -154,25 +154,25 @@ const ChartsView = (): JSX.Element => {
    return (
       <Styles.Chart.Main>
          <section tw="overflow-x-auto rounded">
-            <h2 tw="border-b border-gray-700 mx-3 text-xl h-12 flex items-center mb-3">
+            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center mb-3">
                Expenses By Categories
             </h2>
             <ExpensesByCategoriesChart />
          </section>
-         <section tw="overflow-x-auto border-t border-gray-700 md:(border-t-0 border-l)">
-            <h2 tw="border-b border-gray-700 mx-3 text-xl h-12 flex items-center mb-3">
+         <section tw="overflow-x-auto border-t border-dark-200 md:(border-t-0 border-l)">
+            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center mb-3">
                Expenses By Year
             </h2>
             <ExpensesByYearChart />
          </section>
-         <section tw="overflow-x-auto border-t border-gray-700">
-            <h2 tw="border-b border-gray-700 mx-3 text-xl h-12 flex items-center mb-3">
+         <section tw="overflow-x-auto border-t border-dark-200">
+            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center mb-3">
                Incomes By Categories
             </h2>
             <IncomesByCategoriesChart />
          </section>
-         <section tw="overflow-x-auto border-t border-gray-700 md:(border-l)">
-            <h2 tw="border-b border-gray-700 mx-3 text-xl h-12 flex items-center mb-3">
+         <section tw="overflow-x-auto border-t border-dark-200 md:(border-l)">
+            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center mb-3">
                Incomes By Years
             </h2>
             <IncomesByYearsChart />
@@ -273,7 +273,7 @@ const CustomTooltip = ({
 
    const { title, amount, count } = payload[0].payload
    return (
-      <section tw="bg-gray-700 rounded p-2 gap-2 flex flex-col">
+      <section tw="bg-dark-200 rounded p-2 gap-2 flex flex-col">
          <span>Title: {title}</span>
          <span>Amount: {methods.format_currency(amount || 0)}</span>
          <span>Total: {count}</span>
@@ -283,27 +283,27 @@ const CustomTooltip = ({
 
 const TableView = () => {
    return (
-      <main tw="grid grid-cols-1 md:grid-cols-2 border border-gray-700">
+      <main tw="grid grid-cols-1 md:grid-cols-2 border border-dark-200">
          <section tw="pb-3 overflow-x-auto">
-            <h2 tw="border-b border-gray-700 mx-3 text-xl h-12 flex items-center">
+            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center">
                Expenses By Categories
             </h2>
             <ExpensesByCategoriesTable />
          </section>
-         <section tw="pb-3 overflow-x-auto border-t border-gray-700 md:(border-t-0 border-l)">
-            <h2 tw="border-b border-gray-700 mx-3 text-xl h-12 flex items-center">
+         <section tw="pb-3 overflow-x-auto border-t border-dark-200 md:(border-t-0 border-l)">
+            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center">
                Expenses By Year
             </h2>
             <ExpensesByYearTable />
          </section>
-         <section tw="pb-3 overflow-x-auto border-t border-gray-700">
-            <h2 tw="border-b border-gray-700 mx-3 text-xl h-12 flex items-center">
+         <section tw="pb-3 overflow-x-auto border-t border-dark-200">
+            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center">
                Incomes By Categories
             </h2>
             <IncomesByCategoriesTable />
          </section>
-         <section tw="pb-3 overflow-x-auto border-t border-gray-700 md:(border-l)">
-            <h2 tw="border-b border-gray-700 mx-3 text-xl h-12 flex items-center">
+         <section tw="pb-3 overflow-x-auto border-t border-dark-200 md:(border-l)">
+            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center">
                Incomes By Years
             </h2>
             <IncomesByYearsTable />

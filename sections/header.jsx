@@ -45,9 +45,9 @@ const Route = ({ path, title, is_active }) => (
 )
 
 const Styles = {
-   Header: tw.header`z-10 bg-gray-800 sticky top-0 flex items-center justify-center h-auto border-b border-gray-700 md:(h-12)`,
+   Header: tw.header`z-10 sticky top-0 flex items-center justify-center h-auto border-b border-dark-200 md:(h-12)`,
    NavItems: styled.ul`
-      ${tw`border-gray-700 mx-auto h-auto flex flex-wrap divide-x divide-gray-700 md:(border-l border-r h-12)`}
+      ${tw`border-dark-200 mx-auto h-auto flex flex-wrap divide-x divide-gray-700 md:(border-l border-r h-12)`}
       @media screen and (max-width: 567px) {
          ${tw`w-full grid grid-cols-2`}
       }
@@ -59,9 +59,9 @@ const Styles = {
       }
    `,
    NavLink: styled.a`
-      ${tw`border-b border-gray-700 cursor-pointer flex items-center justify-center px-4 h-10 hover:(bg-gray-700) md:(h-12)`}
+      ${tw`border-b border-dark-200 cursor-pointer flex items-center justify-center px-4 h-10 hover:(bg-dark-200) md:(h-12)`}
       &.active {
-         ${tw`bg-indigo-700 hover:(bg-indigo-700)`}
+         ${tw`font-medium text-dark-400 bg-highlight hover:(bg-highlight-hover)`}
       }
       @media screen and (max-width: 567px) {
          ${tw`w-full px-0`}

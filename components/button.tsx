@@ -62,7 +62,7 @@ const handle_variant = variant => {
       case 'danger':
          return tw`bg-red-500 hover:bg-red-600`
       default:
-         return tw`bg-gray-600 hover:bg-gray-700`
+         return tw`bg-dark-200 hover:bg-dark-300`
    }
 }
 
@@ -76,7 +76,7 @@ const Styles = {
       `
    ),
    Text: styled.button`
-      ${tw`relative h-10 px-4 flex flex-shrink-0 items-center justify-center rounded-lg `}
+      ${tw`text-sm relative h-10 px-4 flex flex-shrink-0 items-center justify-center rounded-lg `}
       ${({ variant }) => handle_variant(variant)}
       &[disabled] {
          ${tw`bg-gray-500 cursor-not-allowed text-gray-700`}
@@ -88,7 +88,7 @@ const Styles = {
          `}
    `,
    Combo: styled.button`
-      ${tw`relative h-10 flex flex-shrink-0 items-center justify-center rounded-lg`}
+      ${tw`text-sm relative h-10 flex flex-shrink-0 items-center justify-center rounded-lg`}
       ${({ variant }) => handle_variant(variant)}
       &[disabled] {
          ${tw`bg-gray-500 cursor-not-allowed text-gray-700`}

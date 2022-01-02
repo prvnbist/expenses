@@ -89,11 +89,11 @@ export class Export extends Component<IExportProps, IExportState> {
          <>
             <ul
                ref={this.containerRef}
-               tw="w-[180px] absolute mt-2 left-2 md:(left-[unset] right-[200px]) z-10 bg-gray-700 py-2 rounded shadow-xl"
+               tw="w-[180px] absolute mt-2 left-2 md:(left-[unset] right-[200px]) z-10 bg-dark-200 py-2 rounded shadow-xl"
             >
                <li
                   onClick={() => this.download(false)}
-                  tw="hover:bg-gray-800 cursor-pointer flex items-center justify-between pl-3 pr-2 h-10 space-x-4"
+                  tw="hover:bg-dark-300 cursor-pointer flex items-center justify-between pl-3 pr-2 h-10 space-x-4"
                >
                   {this.state.is_loading && !this.state.withFilter && (
                      <Loader />
@@ -110,7 +110,7 @@ export class Export extends Component<IExportProps, IExportState> {
                </li>
                <li
                   onClick={() => this.download(true)}
-                  tw="hover:bg-gray-800 cursor-pointer flex items-center justify-between pl-3 pr-2 h-10 space-x-4"
+                  tw="hover:bg-dark-300 cursor-pointer flex items-center justify-between pl-3 pr-2 h-10 space-x-4"
                >
                   {this.state.is_loading && this.state.withFilter && <Loader />}
                   <span

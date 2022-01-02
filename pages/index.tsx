@@ -37,8 +37,8 @@ const IndexPage = (): JSX.Element => {
    return (
       <Layout noPadding>
          <header>
-            <section tw="mt-[-1px] h-auto border-t border-b border-gray-700 flex flex-col md:(h-12 flex-row)">
-               <fieldset tw="border-b border-gray-700 h-10 md:(flex-1 h-full border-none)">
+            <section tw="mt-[-1px] h-auto border-t border-b border-dark-200 flex flex-col md:(h-12 flex-row)">
+               <fieldset tw="border-b border-dark-200 h-10 md:(flex-1 h-full border-none)">
                   <input
                      type="text"
                      id="search"
@@ -53,10 +53,10 @@ const IndexPage = (): JSX.Element => {
                      tw="w-full h-10 bg-transparent px-3 focus:(outline-none ring-0 ring-offset-0 bg-transparent) md:(h-full)"
                   />
                </fieldset>
-               <aside tw="flex border-gray-700 h-10 divide-x divide-gray-700 md:(h-full border-l)">
+               <aside tw="flex border-dark-200 h-10 divide-x divide-gray-700 md:(h-full border-l)">
                   <button
                      onClick={() => setIsExportPanelOpen(!isExportPanelOpen)}
-                     tw="flex items-center justify-center md:(justify-start) flex-1 h-full pl-5 hover:(bg-gray-700)"
+                     tw="flex items-center justify-center md:(justify-start) flex-1 h-full pl-5 hover:(bg-dark-200)"
                   >
                      Export
                      <span tw="h-12 w-12 flex items-center justify-center">
@@ -69,7 +69,7 @@ const IndexPage = (): JSX.Element => {
                   </button>
                   <button
                      onClick={() => setIsSortPanelOpen(!isSortPanelOpen)}
-                     tw="flex items-center justify-center flex-1 h-full pl-5 hover:(bg-gray-700) md:(justify-start)"
+                     tw="flex items-center justify-center flex-1 h-full pl-5 hover:(bg-dark-200) md:(justify-start)"
                   >
                      Sort
                      <span tw="h-10 w-10 flex items-center justify-center md:(h-12 w-12)">
@@ -81,7 +81,7 @@ const IndexPage = (): JSX.Element => {
                      </span>
                   </button>
                   <button
-                     tw="flex items-center justify-center md:(justify-start) flex-1 h-full pr-5 hover:(bg-gray-700)"
+                     tw="flex items-center justify-center md:(justify-start) flex-1 h-full pr-5 hover:(bg-dark-200)"
                      onClick={() => setIsFormOpen(true)}
                   >
                      <span tw="h-10 w-10 flex items-center justify-center md:(h-12 w-12)">
@@ -132,12 +132,12 @@ const Styles = {
          grid-template-columns: 1fr;
          > aside {
             z-index: 100;
-            ${tw`pb-3 fixed inset-0 bg-gray-800`}
+            ${tw`pb-3 fixed inset-0 bg-dark-400`}
          }
       }
       > aside {
          ${props => (props.isFormOpen ? tw`flex` : tw`hidden`)}
-         ${tw`mt-[-1px] flex-col border-l border-gray-700`}
+         ${tw`mt-[-1px] flex-col border-l border-dark-200`}
          > main {
             ${tw`flex-1 overflow-y-auto overflow-x-hidden`}
          }

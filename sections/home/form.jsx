@@ -15,13 +15,13 @@ import { Button, Select } from '../../components'
 
 const Styles = {
    Fieldset: styled.fieldset`
-      ${tw`flex flex-col space-y-1 mt-2 flex-1`}
+      ${tw`flex flex-col space-y-1 mt-3 flex-1`}
    `,
    Label: styled.label`
-      ${tw`text-sm text-gray-500 uppercase font-medium tracking-wider`}
+      ${tw`text-xs text-gray-500 uppercase font-medium tracking-wider`}
    `,
    Text: styled.input`
-      ${tw`bg-gray-700 h-10 rounded px-2`}
+      ${tw`text-sm bg-dark-200 h-10 rounded px-2`}
    `,
 }
 
@@ -129,7 +129,7 @@ export const Form = () => {
    }
    return (
       <section>
-         <header tw="pl-3 pr-2 flex items-center justify-between h-12 border-b border-gray-700">
+         <header tw="pl-3 pr-2 flex items-center justify-between h-12 border-b border-dark-200">
             <h3>{editForm?.id ? 'Update' : 'Add'} Details</h3>
             <Button.Icon
                is_small
@@ -178,11 +178,11 @@ export const Form = () => {
             </Styles.Fieldset>
             <Styles.Fieldset>
                <Styles.Label htmlFor="type">Type</Styles.Label>
-               <section tw="bg-gray-700 px-1 h-10 flex items-center rounded">
+               <section tw="bg-dark-200 px-1 h-10 flex items-center rounded">
                   <button
                      css={[
-                        tw`px-2 h-8 flex-1 rounded`,
-                        form.type === 'expense' && tw`bg-gray-800`,
+                        tw`text-sm px-2 h-8 flex-1 rounded`,
+                        form.type === 'expense' && tw`bg-dark-300`,
                      ]}
                      onClick={() => handleChange('type', 'expense')}
                   >
@@ -190,8 +190,8 @@ export const Form = () => {
                   </button>
                   <button
                      css={[
-                        tw`px-2 h-8 flex-1 rounded`,
-                        form.type === 'income' && tw`bg-gray-800`,
+                        tw`text-sm px-2 h-8 flex-1 rounded`,
+                        form.type === 'income' && tw`bg-dark-300`,
                      ]}
                      onClick={() => handleChange('type', 'income')}
                   >

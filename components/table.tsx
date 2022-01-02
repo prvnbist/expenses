@@ -50,7 +50,7 @@ const Styles = {
    Head: tw.thead`relative `,
    Row: styled.tr(
       ({ odd, noBg }) => css`
-         ${odd && tw`bg-gray-700 border-t border-b border-gray-700`};
+         ${odd && tw`bg-dark-300 border-t border-b border-dark-200`};
          > th {
             ${noBg && tw`bg-transparent`}
          }
@@ -58,17 +58,17 @@ const Styles = {
    ),
    Cell: styled.td(
       ({ is_right, is_center, no_padding, on_hover }) => css`
-         ${tw`cursor-pointer font-light h-10 whitespace-nowrap`}
+         ${tw`text-sm cursor-pointer font-light h-10 whitespace-nowrap`}
          ${is_right && tw`text-right`}
          ${!no_padding && tw`px-3`}
          ${is_center && tw`flex justify-center`}
-         ${on_hover && tw`hover:(bg-gray-900)`}
+         ${on_hover && tw`hover:(bg-dark-200)`}
       `
    ),
    HCell: styled.th(
       ({ is_right, is_center }) =>
          css`
-            ${tw`bg-gray-800 sticky top-0 h-8 px-3 text-left text-sm text-gray-500 uppercase font-medium tracking-wider whitespace-nowrap`}
+            ${tw`sticky top-0 h-8 px-3 text-left text-xs text-gray-500 uppercase font-medium tracking-wider whitespace-nowrap`}
             ${is_right && tw`text-right`}
             ${is_center && tw`flex justify-center`}
          `

@@ -182,7 +182,7 @@ const CardView = ({
    return (
       <ul tw="space-y-2">
          {accounts.map(account => (
-            <li key={account.id} tw="list-none bg-gray-700 rounded p-3">
+            <li key={account.id} tw="list-none bg-dark-300 rounded p-3">
                <header tw="flex items-center justify-between">
                   <h3 tw="text-lg">
                      {account.title} ({methods.format_currency(account.balance)}
@@ -209,7 +209,7 @@ const CardView = ({
                   </Button.Group>
                </header>
                <main tw="mt-3">
-                  <section tw="pt-2 divide-x divide-gray-800 border-t border-gray-800 grid grid-cols-2 text-center">
+                  <section tw="pt-2 divide-x divide-dark-200 border-t border-dark-200 grid grid-cols-2 text-center">
                      <span title="Total Expenses" tw="text-red-400">
                         - {methods.format_currency(account.expense_sum)}(
                         {account.expense_count})
@@ -231,10 +231,10 @@ const Styles = {
       ${tw`flex flex-col space-y-1 mt-2 flex-1`}
    `,
    Label: styled.label`
-      ${tw`text-sm text-gray-500 uppercase font-medium tracking-wider`}
+      ${tw`text-xs text-gray-500 uppercase font-medium tracking-wider`}
    `,
    Text: styled.input`
-      ${tw`bg-gray-700 h-10 rounded px-2`}
+      ${tw`text-sm bg-dark-300 h-10 rounded px-2`}
    `,
 }
 
@@ -297,8 +297,8 @@ const ManageAccount = ({
 
    if (!isFormOpen) return null
    return (
-      <section tw="overflow-y-auto pb-3 fixed left-0 top-0 bottom-0 z-10 bg-gray-800 shadow-xl w-full md:w-6/12 lg:w-5/12 xl:w-4/12">
-         <header tw="sticky top-0 flex items-center justify-between px-3 h-16 bg-gray-800 border-b border-gray-700">
+      <section tw="overflow-y-auto pb-3 fixed left-0 top-0 bottom-0 z-10 bg-dark-400 shadow-xl w-full md:w-6/12 lg:w-5/12 xl:w-4/12">
+         <header tw="sticky top-0 flex items-center justify-between px-3 h-16 bg-dark-300 border-b border-dark-200">
             <h1 tw="text-xl">{account?.id ? 'Edit' : 'Add'} Account</h1>
             <Button.Icon
                onClick={() => {

@@ -12,8 +12,8 @@ export const FilterBy = (): JSX.Element => {
    )
       return null
    return (
-      <section tw="mt-[-1px] h-auto border-t border-b border-gray-700 flex flex-col md:(h-12 divide-x divide-gray-700 flex-row)">
-         <h3 tw="px-3 h-10 md:(h-12) flex items-center">Filter By</h3>
+      <section tw="mt-[-1px] h-auto border-t border-b border-dark-200 flex flex-col md:(h-12 divide-x divide-dark-200 flex-row)">
+         <h3 tw="px-3 h-10 md:(h-12) flex items-center text-sm">Filter By</h3>
          <ul tw="pb-2 md:(pt-2) pl-3 flex items-center flex-wrap gap-2">
             {Object.keys(where).map(
                key =>
@@ -21,7 +21,7 @@ export const FilterBy = (): JSX.Element => {
                      <li
                         key={key}
                         title={key}
-                        tw="h-8 flex space-x-2 items-center bg-gray-700 px-2 rounded"
+                        tw="text-sm h-8 flex space-x-2 items-center bg-dark-200 px-2 rounded"
                      >
                         <span>{where[key]?._eq}</span>
                         <button
@@ -31,7 +31,7 @@ export const FilterBy = (): JSX.Element => {
                                  return { ...existing }
                               })
                            }
-                           tw="rounded-full p-1 hover:(bg-gray-800)"
+                           tw="rounded-full p-1 hover:(bg-dark-300)"
                         >
                            <Icon.Close
                               size={16}

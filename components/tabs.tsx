@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components'
 const Styles = {
    Tabs: styled.div``,
    List: styled.ul`
-      ${tw`flex justify-center border-b border-gray-700 p-1 gap-4`}
+      ${tw`flex justify-center border-b border-dark-200 p-1 gap-4`}
    `,
    ListItem: styled.li(
       ({ is_active }) => css`

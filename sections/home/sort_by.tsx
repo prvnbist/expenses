@@ -12,7 +12,7 @@ export const SortBy = (): JSX.Element => {
    return (
       <ul
          ref={ref}
-         tw="w-[280px] absolute right-[calc(50% - 140px)] md:right-[98px] mt-2 mr-0 z-10 bg-gray-700 py-2 rounded shadow-xl"
+         tw="w-[280px] absolute right-[calc(50% - 140px)] md:right-[98px] mt-2 mr-0 z-10 bg-dark-200 py-2 rounded shadow-xl"
       >
          <SortByOption
             field="title"
@@ -80,8 +80,8 @@ const SortByOption = ({
             <button
                onClick={() => on_sort(field, 'asc')}
                css={[
-                  tw`py-1 px-2 rounded text-sm hover:(bg-gray-800)`,
-                  active === 'asc' && tw`bg-gray-800`,
+                  tw`py-1 px-2 rounded text-sm hover:(bg-dark-300)`,
+                  active === 'asc' && tw`bg-dark-300`,
                ]}
             >
                Asc
@@ -89,8 +89,8 @@ const SortByOption = ({
             <button
                onClick={() => on_sort(field, 'desc')}
                css={[
-                  tw`py-1 px-2 rounded text-sm hover:(bg-gray-800)`,
-                  active === 'desc' && tw`bg-gray-800`,
+                  tw`py-1 px-2 rounded text-sm hover:(bg-dark-300)`,
+                  active === 'desc' && tw`bg-dark-300`,
                ]}
             >
                Desc

@@ -151,7 +151,7 @@ const Styles = {
          visibility: hidden;
       }
       label {
-         ${tw`inline-flex h-5 w-5 rounded bg-gray-600 relative p-1 cursor-pointer`}
+         ${tw`inline-flex h-5 w-5 rounded bg-dark-200 relative p-1 cursor-pointer`}
          :after {
             content: '';
             position: absolute;

@@ -40,12 +40,12 @@ export const CardView = ({ resetPage }) => {
    return (
       <ul tw="p-3 space-y-2">
          {transactions.map(transaction => (
-            <li key={transaction.id} tw="list-none border border-gray-700">
+            <li key={transaction.id} tw="list-none border border-dark-200">
                <header tw="h-12 pl-3 flex items-center justify-between">
-                  <h3 tw="md:text-lg">{transaction.title}</h3>
-                  <aside tw="self-start h-10 border-l border-b border-gray-700 flex divide-x divide-gray-700">
+                  <h3 tw="text-lg">{transaction.title}</h3>
+                  <aside tw="self-start h-10 border-l border-b border-dark-200 flex divide-x divide-dark-200">
                      <button
-                        tw="h-10 w-10 flex items-center justify-center hover:(bg-gray-700)"
+                        tw="h-10 w-10 flex items-center justify-center hover:(bg-dark-200)"
                         onClick={() => update(transaction)}
                      >
                         <Icon.Edit
@@ -88,14 +88,14 @@ export const CardView = ({ resetPage }) => {
                         {methods.format_date(transaction.date)}
                      </span>
                   </section>
-                  <section tw="h-10 flex items-center divide-x divide-gray-700 border-t border-gray-700 flex text-center">
+                  <section tw="h-10 flex items-center divide-x divide-dark-200 border-t border-dark-200 flex text-center">
                      <span
                         title="Category"
                         onClick={() => {
                            viewBy('category', transaction.category)
                            resetPage()
                         }}
-                        tw="text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-gray-700)"
+                        tw="text-sm text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-dark-200)"
                      >
                         {transaction.category || 'N/A'}
                      </span>
@@ -105,7 +105,7 @@ export const CardView = ({ resetPage }) => {
                            viewBy('payment_method', transaction.payment_method)
                            resetPage()
                         }}
-                        tw="text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-gray-700)"
+                        tw="text-sm text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-dark-200)"
                      >
                         {transaction.payment_method || 'N/A'}
                      </span>
@@ -115,7 +115,7 @@ export const CardView = ({ resetPage }) => {
                            viewBy('account', transaction.account)
                            resetPage()
                         }}
-                        tw="text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-gray-700)"
+                        tw="text-sm text-gray-400 h-full px-2 flex flex-wrap whitespace-nowrap flex-1 items-center justify-center cursor-pointer hover:(bg-dark-200)"
                      >
                         {transaction.account || 'N/A'}
                      </span>
