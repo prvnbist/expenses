@@ -42,32 +42,32 @@ export const CardView = ({ resetPage }) => {
          {transactions.map(transaction => (
             <li key={transaction.id} tw="list-none border border-dark-200">
                <header tw="h-12 pl-3 flex items-center justify-between">
-                  <h3 tw="text-lg">{transaction.title}</h3>
-                  <aside tw="self-start h-10 border-l border-b border-dark-200 flex divide-x divide-dark-200">
+                  <h3>{transaction.title}</h3>
+                  <aside tw="self-start h-8 border-l border-b border-dark-200 flex divide-x divide-dark-200">
                      <button
-                        tw="h-10 w-10 flex items-center justify-center hover:(bg-dark-200)"
+                        tw="h-8 w-8 flex items-center justify-center hover:(bg-dark-200)"
                         onClick={() => update(transaction)}
                      >
                         <Icon.Edit
-                           size={16}
+                           size={14}
                            tw="stroke-current text-gray-300"
                         />
                      </button>
                      <button
-                        tw="h-10 w-10 flex items-center justify-center hover:(bg-red-500)"
+                        tw="h-8 w-8 flex items-center justify-center hover:(bg-red-500)"
                         onClick={() =>
                            remove({ variables: { id: transaction.id } })
                         }
                      >
                         <Icon.Delete
-                           size={16}
+                           size={14}
                            tw="stroke-current text-gray-300"
                         />
                      </button>
                   </aside>
                </header>
-               <main tw="mt-3">
-                  <section tw="px-3 mb-2 flex justify-between">
+               <main>
+                  <section tw="px-3 mb-2 flex items-center justify-between">
                      <span
                         title={
                            transaction.type === 'expense' ? 'Debit' : 'Credit'
@@ -84,11 +84,11 @@ export const CardView = ({ resetPage }) => {
                            Number(transaction.amount) || 0
                         )}
                      </span>
-                     <span tw="text-gray-400">
+                     <span tw="text-gray-400 text-sm">
                         {methods.format_date(transaction.date)}
                      </span>
                   </section>
-                  <section tw="h-10 flex items-center divide-x divide-dark-200 border-t border-dark-200 flex text-center">
+                  <section tw="h-8 flex items-center divide-x divide-dark-200 border-t border-dark-200 flex text-center">
                      <span
                         title="Category"
                         onClick={() => {

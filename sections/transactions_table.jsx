@@ -147,18 +147,18 @@ const Tag = tw.button`text-xs rounded px-[6px] bg-indigo-200 text-indigo-900 cur
 
 const Styles = {
    Checkbox: styled.span`
-      ${tw`flex h-10 items-center justify-center`}
+      ${tw`flex h-8 items-center justify-center`}
       input {
          opacity: 0;
          display: none;
          visibility: hidden;
       }
       label {
-         ${tw`inline-flex h-5 w-5 rounded bg-dark-200 relative p-1 cursor-pointer`}
+         ${tw`inline-flex h-4 w-4 rounded bg-dark-200 relative p-1 cursor-pointer`}
          :after {
             content: '';
             position: absolute;
-            ${tw`h-3 w-3 rounded`}
+            ${tw`h-2 w-2 rounded`}
             ${({ is_selected }) => is_selected && tw`bg-white`}
          }
       }
