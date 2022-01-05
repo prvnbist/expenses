@@ -89,7 +89,7 @@ export class Export extends Component<IExportProps, IExportState> {
          <>
             <ul
                ref={this.containerRef}
-               tw="w-[180px] absolute mt-2 left-2 md:(left-[unset] right-[200px]) z-10 bg-dark-200 py-2 rounded shadow-xl"
+               tw="w-[180px] absolute mt-2 left-2 md:(left-[unset] right-[176px]) z-10 bg-dark-200 py-2 rounded shadow-xl"
             >
                <li
                   onClick={() => this.download(false)}

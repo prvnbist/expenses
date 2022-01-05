@@ -244,3 +244,43 @@ export const INCOME_YEARS = gql`
       }
    }
 `
+
+export const CURRENT_MONTH_EXPENDITURE = gql`
+   query current_month_expenditure(
+      $where1: transactions_view_bool_exp = {}
+      $where2: transactions_view_bool_exp = {}
+   ) {
+      expense_aggregate: transactions_view_aggregate(
+         where: $where1
+         order_by: { date: asc }
+      ) {
+         aggregate {
+            count
+            sum {
+               debit
+            }
+         }
+         nodes {
+            id
+            date
+            debit
+         }
+      }
+      income_aggregate: transactions_view_aggregate(
+         where: $where2
+         order_by: { date: asc }
+      ) {
+         aggregate {
+            count
+            sum {
+               credit
+            }
+         }
+         nodes {
+            id
+            date
+            credit
+         }
+      }
+   }
+`

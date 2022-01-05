@@ -12,6 +12,7 @@ import {
    Filters,
    FilterBy,
    BulkActions,
+   CurrentMonthExpenditure,
 } from '../sections/home'
 
 const IndexPage = (): JSX.Element => {
@@ -36,6 +37,7 @@ const IndexPage = (): JSX.Element => {
 
    return (
       <Layout noPadding>
+         <CurrentMonthExpenditure />
          <header>
             <section tw="mt-[-1px] h-auto border-t border-b border-dark-200 flex flex-col md:(flex-row)">
                <fieldset tw="border-b border-dark-200 h-10 md:(flex-1 h-full border-none)">

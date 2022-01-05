@@ -16,6 +16,8 @@
       "@apollo/client": "^3.3.15",
       "date-fns": "^2.21.1",
       "dotenv": "^8.2.0",
+      "echarts": "^5.2.2",
+      "echarts-for-react": "^3.0.2",
       "graphql": "^15.5.0",
       "graphql-request": "^3.5.0",
       "graphql-tag": "^2.11.0",
