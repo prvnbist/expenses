@@ -39,6 +39,7 @@ export const Form = () => {
       date: new Date().toISOString().slice(0, 10),
    })
    const [upsert, { loading }] = useMutation(INSERT_TRANSACTION, {
+      refetchQueries: ['current_month_expenditure'],
       onCompleted: () => {
          setEditForm({})
          setIsFormOpen(false)

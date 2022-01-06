@@ -10,6 +10,7 @@ interface IGroup {
 interface IIcon {
    children: React.ReactNode
    is_small?: boolean
+   variant?: 'danger' | 'ghost'
    onClick: () => void
 }
 
@@ -61,6 +62,8 @@ const handle_variant = variant => {
    switch (variant) {
       case 'danger':
          return tw`bg-red-500 hover:bg-red-600`
+      case 'ghost':
+         return tw`hover:bg-dark-200`
       default:
          return tw`bg-dark-200 hover:bg-dark-300`
    }

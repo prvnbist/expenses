@@ -84,6 +84,7 @@ export const TransactionsProvider = ({
    )
 
    const [remove] = useMutation(DELETE_TRANSACTION, {
+      refetchQueries: ['current_month_expenditure'],
       onCompleted: () => {
          setEditForm({})
          setIsFormOpen(false)
@@ -97,6 +98,7 @@ export const TransactionsProvider = ({
       },
    })
    const [removeMultiple] = useMutation(DELETE_TRANSACTIONS, {
+      refetchQueries: ['current_month_expenditure'],
       onCompleted: () => {
          setSelected([])
          addToast('Successfully deleted the transactions.', {

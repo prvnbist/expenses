@@ -37,33 +37,37 @@ const Accounts = (): JSX.Element => {
                Add
             </Button.Combo>
          </header>
-         {accounts.length === 0 ? (
-            <div tw="my-6 w-full flex items-center justify-center">
-               <Svg.Empty message="No accounts yet!" />
-            </div>
+         {loading ? (
+            <Loader />
          ) : (
             <>
-               <main
-                  style={{ maxHeight: '520px' }}
-                  tw="flex-1 hidden md:block overflow-y-auto"
-               >
-                  <TableView
-                     remove={remove}
-                     loading={loading}
-                     accounts={accounts}
-                     setAccount={setAccount}
-                     setIsFormOpen={setIsFormOpen}
-                  />
-               </main>
-               <main tw="md:hidden">
-                  <CardView
-                     remove={remove}
-                     loading={loading}
-                     accounts={accounts}
-                     setAccount={setAccount}
-                     setIsFormOpen={setIsFormOpen}
-                  />
-               </main>
+               {accounts.length === 0 ? (
+                  <div tw="my-6 w-full flex items-center justify-center">
+                     <Svg.Empty message="No accounts yet!" />
+                  </div>
+               ) : (
+                  <>
+                     <main
+                        style={{ maxHeight: '520px' }}
+                        tw="flex-1 hidden md:block"
+                     >
+                        <TableView
+                           remove={remove}
+                           accounts={accounts}
+                           setAccount={setAccount}
+                           setIsFormOpen={setIsFormOpen}
+                        />
+                     </main>
+                     <main tw="md:hidden">
+                        <CardView
+                           remove={remove}
+                           accounts={accounts}
+                           setAccount={setAccount}
+                           setIsFormOpen={setIsFormOpen}
+                        />
+                     </main>
+                  </>
+               )}
             </>
          )}
          <ManageAccount
@@ -95,7 +99,6 @@ interface IAccount {
 }
 
 interface ITableOrCardView {
-   loading: boolean
    accounts: IAccount[]
    setIsFormOpen: (x: boolean) => void
    setAccount: (x: IAccountInput) => void
@@ -106,11 +109,9 @@ const TableView = ({
    setAccount,
    setIsFormOpen,
    remove,
-   loading,
    accounts,
 }: ITableOrCardView): JSX.Element => {
    const { methods } = useConfig()
-   if (loading) return <Loader />
    return (
       <Table>
          <Table.Head>
@@ -145,6 +146,7 @@ const TableView = ({
                      <Button.Group>
                         <Button.Icon
                            is_small
+                           variant="ghost"
                            onClick={() => {
                               setAccount(account)
                               setIsFormOpen(true)
@@ -154,6 +156,7 @@ const TableView = ({
                         </Button.Icon>
                         <Button.Icon
                            is_small
+                           variant="ghost"
                            onClick={() =>
                               remove({ variables: { id: account.id } })
                            }
@@ -173,12 +176,10 @@ const CardView = ({
    setAccount,
    setIsFormOpen,
    remove,
-   loading,
    accounts,
 }: ITableOrCardView): JSX.Element => {
    const { methods } = useConfig()
 
-   if (loading) return <Loader />
    return (
       <ul tw="space-y-2">
          {accounts.map(account => (
