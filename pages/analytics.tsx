@@ -190,9 +190,9 @@ const _Styles = {
 const commonBarChartOptions = {
    grid: {
       top: '3%',
-      right: '4%',
+      right: '2%',
       bottom: '16%',
-      left: '8%',
+      left: '12%',
    },
 }
 
