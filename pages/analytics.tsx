@@ -1,16 +1,8 @@
 import React from 'react'
 import tw from 'twin.macro'
 import styled from 'styled-components'
+import ReactEcharts from 'echarts-for-react'
 import { useSubscription } from '@apollo/client'
-import {
-   Bar,
-   YAxis,
-   XAxis,
-   Tooltip,
-   BarChart,
-   CartesianGrid,
-   ResponsiveContainer,
-} from 'recharts'
 
 import { Layout } from '../sections'
 import * as Svg from '../assets/svgs'
@@ -25,36 +17,9 @@ import {
 } from '../graphql'
 
 const Styles = {
-   Chart: {
-      Main: styled.main`
-         ${tw`grid border border-dark-200`}
-         grid-auto-rows: 304px;
-         grid-template-columns: repeat(2, 1fr);
-         grid-template-areas:
-            'section1 section2'
-            'section3 section4';
-         > section:nth-of-type(1) {
-            grid-area: section1;
-         }
-         > section:nth-of-type(2) {
-            grid-area: section2;
-         }
-         > section:nth-of-type(3) {
-            grid-area: section3;
-         }
-         > section:nth-of-type(4) {
-            grid-area: section4;
-         }
-
-         @media screen and (max-width: 767px) {
-            grid-template-columns: 1fr;
-            grid-template-areas: 'section1' 'section2' 'section3' 'section4';
-         }
-      `,
-   },
-   Metrics: tw.ul`flex flex-wrap items-center gap-3 `,
+   Metrics: tw.ul`flex flex-wrap items-center gap-3`,
    Metric: styled.li`
-      ${tw`pt-2 pb-3 px-3 flex flex-col flex-shrink-0 rounded w-full md:w-64 h-24`}
+      ${tw`bg-dark-300 border border-dark-200 pt-2 pb-3 px-4 flex flex-col flex-shrink-0 rounded w-full md:w-64 h-24`}
       > span {
          ${tw`uppercase font-medium tracking-wider`}
       }
@@ -67,7 +32,7 @@ const Styles = {
 const Analytics = (): JSX.Element => {
    return (
       <Layout>
-         <header>
+         <header tw="flex justify-center">
             <Metrics />
          </header>
          <Tabs>
@@ -77,7 +42,7 @@ const Analytics = (): JSX.Element => {
             </Tabs.List>
             <Tabs.Panels>
                <Tabs.Panel>
-                  <ChartsView />
+                  <ReportGrid />
                </Tabs.Panel>
                <Tabs.Panel>
                   <TableView />
@@ -119,166 +84,338 @@ const Metrics = (): JSX.Element => {
    if (loading)
       return (
          <Styles.Metrics>
-            <Styles.Metric tw="bg-indigo-500" />
-            <Styles.Metric tw="bg-red-400" />
-            <Styles.Metric tw="bg-gray-300" />
+            <Styles.Metric />
+            <Styles.Metric />
+            <Styles.Metric />
          </Styles.Metrics>
       )
    return (
       <Styles.Metrics>
-         <Styles.Metric tw="bg-indigo-500">
-            <span tw="text-indigo-800">Total Income</span>
+         <Styles.Metric>
+            <span tw="text-gray-500">Total Income</span>
             <h3>
                {methods.format_currency(Number(overall['Total Income']) || 0)}
             </h3>
          </Styles.Metric>
-         <Styles.Metric tw="bg-red-400">
-            <span tw="text-red-800">Total Expense</span>
+         <Styles.Metric>
+            <span tw="text-gray-500">Total Expense</span>
             <h3>
                {methods.format_currency(Number(overall['Total Expense']) || 0)}
             </h3>
          </Styles.Metric>
-         <Styles.Metric tw="bg-gray-300">
-            <span tw="text-gray-600">Balance</span>
-            <h3 tw="text-gray-600">
-               {methods.format_currency(Number(overall['Balance']) || 0)}
-            </h3>
+         <Styles.Metric>
+            <span tw="text-gray-500">Balance</span>
+            <h3>{methods.format_currency(Number(overall['Balance']) || 0)}</h3>
          </Styles.Metric>
       </Styles.Metrics>
    )
 }
 
-const CHART_HEIGHT = 242
-
-const ChartsView = (): JSX.Element => {
+const ReportGrid = () => {
+   const { methods } = useConfig()
    return (
-      <Styles.Chart.Main>
-         <section tw="overflow-x-auto rounded">
-            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center mb-3">
-               Expenses By Categories
-            </h2>
-            <ExpensesByCategoriesChart />
-         </section>
-         <section tw="overflow-x-auto border-t border-dark-200 md:(border-t-0 border-l)">
+      <_Styles.Container>
+         <article id="a">
             <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center mb-3">
                Expenses By Year
             </h2>
-            <ExpensesByYearChart />
-         </section>
-         <section tw="overflow-x-auto border-t border-dark-200">
-            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center mb-3">
-               Incomes By Categories
-            </h2>
-            <IncomesByCategoriesChart />
-         </section>
-         <section tw="overflow-x-auto border-t border-dark-200 md:(border-l)">
+            <ExpensesByYearChart methods={methods} />
+         </article>
+         <article id="b">
             <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center mb-3">
                Incomes By Years
             </h2>
-            <IncomesByYearsChart />
-         </section>
-      </Styles.Chart.Main>
+            <IncomesByYearsChart methods={methods} />
+         </article>
+         <article id="c">
+            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center mb-3">
+               Expenses By Categories
+            </h2>
+            <ExpensesByCategoriesChart methods={methods} />
+         </article>
+         <article id="d">
+            <h2 tw="border-b border-dark-200 mx-3 text-xl h-12 flex items-center mb-3">
+               Incomes By Categories
+            </h2>
+            <IncomesByCategoriesChart methods={methods} />
+         </article>
+      </_Styles.Container>
    )
 }
 
-const ExpensesByCategoriesChart = (): JSX.Element => {
+const _Styles = {
+   Container: styled.div`
+      ${tw`mx-auto grid gap-3`}
+      width: 100%;
+      max-width: 1280px;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      article {
+         ${tw`border border-dark-200 rounded`}
+      }
+      article#a {
+         height: 490px;
+         grid-column: 1;
+         grid-row: 1 / 3;
+      }
+      article#b {
+         height: 490px;
+         grid-column: 2;
+         grid-row: 1 / 3;
+      }
+      article#c,
+      article#d {
+         height: 340px;
+         grid-row: 3 / 5;
+      }
+      @media screen and (max-width: 1023px) {
+         grid-template-rows: auto;
+         grid-template-columns: 1fr;
+         article#a {
+            grid-row: unset;
+            grid-column: unset;
+         }
+         article#b {
+            grid-row: unset;
+            grid-column: unset;
+         }
+         article#c,
+         article#d {
+            grid-row: unset;
+         }
+      }
+   `,
+}
+
+const commonBarChartOptions = {
+   grid: {
+      top: '3%',
+      right: '4%',
+      bottom: '16%',
+      left: '8%',
+   },
+}
+
+const ExpensesByCategoriesChart = ({ methods }): JSX.Element => {
    const { loading, data: { expenses_by_categories = {} } = {} } =
       useSubscription(EXPENSES_BY_CATEGORIES, {
          variables: { order_by: { title: 'asc' } },
       })
-   return <Chart loading={loading} data={expenses_by_categories.nodes} />
+   if (loading) return <Loader />
+   return (
+      <ReactEcharts
+         style={{ width: '100%', height: '280px' }}
+         option={{
+            ...commonBarChartOptions,
+            tooltip: {
+               trigger: 'axis',
+               formatter: props => {
+                  const [node] = props
+                  return `<span>
+                        ${node.marker}
+                        ${node.axisValue}
+                        <h3 style="margin-top:8px; font-size: 24px">${methods.format_currency(
+                           node.value
+                        )}</h3>
+                     </span>`
+               },
+            },
+            xAxis: {
+               type: 'category',
+               data: expenses_by_categories.nodes.map(node => node.title),
+            },
+            yAxis: {
+               type: 'value',
+               axisLine: {
+                  show: false,
+               },
+               splitLine: {
+                  lineStyle: {
+                     color: '#3b3936',
+                  },
+               },
+               axisLabel: {
+                  formatter: function (value) {
+                     return methods.format_k(value)
+                  },
+               },
+            },
+            series: [
+               {
+                  type: 'bar',
+                  itemStyle: {
+                     color: 'rgb(223,247,95)',
+                  },
+                  data: expenses_by_categories.nodes.map(node => node.amount),
+               },
+            ],
+         }}
+      />
+   )
 }
 
-const ExpensesByYearChart = (): JSX.Element => {
-   const { loading, data: { expenses_by_years = {} } = {} } =
-      useSubscription(EXPENSES_BY_YEARS)
-   return <Chart loading={loading} data={expenses_by_years.nodes} />
-}
-
-const IncomesByCategoriesChart = (): JSX.Element => {
+const IncomesByCategoriesChart = ({ methods }): JSX.Element => {
    const { loading, data: { incomes_by_categories = {} } = {} } =
       useSubscription(INCOMES_BY_CATEGORIES, {
          variables: { order_by: { title: 'asc' } },
       })
-   return <Chart loading={loading} data={incomes_by_categories.nodes} />
+   if (loading) return <Loader />
+   return (
+      <ReactEcharts
+         style={{ width: '100%', height: '280px' }}
+         option={{
+            ...commonBarChartOptions,
+            tooltip: {
+               trigger: 'axis',
+               formatter: props => {
+                  const [node] = props
+                  return `<span>
+                           ${node.marker}
+                           ${node.axisValue}
+                           <h3 style="margin-top:8px; font-size: 24px">${methods.format_currency(
+                              node.value
+                           )}</h3>
+                        </span>`
+               },
+            },
+            xAxis: {
+               type: 'category',
+               data: incomes_by_categories.nodes.map(node => node.title),
+            },
+            yAxis: {
+               type: 'value',
+               axisLine: {
+                  show: false,
+               },
+               splitLine: {
+                  lineStyle: {
+                     color: '#3b3936',
+                  },
+               },
+               axisLabel: {
+                  formatter: function (value) {
+                     return methods.format_k(value)
+                  },
+               },
+            },
+            series: [
+               {
+                  type: 'bar',
+                  itemStyle: {
+                     color: 'rgb(223,247,95)',
+                  },
+                  data: incomes_by_categories.nodes.map(node => node.amount),
+               },
+            ],
+         }}
+      />
+   )
 }
 
-const IncomesByYearsChart = (): JSX.Element => {
+const commonChartOptions = {
+   legend: {
+      top: '1%',
+      left: 'center',
+      textStyle: {
+         color: '#fff',
+      },
+   },
+}
+
+const commonPieSeriesOptions = {
+   type: 'pie',
+   radius: ['40%', '80%'],
+   avoidLabelOverlap: false,
+   label: {
+      show: false,
+      position: 'center',
+   },
+   emphasis: {
+      label: {
+         color: '#fff',
+         show: true,
+         fontSize: '40',
+         fontWeight: 'bold',
+      },
+   },
+   labelLine: {
+      show: false,
+   },
+}
+
+const ExpensesByYearChart = ({ methods }): JSX.Element => {
+   const { loading, data: { expenses_by_years = {} } = {} } =
+      useSubscription(EXPENSES_BY_YEARS)
+   if (loading) return <Loader />
+   return (
+      <ReactEcharts
+         style={{ width: '100%', height: '430px' }}
+         option={{
+            ...commonChartOptions,
+            tooltip: {
+               trigger: 'item',
+               formatter: props => {
+                  return `<span>
+                        ${props.marker}
+                        ${props.data.name}
+                        <h3 style="margin-top:8px; font-size: 24px">${methods.format_currency(
+                           props.data.value
+                        )}</h3>
+                     </span>`
+               },
+            },
+            series: [
+               {
+                  ...commonPieSeriesOptions,
+                  data: expenses_by_years.nodes.map(node => ({
+                     name: node.title,
+                     value: node.amount,
+                  })),
+               },
+            ],
+         }}
+      />
+   )
+}
+
+const IncomesByYearsChart = ({ methods }): JSX.Element => {
    const { loading, data: { incomes_by_years = {} } = {} } =
       useSubscription(INCOMES_BY_YEARS)
-   return <Chart loading={loading} data={incomes_by_years.nodes} />
+   if (loading) return <Loader />
+   return (
+      <ReactEcharts
+         style={{ width: '100%', height: '430px' }}
+         option={{
+            ...commonChartOptions,
+            tooltip: {
+               trigger: 'item',
+               formatter: props => {
+                  return `<span>
+                        ${props.marker}
+                        ${props.data.name}
+                        <h3 style="margin-top:8px; font-size: 24px">${methods.format_currency(
+                           props.data.value
+                        )}</h3>
+                     </span>`
+               },
+            },
+            series: [
+               {
+                  ...commonPieSeriesOptions,
+                  data: incomes_by_years.nodes.map(node => ({
+                     name: node.title,
+                     value: node.amount,
+                  })),
+               },
+            ],
+         }}
+      />
+   )
 }
-
 interface IChartData {
    title: string
    count: number
    amount: number
-}
-
-interface IChart {
-   loading: boolean
-   data: IChartData[]
-}
-
-const Chart = ({ loading, data }: IChart): JSX.Element => {
-   const { methods } = useConfig()
-   if (loading) return <Loader />
-   return (
-      <main tw="px-3">
-         <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-            <BarChart data={data}>
-               <Tooltip
-                  cursor={{ fill: '#111827' }}
-                  content={({ active, payload }) => (
-                     <CustomTooltip
-                        active={active}
-                        methods={methods}
-                        payload={payload}
-                     />
-                  )}
-               />
-               <XAxis dataKey="title" fontSize={14} />
-               <YAxis
-                  width={46}
-                  type="number"
-                  fontSize={14}
-                  dataKey="amount"
-                  tickFormatter={tick => {
-                     return methods.format_k(tick)
-                  }}
-               />
-               <Bar barSize={32} dataKey="amount" fill="#dff75f" />
-               <CartesianGrid stroke="rgba(255,255,255,0.30)" />
-            </BarChart>
-         </ResponsiveContainer>
-      </main>
-   )
-}
-
-interface ICustomTooltip {
-   payload?: any
-   active?: boolean
-   methods: {
-      format_currency: (x: number) => string
-   }
-}
-
-const CustomTooltip = ({
-   active,
-   payload,
-   methods,
-}: ICustomTooltip): JSX.Element => {
-   if (!active || !Array.isArray(payload) || payload?.length === 0)
-      return <section />
-
-   const { title, amount, count } = payload[0].payload
-   return (
-      <section tw="bg-dark-200 rounded p-2 gap-2 flex flex-col">
-         <span>Title: {title}</span>
-         <span>Amount: {methods.format_currency(amount || 0)}</span>
-         <span>Total: {count}</span>
-      </section>
-   )
 }
 
 const TableView = () => {
