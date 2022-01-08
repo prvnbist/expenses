@@ -294,3 +294,54 @@ export const GROUPS = gql`
       }
    }
 `
+
+export const GROUP = gql`
+   query group($id: uuid!) {
+      group: groups_group_by_pk(id: $id) {
+         id
+         title
+      }
+   }
+`
+
+export const GROUP_TRANSACTIONS = gql`
+   query group_transactions(
+      $where: groups_group_transaction_view_bool_exp = {}
+      $order_by: [groups_group_transaction_view_order_by!] = {}
+      $offset: Int = 0
+      $limit: Int = 10
+   ) {
+      group_transactions_aggregate: groups_group_transaction_view_aggregate {
+         aggregate {
+            count
+         }
+      }
+      group_transactions: groups_group_transaction_view_aggregate(
+         where: $where
+         order_by: $order_by
+         offset: $offset
+         limit: $limit
+      ) {
+         aggregate {
+            count
+            sum {
+               amount
+            }
+         }
+         nodes {
+            id
+            type
+            date
+            title
+            amount
+            account
+            raw_date
+            account_id
+            category
+            category_id
+            payment_method
+            payment_method_id
+         }
+      }
+   }
+`

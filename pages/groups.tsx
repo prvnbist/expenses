@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import ReactModal from 'react-modal'
 import tw, { styled } from 'twin.macro'
 import { useMutation, useQuery } from '@apollo/client'
@@ -54,7 +55,11 @@ const List = () => {
             {groups.map(group => (
                <Styles.Group key={group.id}>
                   <h2 tw="border-l border-indigo-700 border-l-2 py-3 px-3 text-lg truncate">
-                     {group.title}
+                     <Link href={`/groups/${group.id}`}>
+                        <a tw="hover:text-indigo-400 cursor-pointer">
+                           {group.title}
+                        </a>
+                     </Link>
                   </h2>
                   <p tw="px-3 mt-3 text-gray-500 mb-3">{group.description}</p>
                   <footer tw="w-full justify-end mt-auto flex gap-3 px-3 border-t border-dark-200 pt-3">
