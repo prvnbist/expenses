@@ -8,3 +8,32 @@ body {
    color: #fff;
    background: #21201e;
 }
+
+.ReactModal__Overlay {
+   top: 48px !important;
+   background-color: rgba(43, 42, 39, 0.3) !important;
+}
+
+.ReactModal__Content {
+   height: auto;
+   margin: 0 auto;
+   max-width: 480px;
+   overflow-y: auto;
+   max-height: 540px;
+   padding: 0 !important;
+   inset: 20px !important;
+   width: calc(100% - 40px);
+   overflow-x: hidden !important;
+   background: #21201e !important;
+   border: 1px solid #3b3936 !important;
+}
+
+@media screen and (max-width: 567px) {
+   .ReactModal__Content {
+      width: 100%;
+      max-height: unset;
+      inset: 0 !important;
+      top: 10px !important;
+      height: calc(100% - 20px);
+   }
+}

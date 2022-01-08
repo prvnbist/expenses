@@ -284,3 +284,13 @@ export const CURRENT_MONTH_EXPENDITURE = gql`
       }
    }
 `
+
+export const GROUPS = gql`
+   query groups {
+      groups: groups_group(order_by: { title: asc }) {
+         id
+         title
+         description
+      }
+   }
+`
