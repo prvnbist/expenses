@@ -1,5 +1,6 @@
 import React from 'react'
 import tw from 'twin.macro'
+import ReactModal from 'react-modal'
 import styled from 'styled-components'
 import { useToasts } from 'react-toast-notifications'
 import { useMutation, useSubscription } from '@apollo/client'
@@ -70,12 +71,16 @@ const Accounts = (): JSX.Element => {
                )}
             </>
          )}
-         <ManageAccount
-            account={account}
-            setAccount={setAccount}
-            isFormOpen={isFormOpen}
-            setIsFormOpen={setIsFormOpen}
-         />
+         <ReactModal
+            isOpen={isFormOpen}
+            onRequestClose={() => setIsFormOpen(false)}
+         >
+            <ManageAccount
+               account={account}
+               setAccount={setAccount}
+               setIsFormOpen={setIsFormOpen}
+            />
+         </ReactModal>
       </Layout>
    )
 }
@@ -240,16 +245,14 @@ const Styles = {
 }
 
 interface IManageAccount {
-   isFormOpen: boolean
    account: IAccountInput
-   setIsFormOpen: (x: boolean) => void
+   setIsFormOpen: (x: any) => void
    setAccount: (x: IAccountInput | {}) => void | IAccountInput
 }
 
 const ManageAccount = ({
    account,
    setAccount,
-   isFormOpen,
    setIsFormOpen,
 }: IManageAccount): JSX.Element => {
    const { addToast } = useToasts()
@@ -296,15 +299,15 @@ const ManageAccount = ({
       })
    }
 
-   if (!isFormOpen) return null
    return (
-      <section tw="overflow-y-auto pb-3 fixed left-0 top-0 bottom-0 z-10 bg-dark-400 shadow-xl w-full md:w-6/12 lg:w-5/12 xl:w-4/12">
-         <header tw="sticky top-0 flex items-center justify-between px-3 h-16 bg-dark-300 border-b border-dark-200">
-            <h1 tw="text-xl">{account?.id ? 'Edit' : 'Add'} Account</h1>
+      <section tw="">
+         <header tw="pl-3 pr-2 flex items-center justify-between h-12 border-b border-dark-200">
+            <h3>{account?.id ? 'Edit' : 'Add'} Account</h3>
             <Button.Icon
+               is_small
                onClick={() => {
                   setAccount({})
-                  setIsFormOpen(!isFormOpen)
+                  setIsFormOpen(_isFormOpen => !_isFormOpen)
                }}
             >
                <Icon.Close tw="stroke-current" />

@@ -15,13 +15,19 @@ import { Button, Select } from '../../components'
 
 const Styles = {
    Fieldset: styled.fieldset`
-      ${tw`flex flex-col space-y-1 mt-3 flex-1`}
+      ${tw`flex flex-col space-y-1 mb-3 flex-1`}
    `,
    Label: styled.label`
       ${tw`text-xs text-gray-500 uppercase font-medium tracking-wider`}
    `,
    Text: styled.input`
       ${tw`text-sm bg-dark-200 h-10 rounded px-2`}
+   `,
+   Container: styled.section`
+      ${tw`h-full bg-dark-400 flex flex-col`}
+      > main {
+         ${tw`flex-1 overflow-y-auto overflow-y-auto`}
+      }
    `,
 }
 
@@ -129,7 +135,7 @@ export const Form = () => {
       })
    }
    return (
-      <section>
+      <Styles.Container>
          <header tw="pl-3 pr-2 flex items-center justify-between h-12 border-b border-dark-200">
             <h3>{editForm?.id ? 'Update' : 'Add'} Details</h3>
             <Button.Icon
@@ -143,7 +149,7 @@ export const Form = () => {
                <Icon.Close tw="stroke-current" />
             </Button.Icon>
          </header>
-         <main tw="p-2">
+         <main tw="p-3">
             <Styles.Fieldset>
                <Styles.Label htmlFor="title">Title</Styles.Label>
                <Styles.Text
@@ -257,7 +263,7 @@ export const Form = () => {
                   ))}
                </Select>
             </Styles.Fieldset>
-            <div tw="h-4" />
+            <div tw="h-1" />
             <footer tw="flex gap-3">
                <Button.Text
                   is_loading={loading}
@@ -279,6 +285,6 @@ export const Form = () => {
                )}
             </footer>
          </main>
-      </section>
+      </Styles.Container>
    )
 }

@@ -12,7 +12,7 @@ export const SortBy = (): JSX.Element => {
    return (
       <ul
          ref={ref}
-         tw="w-[280px] absolute right-[calc(50% - 140px)] md:right-[87px] mt-2 mr-0 z-10 bg-dark-200 py-2 rounded shadow-xl"
+         tw="w-[280px] absolute right-[8px] mt-2 mr-0 z-10 bg-dark-200 py-2 rounded shadow-xl"
       >
          <SortByOption
             field="title"
