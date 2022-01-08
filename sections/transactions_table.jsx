@@ -55,7 +55,7 @@ export const TableView = ({ resetPage }) => {
          </Table.Head>
          <Table.Body>
             {transactions.map((transaction, index) => (
-               <Table.Row key={transaction.id} odd={index % 2 === 0}>
+               <Table.Row key={transaction.id} odd={index % 2 !== 0}>
                   <Table.Cell no_padding>
                      <Styles.Checkbox
                         is_selected={is_row_selected(transaction)}

@@ -33,6 +33,12 @@ const Header = () => {
                icon={<Icon.LineChart tw="stroke-current" />}
                is_active={router.asPath === '/analytics'}
             />
+            <Route
+               path="/groups"
+               title="Groups"
+               icon={<Icon.Collection tw="stroke-current" />}
+               is_active={router.asPath === '/groups'}
+            />
          </Styles.NavItems>
       </Styles.Header>
    )
@@ -56,7 +62,7 @@ const Route = ({ path, icon, title, is_active }) => (
 const Styles = {
    Header: tw.header`bg-dark-400 z-10 sticky top-0 flex items-center justify-center h-auto border-b border-dark-200 md:(h-12)`,
    NavItems: styled.ul`
-      ${tw`border-dark-200 mx-auto h-12 divide-x divide-gray-700 w-full grid grid-cols-4 md:(w-auto border-l border-r)`}
+      ${tw`border-dark-200 mx-auto h-12 divide-x divide-gray-700 w-full grid grid-cols-5 md:(w-auto border-l border-r)`}
       li a {
          ${tw`border-b-0`}
       }

@@ -60,6 +60,8 @@ export const TRANSACTIONS = gql`
          amount
          account
          raw_date
+         group
+         group_id
          account_id
          category
          category_id
@@ -280,6 +282,71 @@ export const CURRENT_MONTH_EXPENDITURE = gql`
             id
             date
             credit
+         }
+      }
+   }
+`
+
+export const GROUPS = gql`
+   query groups {
+      groups: groups_group(order_by: { title: asc }) {
+         id
+         title
+         description
+      }
+   }
+`
+
+export const GROUP = gql`
+   query group($id: uuid!) {
+      group: groups_group_by_pk(id: $id) {
+         id
+         title
+      }
+   }
+`
+
+export const GROUP_TRANSACTIONS = gql`
+   query group_transactions(
+      $where: transactions_view_bool_exp = {}
+      $order_by: [transactions_view_order_by!] = {}
+      $offset: Int = 0
+      $limit: Int = 10
+   ) {
+      group_transactions_aggregate: transactions_view_aggregate(where: $where) {
+         aggregate {
+            count
+            sum {
+               debit
+               credit
+            }
+         }
+      }
+      group_transactions: transactions_view_aggregate(
+         where: $where
+         order_by: $order_by
+         offset: $offset
+         limit: $limit
+      ) {
+         aggregate {
+            count
+            sum {
+               amount
+            }
+         }
+         nodes {
+            id
+            type
+            date
+            title
+            amount
+            account
+            raw_date
+            account_id
+            category
+            category_id
+            payment_method
+            payment_method_id
          }
       }
    }

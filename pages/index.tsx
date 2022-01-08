@@ -1,7 +1,9 @@
 import React from 'react'
-import tw, { styled } from 'twin.macro'
+import tw from 'twin.macro'
+import ReactModal from 'react-modal'
 import { usePagination } from 'react-use-pagination'
 
+import { Button } from '../components'
 import * as Icon from '../assets/icons'
 import { useTransactions } from '../hooks'
 import { Layout, TableView, CardView } from '../sections'
@@ -37,6 +39,12 @@ const IndexPage = (): JSX.Element => {
 
    return (
       <Layout noPadding>
+         <header tw="flex items-center gap-3 mb-4 px-3 mt-4">
+            <h1 tw="text-2xl">Transactions</h1>
+            <Button.Icon is_small onClick={() => setIsFormOpen(true)}>
+               <Icon.Add tw="stroke-current" />
+            </Button.Icon>
+         </header>
          <CurrentMonthExpenditure />
          <header>
             <section tw="mt-[-1px] h-auto border-t border-b border-dark-200 flex flex-col md:(flex-row)">
@@ -82,15 +90,6 @@ const IndexPage = (): JSX.Element => {
                         )}
                      </span>
                   </button>
-                  <button
-                     tw="text-sm flex items-center justify-center md:(justify-start) flex-1 h-full pr-5 hover:(bg-dark-200)"
-                     onClick={() => setIsFormOpen(true)}
-                  >
-                     <span tw="h-10 w-10 flex items-center justify-center">
-                        <Icon.Add tw="stroke-current" />
-                     </span>
-                     Add
-                  </button>
                </aside>
             </section>
             {isExportPanelOpen && (
@@ -101,7 +100,7 @@ const IndexPage = (): JSX.Element => {
             )}
             {isSortPanelOpen && <SortBy />}
          </header>
-         <Styles.Main isFormOpen={isFormOpen}>
+         <main>
             <main>
                <Filters pagination={pagination} />
                <FilterBy />
@@ -114,35 +113,15 @@ const IndexPage = (): JSX.Element => {
                </main>
                <Filters pagination={pagination} />
             </main>
-            <aside>
-               <Form />
-            </aside>
-         </Styles.Main>
+         </main>
+         <ReactModal
+            isOpen={isFormOpen}
+            onRequestClose={() => setIsFormOpen(false)}
+         >
+            <Form />
+         </ReactModal>
       </Layout>
    )
 }
 
 export default IndexPage
-
-const Styles = {
-   Main: styled.main`
-      display: grid;
-      grid-template-rows: 1fr;
-      grid-template-columns: ${props =>
-         props.isFormOpen ? '1fr 360px' : '1fr'};
-      @media (max-width: 968px) {
-         grid-template-columns: 1fr;
-         > aside {
-            z-index: 100;
-            ${tw`pb-3 fixed inset-0 bg-dark-400`}
-         }
-      }
-      > aside {
-         ${props => (props.isFormOpen ? tw`flex` : tw`hidden`)}
-         ${tw`mt-[-1px] flex-col border-l border-dark-200`}
-         > main {
-            ${tw`flex-1 overflow-y-auto overflow-x-hidden`}
-         }
-      }
-   `,
-}

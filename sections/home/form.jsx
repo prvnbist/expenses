@@ -6,6 +6,7 @@ import { useMutation, useSubscription } from '@apollo/client'
 import {
    ACCOUNTS,
    CATEGORIES,
+   GROUPS,
    INSERT_TRANSACTION,
    PAYMENT_METHODS,
 } from '../../graphql'
@@ -15,13 +16,19 @@ import { Button, Select } from '../../components'
 
 const Styles = {
    Fieldset: styled.fieldset`
-      ${tw`flex flex-col space-y-1 mt-3 flex-1`}
+      ${tw`flex flex-col space-y-1 mb-3 flex-1`}
    `,
    Label: styled.label`
       ${tw`text-xs text-gray-500 uppercase font-medium tracking-wider`}
    `,
    Text: styled.input`
       ${tw`text-sm bg-dark-200 h-10 rounded px-2`}
+   `,
+   Container: styled.section`
+      ${tw`h-full bg-dark-400 flex flex-col`}
+      > main {
+         ${tw`flex-1 overflow-y-auto overflow-y-auto`}
+      }
    `,
 }
 
@@ -32,6 +39,7 @@ export const Form = () => {
    const [form, setForm] = React.useState({
       title: '',
       amount: '',
+      group_id: '',
       account_id: '',
       type: 'expense',
       category_id: '',
@@ -39,7 +47,7 @@ export const Form = () => {
       date: new Date().toISOString().slice(0, 10),
    })
    const [upsert, { loading }] = useMutation(INSERT_TRANSACTION, {
-      refetchQueries: ['current_month_expenditure'],
+      refetchQueries: ['current_month_expenditure', 'group_transactions'],
       onCompleted: () => {
          setEditForm({})
          setIsFormOpen(false)
@@ -58,6 +66,7 @@ export const Form = () => {
    })
    const { data: { categories = [] } = {} } = useSubscription(CATEGORIES)
    const { data: { accounts = [] } = {} } = useSubscription(ACCOUNTS)
+   const { data: { groups = [] } = {} } = useSubscription(GROUPS)
    const { data: { payment_methods = [] } = {} } =
       useSubscription(PAYMENT_METHODS)
 
@@ -69,6 +78,7 @@ export const Form = () => {
             payment_method,
             category,
             date,
+            group,
             raw_date,
             ...rest
          } = editForm
@@ -105,6 +115,7 @@ export const Form = () => {
                'type',
                'title',
                'amount',
+               'group_id',
                'account_id',
                'category_id',
                'payment_method_id',
@@ -129,7 +140,7 @@ export const Form = () => {
       })
    }
    return (
-      <section>
+      <Styles.Container>
          <header tw="pl-3 pr-2 flex items-center justify-between h-12 border-b border-dark-200">
             <h3>{editForm?.id ? 'Update' : 'Add'} Details</h3>
             <Button.Icon
@@ -143,7 +154,7 @@ export const Form = () => {
                <Icon.Close tw="stroke-current" />
             </Button.Icon>
          </header>
-         <main tw="p-2">
+         <main tw="p-3">
             <Styles.Fieldset>
                <Styles.Label htmlFor="title">Title</Styles.Label>
                <Styles.Text
@@ -257,7 +268,21 @@ export const Form = () => {
                   ))}
                </Select>
             </Styles.Fieldset>
-            <div tw="h-4" />
+            <Styles.Fieldset>
+               <Styles.Label htmlFor="group">Group</Styles.Label>
+               <Select
+                  is_small
+                  placeholder="Search groups"
+                  on_deselect={() => handleChange('group_id', null)}
+                  on_select={option => handleChange('group_id', option.id)}
+                  selected={groups.find(group => group.id === form.group_id)}
+               >
+                  {groups.map(option => (
+                     <Select.Option key={option.id} option={option} />
+                  ))}
+               </Select>
+            </Styles.Fieldset>
+            <div tw="h-1" />
             <footer tw="flex gap-3">
                <Button.Text
                   is_loading={loading}
@@ -279,6 +304,6 @@ export const Form = () => {
                )}
             </footer>
          </main>
-      </section>
+      </Styles.Container>
    )
 }

@@ -54,3 +54,36 @@ export const DELETE_ACCOUNT = gql`
       }
    }
 `
+
+export const UPDATE_GROUP = gql`
+   mutation update_group(
+      $where: groups_group_bool_exp = {}
+      $_set: groups_group_set_input = {}
+   ) {
+      update_group: update_groups_group(where: $where, _set: $_set) {
+         returning {
+            id
+         }
+      }
+   }
+`
+
+export const INSERT_GROUP = gql`
+   mutation insert_groups($objects: [groups_group_insert_input!] = {}) {
+      insert_groups: insert_groups_group(objects: $objects) {
+         returning {
+            id
+         }
+      }
+   }
+`
+
+export const DELETE_GROUP = gql`
+   mutation delete_group($where: groups_group_bool_exp = {}) {
+      delete_group: delete_groups_group(where: $where) {
+         returning {
+            id
+         }
+      }
+   }
+`

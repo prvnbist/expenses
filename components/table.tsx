@@ -27,6 +27,7 @@ interface ICell {
    is_right?: boolean
    is_center?: boolean
    children: React.ReactNode
+   width?: number
 }
 
 const Cell = ({ children, ...props }: ICell): JSX.Element => (
@@ -36,7 +37,7 @@ const Cell = ({ children, ...props }: ICell): JSX.Element => (
 interface HCell {
    is_right?: boolean
    is_center?: boolean
-   children: React.ReactNode
+   children?: React.ReactNode
 }
 
 const HCell = ({ children, ...props }: HCell): JSX.Element => (
@@ -47,7 +48,7 @@ const Styles = {
    Table: styled.table`
       ${tw`relative w-full table-auto`}
    `,
-   Head: tw.thead`relative `,
+   Head: tw.thead`relative border-b border-dark-200`,
    Row: styled.tr(
       ({ odd, noBg }) => css`
          ${odd && tw`bg-dark-300 border-t border-b border-dark-200`};
@@ -57,12 +58,13 @@ const Styles = {
       `
    ),
    Cell: styled.td(
-      ({ is_right, is_center, no_padding, on_hover }) => css`
+      ({ is_right, is_center, no_padding, on_hover, width }) => css`
          ${tw`text-sm cursor-pointer font-light h-8 whitespace-nowrap`}
          ${is_right && tw`text-right`}
          ${!no_padding && tw`px-3`}
          ${is_center && tw`flex justify-center`}
          ${on_hover && tw`hover:(bg-dark-200)`}
+         ${width && `width: ${width}px; max-width: ${width}px`}
       `
    ),
    HCell: styled.th(

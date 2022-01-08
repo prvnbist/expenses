@@ -10,8 +10,8 @@ interface IGroup {
 interface IIcon {
    children: React.ReactNode
    is_small?: boolean
-   variant?: 'danger' | 'ghost'
    onClick: () => void
+   variant?: 'outline' | 'danger' | 'ghost'
 }
 
 interface IText {
@@ -20,6 +20,7 @@ interface IText {
    is_loading?: boolean
    is_disabled?: boolean
    children: React.ReactNode
+   variant?: 'outline' | 'danger' | 'ghost' | 'success' | 'primary'
 }
 
 interface ICombo {
@@ -62,8 +63,14 @@ const handle_variant = variant => {
    switch (variant) {
       case 'danger':
          return tw`bg-red-500 hover:bg-red-600`
+      case 'success':
+         return tw`bg-green-600 hover:bg-green-700`
+      case 'outline':
+         return tw`border border-dark-200 hover:(bg-dark-300)`
       case 'ghost':
          return tw`hover:bg-dark-200`
+      case 'primary':
+         return tw`bg-dark-200 hover:bg-dark-300`
       default:
          return tw`bg-dark-200 hover:bg-dark-300`
    }
