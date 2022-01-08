@@ -2,6 +2,7 @@ import tw from 'twin.macro'
 import React from 'react'
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
+import ReactEcharts from 'echarts-for-react'
 import { useTable, usePagination } from 'react-table'
 
 import { Layout } from '../../sections'
@@ -72,6 +73,7 @@ const Transactions = ({ id }) => {
    const { methods } = useConfig()
    const [status, setStatus] = React.useState('LOADING')
    const [transactions, setTransactions] = React.useState([])
+   const [transactionAggregate, setTransactionAggregate] = React.useState({})
    const [pagination, setPagination] = React.useState({
       page: 0,
       size: 10,
@@ -79,6 +81,7 @@ const Transactions = ({ id }) => {
    })
    useQuery(GROUP_TRANSACTIONS, {
       skip: !id,
+      fetchPolicy: 'network-only',
       variables: {
          limit: 10,
          where: { group_id: { _eq: id } },
@@ -94,6 +97,7 @@ const Transactions = ({ id }) => {
             return
          }
          setTransactions(group_transactions.nodes)
+         setTransactionAggregate(group_transactions_aggregate)
          const count = Math.ceil(
             group_transactions_aggregate.aggregate.count % pagination.size === 0
                ? group_transactions_aggregate.aggregate.count / pagination.size
@@ -195,12 +199,60 @@ const Transactions = ({ id }) => {
    if (status === 'EMPTY')
       return <Empty message="This group has no transactions!" />
    return (
-      <Table
-         columns={columns}
-         pagination={pagination}
-         transactions={transactions}
-         onPageChange={onPageChange}
-      />
+      <>
+         <section tw="flex flex-wrap justify-center mb-4">
+            <ReactEcharts
+               style={{ width: '240px', height: '240px' }}
+               option={{
+                  legend: {
+                     top: 'bottom',
+                     left: 'center',
+                     textStyle: {
+                        color: '#fff',
+                     },
+                  },
+                  tooltip: {
+                     trigger: 'item',
+                     formatter: props => {
+                        return `<span>
+                           ${props.marker}
+                           ${props.data.name}
+                           <h3 style="margin-top:8px; font-size: 24px">${methods.format_currency(
+                              props.data.value
+                           )}</h3>
+                        </span>`
+                     },
+                  },
+                  series: [
+                     {
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        label: { show: false },
+                        avoidLabelOverlap: false,
+                        data: [
+                           {
+                              name: 'Expense',
+                              value: transactionAggregate.aggregate.sum.debit,
+                              itemStyle: { color: 'rgb(248,113,113)' },
+                           },
+                           {
+                              name: 'Income',
+                              value: transactionAggregate.aggregate.sum.credit,
+                              itemStyle: { color: 'rgb(129,140,248)' },
+                           },
+                        ],
+                     },
+                  ],
+               }}
+            />
+         </section>
+         <Table
+            columns={columns}
+            pagination={pagination}
+            transactions={transactions}
+            onPageChange={onPageChange}
+         />
+      </>
    )
 }
 
@@ -304,7 +356,7 @@ const Table = ({
 
 const Row = ({ row, isOdd, ...props }) => {
    return (
-      <MyTable.Row {...props} odd={isOdd}>
+      <MyTable.Row {...props} odd={!isOdd}>
          {row.cells.map(cell => {
             return <Cell {...cell.getCellProps()} cell={cell} />
          })}
@@ -335,12 +387,7 @@ const PaginateButtons = ({
    hasTopBorder,
 }) => {
    return (
-      <section
-         css={[
-            tw`mx-[-16px] border-b border-dark-200 flex items-center justify-between h-10`,
-            hasTopBorder && tw`border-t`,
-         ]}
-      >
+      <section tw="mx-[-16px] border-t mt-[-1px] border-b border-dark-200 flex items-center justify-between h-10">
          <div tw="h-full flex">
             <button
                onClick={() => switchPage(0)}
@@ -358,7 +405,8 @@ const PaginateButtons = ({
             </button>
          </div>
          <span tw="text-sm">
-            {pageIndex + 1} of {pageOptions.length}
+            {pageIndex + 1} of{' '}
+            {pageOptions.length === 0 ? 1 : pageOptions.length}
          </span>
          <div tw="h-full flex">
             <button

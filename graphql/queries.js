@@ -60,6 +60,8 @@ export const TRANSACTIONS = gql`
          amount
          account
          raw_date
+         group
+         group_id
          account_id
          category
          category_id
@@ -306,17 +308,21 @@ export const GROUP = gql`
 
 export const GROUP_TRANSACTIONS = gql`
    query group_transactions(
-      $where: groups_group_transaction_view_bool_exp = {}
-      $order_by: [groups_group_transaction_view_order_by!] = {}
+      $where: transactions_view_bool_exp = {}
+      $order_by: [transactions_view_order_by!] = {}
       $offset: Int = 0
       $limit: Int = 10
    ) {
-      group_transactions_aggregate: groups_group_transaction_view_aggregate {
+      group_transactions_aggregate: transactions_view_aggregate(where: $where) {
          aggregate {
             count
+            sum {
+               debit
+               credit
+            }
          }
       }
-      group_transactions: groups_group_transaction_view_aggregate(
+      group_transactions: transactions_view_aggregate(
          where: $where
          order_by: $order_by
          offset: $offset

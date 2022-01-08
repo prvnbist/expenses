@@ -6,6 +6,7 @@ import { useMutation, useSubscription } from '@apollo/client'
 import {
    ACCOUNTS,
    CATEGORIES,
+   GROUPS,
    INSERT_TRANSACTION,
    PAYMENT_METHODS,
 } from '../../graphql'
@@ -38,6 +39,7 @@ export const Form = () => {
    const [form, setForm] = React.useState({
       title: '',
       amount: '',
+      group_id: '',
       account_id: '',
       type: 'expense',
       category_id: '',
@@ -45,7 +47,7 @@ export const Form = () => {
       date: new Date().toISOString().slice(0, 10),
    })
    const [upsert, { loading }] = useMutation(INSERT_TRANSACTION, {
-      refetchQueries: ['current_month_expenditure'],
+      refetchQueries: ['current_month_expenditure', 'group_transactions'],
       onCompleted: () => {
          setEditForm({})
          setIsFormOpen(false)
@@ -64,6 +66,7 @@ export const Form = () => {
    })
    const { data: { categories = [] } = {} } = useSubscription(CATEGORIES)
    const { data: { accounts = [] } = {} } = useSubscription(ACCOUNTS)
+   const { data: { groups = [] } = {} } = useSubscription(GROUPS)
    const { data: { payment_methods = [] } = {} } =
       useSubscription(PAYMENT_METHODS)
 
@@ -75,6 +78,7 @@ export const Form = () => {
             payment_method,
             category,
             date,
+            group,
             raw_date,
             ...rest
          } = editForm
@@ -111,6 +115,7 @@ export const Form = () => {
                'type',
                'title',
                'amount',
+               'group_id',
                'account_id',
                'category_id',
                'payment_method_id',
@@ -259,6 +264,20 @@ export const Form = () => {
                   )}
                >
                   {accounts.map(option => (
+                     <Select.Option key={option.id} option={option} />
+                  ))}
+               </Select>
+            </Styles.Fieldset>
+            <Styles.Fieldset>
+               <Styles.Label htmlFor="group">Group</Styles.Label>
+               <Select
+                  is_small
+                  placeholder="Search groups"
+                  on_deselect={() => handleChange('group_id', null)}
+                  on_select={option => handleChange('group_id', option.id)}
+                  selected={groups.find(group => group.id === form.group_id)}
+               >
+                  {groups.map(option => (
                      <Select.Option key={option.id} option={option} />
                   ))}
                </Select>
