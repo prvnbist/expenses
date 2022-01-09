@@ -2,6 +2,11 @@ import { createStitches, CSS as StitchesCSS } from '@stitches/react'
 export type { CSS } from '@stitches/react/types/css-util'
 
 export const stitches = createStitches({
+   media: {
+      mobile: '(max-width: 567px)',
+      tablet: '(max-width: 767px)',
+      desktop: '(max-width: 1024px)',
+   },
    prefix: '',
    theme: {},
    utils: {},

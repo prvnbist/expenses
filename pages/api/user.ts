@@ -12,6 +12,7 @@ const USERS = `
    query users($where: user_bool_exp = {}) {
       users(where: $where) {
          id
+         username
       }
    }
 `
@@ -28,7 +29,7 @@ const User = async (req: NextApiRequest, res: NextApiResponse) => {
          where: { email: { _eq: user.email } },
       })
       if (users.length > 0) {
-         user = { ...user, id: users[0].id }
+         user = { ...user, id: users[0].id, username: users[0].username }
       }
    } catch (error) {
       res.status(401).end()
