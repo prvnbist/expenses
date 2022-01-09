@@ -1,82 +1,34 @@
-## Expenses App
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-> A self-hosted app built with Hasura/Postgres, NextJS/React, Apollo Client/GraphQL.
+## Getting Started
 
-#### Status
-[![Awake Action](https://github.com/prvnbist/expenses/actions/workflows/awake.yml/badge.svg)](https://github.com/prvnbist/expenses/actions/workflows/awake.yml)
-![Dependencies](https://img.shields.io/david/prvnbist/expenses)
-![Stars](https://img.shields.io/github/stars/prvnbist/expenses.svg)
-![Github](https://img.shields.io/github/followers/prvnbist.svg?style=flat&label=Follow%20Me&maxAge=2592000)
-
-#### Features
-
-##### Transactions
-
-![Transactions](https://res.cloudinary.com/prvnbist/image/upload/v1622888920/expenses/transactions.png 'Transactions')
-
--  [x] Transactions CRUD.
--  [x] Listing of all credit/debit transactions in one place.
--  [x] Filter by global search, category, payment method and account.
--  [x] Sort by title, date, debit, credit, category, payment method and account. Multiple sort by is also supported.
--  [x] Aggregate analytics for filtered transaction.
--  [x] Pagination and go to page.
--  [x] Delete multiple transactions at once.
--  [ ] Batch edit functionality.
-
-##### Accounts
-
-![Accounts](https://res.cloudinary.com/prvnbist/image/upload/v1622889493/expenses/accounts.png 'Accounts')
-
--  [x] Accounts CRUD.
--  [x] Total expenses per account.
--  [x] Total income per account.
--  [x] Balance remaining.
--  [x] Balance auto update on adding/updating/deleting transactions.
-
-##### Reports
-
-![Reports](https://res.cloudinary.com/prvnbist/image/upload/v1622889793/expenses/reports.png 'Reports')
-
--  [x] View monthly expenses by year.
--  [x] View monthly incomes by year.
-
-##### Analytics
-
-![Analytics](https://res.cloudinary.com/prvnbist/image/upload/v1622889960/expenses/analytics.png 'Analytics')
-
--  [x] Metrics: total income, total expense, balance remaining.
--  [x] Chart/Table View
-   -  [x] Expenses by category, year and month.
-   -  [x] Incomes by category, year and month.
-
-#### Contribution
-
-1. Clone the repo locally.
+First, run the development server:
 
 ```bash
-> git clone https://github.com/prvnbist/expenses.git
+npm run dev
+# or
+yarn dev
 ```
 
-2. This project uses yarn, to isntall packages run:
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-```bash
-> cd expenses
-> yarn
-```
+You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-3. This project requires graphql endpoint to work. Simply create an `.env` file and add these variables. The endpoint urls provided link the app to graphql api served by hasura.
+[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
-```
-WS_GRAPHQL_ENDPOINT=wss://x-expense.herokuapp.com/v1/graphql
-GRAPHQL_ENDPOINT=https://x-expense.herokuapp.com/v1/graphql
-```
+The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-1. To run the server, use following command and navigate to `localhost:3000` in your browser.
+## Learn More
 
-```bash
-> yarn dev
-```
+To learn more about Next.js, take a look at the following resources:
 
-#### Contact
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-> Reach out to my [twitter](https://twitter.com/prvnbist 'twitter') or my email: prvnbist@gmail.com for further queries.
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
