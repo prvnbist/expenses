@@ -10,8 +10,8 @@ const client = new GraphQLClient(process.env.NEXT_HASURA_ENDPOINT, {
 })
 
 const UPSERT_USER = `
-   mutation upsert_user($object: users_user_insert_input = {}) {
-      upsert_user: insert_users_user_one(
+   mutation upsert_user($object: user_insert_input = {}) {
+      upsert_user: insert_user(
          object: $object
          on_conflict: {
             constraint: user_email_key
@@ -43,7 +43,7 @@ const Login = async (req: NextApiRequest, res: NextApiResponse) => {
       process.env.NEXT_MAGIC_ENCRYPTION_KEY || '',
       Iron.defaults
    )
-   const data = await client.request(UPSERT_USER, {
+   await client.request(UPSERT_USER, {
       object: {
          email: user.email,
          username: user?.email?.split('@')[0] ?? '',
