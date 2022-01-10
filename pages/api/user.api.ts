@@ -18,9 +18,8 @@ const USERS = `
 `
 
 const User = async (req: NextApiRequest, res: NextApiResponse) => {
-   let user
    try {
-      user = await Iron.unseal(
+      let user = await Iron.unseal(
          CookieService.getAuthToken(req.cookies),
          process.env.NEXT_MAGIC_ENCRYPTION_KEY || '',
          Iron.defaults
@@ -31,11 +30,11 @@ const User = async (req: NextApiRequest, res: NextApiResponse) => {
       if (users.length > 0) {
          user = { ...user, id: users[0].id, username: users[0].username }
       }
+
+      res.json(user)
    } catch (error) {
       res.status(401).end()
    }
-
-   res.json(user)
 }
 
 export default User

@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
    reactStrictMode: true,
+   pageExtensions: ['page.tsx', 'page.ts', 'api.tsx', 'api.ts'],
    env: {
       NEXT_MAGIC_PUBLISHABLE_KEY: process.env.NEXT_MAGIC_PUBLISHABLE_KEY,
       NEXT_MAGIC_SECRET_KEY: process.env.NEXT_MAGIC_SECRET_KEY,
