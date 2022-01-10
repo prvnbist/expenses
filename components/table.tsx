@@ -1,0 +1,75 @@
+import tw, { styled } from 'twin.macro'
+
+interface IChildren {
+   children: React.ReactNode
+}
+
+export const Table = ({ children }: IChildren): JSX.Element => (
+   <Styles.Table>{children}</Styles.Table>
+)
+
+const Head = ({ children }: IChildren): JSX.Element => (
+   <Styles.Head>{children}</Styles.Head>
+)
+const Body = ({ children }: IChildren): JSX.Element => <tbody>{children}</tbody>
+
+interface IRow {
+   odd?: boolean
+   children: React.ReactNode
+}
+
+const Row = ({ children, ...props }: IRow): JSX.Element => (
+   <Styles.Row {...props}>{children}</Styles.Row>
+)
+
+interface ICell {
+   is_right?: boolean
+   is_center?: boolean
+   children?: React.ReactNode
+   width?: number
+}
+
+const Cell = ({ children, ...props }: ICell): JSX.Element => (
+   <Styles.Cell {...props}>{children}</Styles.Cell>
+)
+
+interface HCell {
+   is_right?: boolean
+   is_center?: boolean
+   children?: React.ReactNode
+}
+
+const HCell = ({ children, ...props }: HCell): JSX.Element => (
+   <Styles.HCell {...props}>{children}</Styles.HCell>
+)
+
+const Styles = {
+   Table: styled('table', { ...tw`border-b relative w-full table-auto` }),
+   Head: styled('thead', { ...tw`relative bg-gray-50 border-b border-t` }),
+   Row: styled('tr', {
+      ...tw`border-l border-r divide-x`,
+      '&:nth-child(even)': { ...tw`border-t border-b` },
+   }),
+   Cell: styled('td', {
+      ...tw`px-3 h-8`,
+      '&:nth-child(1)': { ...tw`flex-shrink-0 truncate` },
+      variants: {
+         is_right: { true: { ...tw`text-right` } },
+         is_center: { true: { ...tw`flex justify-center` } },
+         on_hover: { true: { ...tw`hover:(bg-gray-100)` } },
+      },
+   }),
+   HCell: styled('th', {
+      ...tw`sticky top-0 h-8 px-3 text-left text-xs text-gray-500 uppercase font-medium tracking-wider whitespace-nowrap`,
+      variants: {
+         is_right: { true: { ...tw`text-right` } },
+         is_center: { true: { ...tw`flex justify-center` } },
+      },
+   }),
+}
+
+Table.Head = Head
+Table.Body = Body
+Table.Row = Row
+Table.Cell = Cell
+Table.HCell = HCell

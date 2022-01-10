@@ -1,5 +1,4 @@
 import tw from 'twin.macro'
-import dynamic from 'next/dynamic'
 import { styled } from '@stitches/react'
 
 import { Listing } from './components'

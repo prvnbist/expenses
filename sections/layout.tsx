@@ -53,9 +53,7 @@ const Layout = ({ is_loading, children }: ILayout): JSX.Element => {
                </button>
             </Styles.Collapse>
          </Styles.Sidebar>
-         <main tw="flex-1 overflow-y-auto">
-            {is_loading ? <Loader /> : children}
-         </main>
+         <Styles.Main>{is_loading ? <Loader /> : children}</Styles.Main>
       </Styles.Layout>
    )
 }
@@ -67,7 +65,7 @@ const Styles = {
       ...tw`flex h-screen`,
    }),
    Sidebar: styled.aside({
-      ...tw`flex flex-col bg-gray-800 border-r border-gray-200`,
+      ...tw`z-10 flex flex-col bg-gray-800 border-r border-gray-200`,
       width: '240px',
       variants: {
          is_collapsed: {
@@ -147,5 +145,9 @@ const Styles = {
             },
          },
       },
+   }),
+   Main: styled('main', {
+      ...tw`flex-1 overflow-y-auto`,
+      '@tablet': { ...tw`pb-10` },
    }),
 }
