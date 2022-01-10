@@ -4,12 +4,14 @@ import tw, { styled } from 'twin.macro'
 import { useRouter } from 'next/router'
 
 import * as Icon from '../icons'
+import { Loader } from '../components'
 
 interface ILayout {
+   is_loading?: boolean
    children: React.ReactNode
 }
 
-const Layout = ({ children }: ILayout): JSX.Element => {
+const Layout = ({ is_loading, children }: ILayout): JSX.Element => {
    const router = useRouter()
    const [isCollapsed, setIsCollapsed] = React.useState(false)
 
@@ -51,7 +53,9 @@ const Layout = ({ children }: ILayout): JSX.Element => {
                </button>
             </Styles.Collapse>
          </Styles.Sidebar>
-         <main>{children}</main>
+         <main tw="flex-1 overflow-y-auto">
+            {is_loading ? <Loader /> : children}
+         </main>
       </Styles.Layout>
    )
 }
@@ -63,7 +67,7 @@ const Styles = {
       ...tw`flex h-screen`,
    }),
    Sidebar: styled.aside({
-      ...tw`flex flex-col bg-gray-100 border-r border-gray-200`,
+      ...tw`flex flex-col bg-gray-800 border-r border-gray-200`,
       width: '240px',
       variants: {
          is_collapsed: {
@@ -96,7 +100,7 @@ const Styles = {
    }),
    Item: styled.li({
       a: {
-         ...tw`flex items-center rounded-md h-10 text-gray-700 hover:bg-gray-200`,
+         ...tw`flex items-center rounded h-10 text-white hover:bg-gray-700`,
          span: {
             ...tw`h-full w-10 flex items-center justify-center`,
          },
@@ -117,7 +121,7 @@ const Styles = {
          is_active: {
             true: {
                a: {
-                  ...tw`font-medium border-indigo-200 border-b-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-100`,
+                  ...tw`font-medium border-gray-600 border-b-2 text-indigo-400 bg-gray-700 hover:bg-gray-700`,
                },
             },
          },
@@ -126,7 +130,7 @@ const Styles = {
    Collapse: styled.span({
       ...tw`flex-shrink-0 mt-auto w-full h-10 px-1 pb-1`,
       button: {
-         ...tw`rounded w-full h-full flex items-center justify-center text-gray-700 hover:bg-gray-300`,
+         ...tw`rounded w-full h-full flex items-center justify-center text-white hover:bg-gray-700`,
          '@tablet': {
             ...tw`rounded-none`,
          },
