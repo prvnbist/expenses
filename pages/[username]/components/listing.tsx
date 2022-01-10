@@ -5,6 +5,7 @@ import { styled } from '@stitches/react'
 import { useQuery } from '@apollo/client'
 
 import Table from './table'
+import SortBy from './sort_by'
 import * as Icon from '../../../icons'
 import { Loader } from '../../../components'
 import { useDebounce } from '../../../hooks'
@@ -23,8 +24,17 @@ interface ITransaction {
    raw_date: string
 }
 
+interface ISortByState {
+   title: 'asc' | 'desc'
+   raw_date: 'asc' | 'desc'
+}
+
 const Listing = ({ user }: ILayout): JSX.Element => {
    const [search, setSearch] = React.useState('')
+   const [sortBy, setSortBy] = React.useState<ISortByState>({
+      title: 'asc',
+      raw_date: 'desc',
+   })
    const [status, setStatus] = React.useState('LOADING')
    const [transactions, setTransactions] = React.useState([])
    const [allTransactionsAggregate, setAllTransactionsAggregate] =
@@ -40,7 +50,7 @@ const Listing = ({ user }: ILayout): JSX.Element => {
       fetchPolicy: 'network-only',
       variables: {
          user_id: user?.id,
-         order_by: { raw_date: 'desc', title: 'asc' },
+         order_by: { ...sortBy },
          where: {
             user_id: { _eq: user?.id },
             _or: [{ title: { _ilike: `%${debouncedSearch.trim()}%` } }],
@@ -90,17 +100,20 @@ const Listing = ({ user }: ILayout): JSX.Element => {
                </h2>
             </Styles.Metric>
          </Styles.Metrics>
-         <Styles.Search>
-            <span>
-               <Icon.Search />
-            </span>
-            <input
-               type="text"
-               value={search}
-               placeholder="search by title..."
-               onChange={e => setSearch(e.target.value)}
-            />
-         </Styles.Search>
+         <Styles.Filters>
+            <Styles.Search>
+               <span>
+                  <Icon.Search />
+               </span>
+               <input
+                  type="text"
+                  value={search}
+                  placeholder="search by title..."
+                  onChange={e => setSearch(e.target.value)}
+               />
+            </Styles.Search>
+            <SortBy sortBy={{ ...sortBy }} setSortBy={setSortBy} />
+         </Styles.Filters>
          <Table transactions={transactions} />
       </Styles.Container>
    )
@@ -129,8 +142,9 @@ const Styles = {
          },
       },
    }),
+   Filters: styled('section', { ...tw`mb-3 flex items-center gap-2` }),
    Search: styled('div', {
-      ...tw`mb-3 max-w-[320px] flex items-center border text-gray-900 h-10 focus-within:border-indigo-500`,
+      ...tw`max-w-[320px] flex items-center border text-gray-900 h-10 focus-within:border-indigo-500`,
       span: {
          ...tw`flex-shrink-0 h-full w-10 flex items-center justify-center`,
          svg: { ...tw`stroke-current text-gray-500` },
