@@ -4,6 +4,7 @@ module.exports = {
       extend: {
          fontFamily: {
             heading: ['Poppins', 'sans-serif'],
+            mono: ['Space Mono', 'monospace'],
          },
       },
    },

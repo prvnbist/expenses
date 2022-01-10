@@ -132,7 +132,7 @@ const Styles = {
          ...tw`text-sm uppercase font-medium tracking-wide text-gray-500`,
       },
       h2: {
-         ...tw`text-4xl font-semibold mt-2`,
+         ...tw`font-mono text-4xl font-semibold mt-2`,
       },
       variants: {
          type: {

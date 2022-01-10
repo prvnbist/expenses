@@ -24,7 +24,7 @@ const Table = ({ transactions = [] }) => {
                const type = cell.row.original.type
                return (
                   <Styles.Amount is_expense={type === 'expense'}>
-                     {type === 'expense' ? '- ' : '+ '}
+                     {type === 'expense' ? '-' : '+'}
                      {Dinero({
                         amount: cell.value,
                         currency: 'INR',
@@ -119,6 +119,7 @@ const Cell = ({ cell, ...props }: any) => {
 const Styles = {
    Container: styled('div', { ...tw`overflow-x-auto` }),
    Amount: styled('span', {
+      ...tw`font-mono`,
       variants: {
          is_expense: {
             true: { ...tw`text-red-500` },
