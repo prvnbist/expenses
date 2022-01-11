@@ -45,22 +45,24 @@ const HCell = ({ children, ...props }: HCell): JSX.Element => (
 
 const Styles = {
    Table: styled('table', { ...tw`border-b relative w-full table-auto` }),
-   Head: styled('thead', { ...tw`relative bg-gray-50 border-b border-t` }),
+   Head: styled('thead', {
+      ...tw`relative bg-dark-300 border-b border-t border-dark-200`,
+   }),
    Row: styled('tr', {
-      ...tw`border-l border-r divide-x`,
+      ...tw`border-l border-r  border-dark-200 divide-x divide-dark-200`,
       '&:nth-child(even)': { ...tw`border-t border-b` },
    }),
    Cell: styled('td', {
-      ...tw`px-3 h-8`,
+      ...tw`px-3 h-8 text-gray-300`,
       '&:nth-child(1)': { ...tw`flex-shrink-0 truncate` },
       variants: {
          is_right: { true: { ...tw`text-right` } },
          is_center: { true: { ...tw`flex justify-center` } },
-         on_hover: { true: { ...tw`hover:(bg-gray-100)` } },
+         on_hover: { true: { ...tw`hover:(bg-dark-300)` } },
       },
    }),
    HCell: styled('th', {
-      ...tw`sticky top-0 h-8 px-3 text-left text-xs text-gray-500 uppercase font-medium tracking-wider whitespace-nowrap`,
+      ...tw`sticky top-0 h-8 px-3 text-left text-xs text-gray-400 uppercase font-medium tracking-wider whitespace-nowrap`,
       variants: {
          is_right: { true: { ...tw`text-right` } },
          is_center: { true: { ...tw`flex justify-center` } },

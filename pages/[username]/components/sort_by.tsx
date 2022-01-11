@@ -77,13 +77,13 @@ const Styles = {
    Container: styled('section', { ...tw`relative` }),
    Button: {
       Icon: styled('button', {
-         ...tw`border h-10 w-10 flex items-center justify-center hover:bg-gray-100`,
-         svg: { ...tw`stroke-current` },
+         ...tw`border border-dark-200 h-10 w-10 flex items-center justify-center hover:bg-dark-300`,
+         svg: { ...tw`stroke-current text-gray-400` },
       }),
    },
    Dropdown: {
       Container: styled('ul', {
-         ...tw`hidden border shadow-lg fixed translate-y-[4px] z-10 bg-white py-1 space-y-1`,
+         ...tw`hidden border border-dark-200 bg-dark-300 shadow-lg fixed translate-y-[4px] z-10 py-1 space-y-1`,
          '@media (max-width:768px)': {
             ...tw`translate-x-[calc(-100% + 40px)]`,
          },
@@ -95,7 +95,7 @@ const Styles = {
          ...tw`w-[180px] pl-3 pr-1 flex items-center justify-between`,
          svg: { ...tw`stroke-current text-gray-500` },
          span: {
-            ...tw`text-gray-700`,
+            ...tw`text-gray-300`,
          },
          aside: {
             ...tw`gap-1 flex items-center`,
@@ -103,7 +103,8 @@ const Styles = {
       }),
    },
    AscButton: styled('button', {
-      ...tw`h-8 w-8 flex items-center justify-center rounded hover:bg-gray-100`,
+      ...tw`h-8 w-8 flex items-center justify-center rounded hover:bg-dark-200`,
+      svg: { ...tw`text-gray-400` },
       variants: {
          is_active: {
             true: {
@@ -114,7 +115,8 @@ const Styles = {
       },
    }),
    DescButton: styled('button', {
-      ...tw`h-8 w-8 flex items-center justify-center rounded hover:bg-gray-100`,
+      ...tw`h-8 w-8 flex items-center justify-center rounded hover:bg-dark-200`,
+      svg: { ...tw`text-gray-400` },
       variants: {
          is_active: {
             true: {

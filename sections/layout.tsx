@@ -65,7 +65,7 @@ const Styles = {
       ...tw`flex h-screen`,
    }),
    Sidebar: styled.aside({
-      ...tw`z-10 flex flex-col bg-gray-800 border-r border-gray-200`,
+      ...tw`z-10 flex flex-col bg-dark-300 border-r border-dark-200`,
       width: '240px',
       variants: {
          is_collapsed: {
@@ -98,7 +98,7 @@ const Styles = {
    }),
    Item: styled.li({
       a: {
-         ...tw`flex items-center rounded h-10 text-white hover:bg-gray-700`,
+         ...tw`flex items-center rounded h-10 text-white hover:bg-dark-200`,
          span: {
             ...tw`h-full w-10 flex items-center justify-center`,
          },
@@ -128,7 +128,7 @@ const Styles = {
    Collapse: styled.span({
       ...tw`flex-shrink-0 mt-auto w-full h-10 px-1 pb-1`,
       button: {
-         ...tw`rounded w-full h-full flex items-center justify-center text-white hover:bg-gray-700`,
+         ...tw`rounded w-full h-full flex items-center justify-center text-white hover:bg-dark-200`,
          '@tablet': {
             ...tw`rounded-none`,
          },
@@ -147,7 +147,7 @@ const Styles = {
       },
    }),
    Main: styled('main', {
-      ...tw`flex-1 overflow-y-auto`,
+      ...tw`bg-dark-400 flex-1 overflow-y-auto`,
       '@tablet': { ...tw`pb-10` },
    }),
 }

@@ -21,7 +21,7 @@ const Styles = {
    Header: styled('header', {
       ...tw`px-4 pt-4`,
       h1: {
-         ...tw`font-heading text-3xl font-medium text-gray-700`,
+         ...tw`font-heading text-3xl font-medium text-gray-400`,
       },
    }),
 }

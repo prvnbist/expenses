@@ -77,11 +77,11 @@ const Listing = ({ user }: ILayout): JSX.Element => {
    return (
       <Styles.Container>
          <Styles.Metrics>
-            <Styles.Metric type="1">
+            <Styles.Metric>
                <span>Total Transactions</span>
                <h2>{allTransactionsAggregate.count}</h2>
             </Styles.Metric>
-            <Styles.Metric type="2">
+            <Styles.Metric>
                <span>Total Income</span>
                <h2>
                   {Dinero({
@@ -90,7 +90,7 @@ const Listing = ({ user }: ILayout): JSX.Element => {
                   }).toFormat()}
                </h2>
             </Styles.Metric>
-            <Styles.Metric type="3">
+            <Styles.Metric>
                <span>Total Expense</span>
                <h2>
                   {Dinero({
@@ -127,28 +127,21 @@ const Styles = {
       ...tw`mb-4 flex flex-wrap gap-3`,
    }),
    Metric: styled('li', {
-      ...tw`bg-white flex-1 px-4 py-3`,
+      ...tw`bg-white flex-1 px-4 py-3 bg-dark-300 border border-dark-200`,
       span: {
          ...tw`text-sm uppercase font-medium tracking-wide text-gray-500`,
       },
       h2: {
-         ...tw`font-mono text-4xl font-semibold mt-2`,
-      },
-      variants: {
-         type: {
-            1: { ...tw`bg-green-100`, h2: { ...tw`text-green-900` } },
-            2: { ...tw`bg-blue-100`, h2: { ...tw`text-blue-900` } },
-            3: { ...tw`bg-red-100`, h2: { ...tw`text-red-900` } },
-         },
+         ...tw`font-mono text-4xl font-semibold mt-2 text-gray-300`,
       },
    }),
    Filters: styled('section', { ...tw`mb-3 flex items-center gap-2` }),
    Search: styled('div', {
-      ...tw`max-w-[320px] flex items-center border text-gray-900 h-10 focus-within:border-indigo-500`,
+      ...tw`max-w-[320px] flex items-center border text-gray-300 h-10 border-dark-200 focus-within:border-indigo-500`,
       span: {
          ...tw`flex-shrink-0 h-full w-10 flex items-center justify-center`,
          svg: { ...tw`stroke-current text-gray-500` },
       },
-      input: { ...tw`focus:outline-none w-full` },
+      input: { ...tw`bg-transparent focus:outline-none w-full` },
    }),
 }
