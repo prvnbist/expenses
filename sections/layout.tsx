@@ -148,6 +148,6 @@ const Styles = {
    }),
    Main: styled('main', {
       ...tw`bg-dark-400 flex-1 overflow-y-auto`,
-      '@tablet': { ...tw`pb-10` },
+      '@tablet': { ...tw`h-[calc(100vh - 40px)]` },
    }),
 }

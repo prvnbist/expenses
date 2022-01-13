@@ -31,6 +31,11 @@ interface ISortByState {
 
 const Listing = ({ user }: ILayout): JSX.Element => {
    const [search, setSearch] = React.useState('')
+   const [pagination, setPagination] = React.useState({
+      page: 0,
+      size: 10,
+      count: 0,
+   })
    const [sortBy, setSortBy] = React.useState<ISortByState>({
       title: 'asc',
       raw_date: 'desc',
@@ -51,6 +56,7 @@ const Listing = ({ user }: ILayout): JSX.Element => {
       variables: {
          user_id: user?.id,
          order_by: { ...sortBy },
+         offset: pagination.page * pagination.size,
          where: {
             user_id: { _eq: user?.id },
             _or: [{ title: { _ilike: `%${debouncedSearch.trim()}%` } }],
@@ -63,6 +69,14 @@ const Listing = ({ user }: ILayout): JSX.Element => {
          }
          setTransactions(transactions.nodes)
          setAllTransactionsAggregate(transactions_aggregate.aggregate)
+         const total_transactions = transactions_aggregate.aggregate.count
+         const page_size = pagination.size
+         const total_pages = Math.ceil(
+            total_transactions % page_size === 0
+               ? total_transactions / page_size
+               : total_transactions / page_size + 1
+         )
+         setPagination(value => ({ ...value, count: total_pages }))
          setStatus('SUCCESS')
       },
       onError: error => {
@@ -70,6 +84,12 @@ const Listing = ({ user }: ILayout): JSX.Element => {
          setStatus('ERROR')
       },
    })
+
+   const onPageChange = React.useCallback(page => {
+      setStatus('LOADING')
+      setPagination(value => ({ ...value, page }))
+   }, [])
+
    if (status === 'LOADING') return <Loader />
    if (status === 'ERROR')
       return <p>Something went wrong, please refresh the page.</p>
@@ -114,7 +134,11 @@ const Listing = ({ user }: ILayout): JSX.Element => {
             </Styles.Search>
             <SortBy sortBy={{ ...sortBy }} setSortBy={setSortBy} />
          </Styles.Filters>
-         <Table transactions={transactions} />
+         <Table
+            pagination={pagination}
+            transactions={transactions}
+            onPageChange={onPageChange}
+         />
       </Styles.Container>
    )
 }
