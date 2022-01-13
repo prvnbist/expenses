@@ -5,12 +5,15 @@ import client from '../lib/apollo'
 import globalStyles from '../styles/globalStyles'
 
 import '../styles/globals.css'
+import { UserProvider } from '../lib/user'
 
 const App = ({ Component, pageProps }: AppProps) => {
    globalStyles()
    return (
       <ApolloProvider client={client}>
-         <Component {...pageProps} />
+         <UserProvider>
+            <Component {...pageProps} />
+         </UserProvider>
       </ApolloProvider>
    )
 }

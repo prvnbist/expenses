@@ -7,11 +7,10 @@ import * as Icon from '../icons'
 import { Loader } from '../components'
 
 interface ILayout {
-   is_loading?: boolean
    children: React.ReactNode
 }
 
-const Layout = ({ is_loading, children }: ILayout): JSX.Element => {
+const Layout = ({ children }: ILayout): JSX.Element => {
    const router = useRouter()
    const [isCollapsed, setIsCollapsed] = React.useState(false)
 
@@ -23,6 +22,17 @@ const Layout = ({ is_loading, children }: ILayout): JSX.Element => {
             href: '/prvnbist/transactions',
             isActive: router.asPath.includes('transactions'),
          },
+         {
+            id: 'settings',
+            type: 'divider',
+            title: 'Settings',
+         },
+         {
+            title: 'Categories',
+            href: '/prvnbist/settings/categories',
+            icon: <Icon.Tag tw="stroke-current" />,
+            isActive: router.asPath.includes('categories'),
+         },
       ],
       [router.asPath]
    )
@@ -30,19 +40,25 @@ const Layout = ({ is_loading, children }: ILayout): JSX.Element => {
       <Styles.Layout>
          <Styles.Sidebar is_collapsed={isCollapsed}>
             <Styles.Items is_collapsed={isCollapsed}>
-               {routes.map(route => (
-                  <Styles.Item
-                     key={route.href}
-                     is_collapsed={isCollapsed}
-                     is_active={route.isActive}
-                  >
-                     <Link href={route.href}>
-                        <a title={route.title}>
-                           <span>{route.icon}</span> <h4>{route.title}</h4>
-                        </a>
-                     </Link>
-                  </Styles.Item>
-               ))}
+               {routes.map(route =>
+                  route.type === 'divider' ? (
+                     <Styles.Divider key={route.id} is_collapsed={isCollapsed}>
+                        <span>{route.title}</span>
+                     </Styles.Divider>
+                  ) : (
+                     <Styles.Item
+                        key={route.href}
+                        is_collapsed={isCollapsed}
+                        is_active={route.isActive}
+                     >
+                        <Link href={route.href}>
+                           <a title={route.title}>
+                              <span>{route.icon}</span> <h4>{route.title}</h4>
+                           </a>
+                        </Link>
+                     </Styles.Item>
+                  )
+               )}
             </Styles.Items>
             <Styles.Collapse is_collapsed={isCollapsed}>
                <button
@@ -53,7 +69,7 @@ const Layout = ({ is_loading, children }: ILayout): JSX.Element => {
                </button>
             </Styles.Collapse>
          </Styles.Sidebar>
-         <Styles.Main>{is_loading ? <Loader /> : children}</Styles.Main>
+         <Styles.Main>{children}</Styles.Main>
       </Styles.Layout>
    )
 }
@@ -149,5 +165,16 @@ const Styles = {
    Main: styled('main', {
       ...tw`bg-dark-400 flex-1 overflow-y-auto`,
       '@tablet': { ...tw`h-[calc(100vh - 40px)]` },
+   }),
+   Divider: styled('li', {
+      ...tw`pl-3 text-gray-400 mt-4`,
+      variants: {
+         is_collapsed: {
+            true: {
+               ...tw`border-b border-gray-500 mb-2`,
+               span: { ...tw`hidden` },
+            },
+         },
+      },
    }),
 }

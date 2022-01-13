@@ -2,17 +2,15 @@ import tw from 'twin.macro'
 import { styled } from '@stitches/react'
 
 import { Listing } from './components'
-import useAuth from '../../hooks/useAuth'
 import Layout from '../../sections/layout'
 
 export default function Dashboard() {
-   const { user, loading } = useAuth()
    return (
-      <Layout is_loading={loading}>
+      <Layout>
          <Styles.Header>
             <h1>Transactions</h1>
          </Styles.Header>
-         <Listing user={user} />
+         <Listing />
       </Layout>
    )
 }
