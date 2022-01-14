@@ -39,6 +39,43 @@ const QUERIES = {
          }
       `,
    },
+   CATEGORIES: {
+      LIST: gql`
+         query categories($where: categories_bool_exp = {}) {
+            categories: categories_aggregate(
+               order_by: { title: asc }
+               where: $where
+            ) {
+               aggregate {
+                  count
+               }
+               nodes {
+                  id
+                  title
+                  type
+               }
+            }
+         }
+      `,
+   },
+   SUB_CATEGORIES: {
+      LIST: gql`
+         query categories($where: sub_categories_bool_exp = {}) {
+            categories: sub_categories_aggregate(
+               order_by: { title: asc }
+               where: $where
+            ) {
+               aggregate {
+                  count
+               }
+               nodes {
+                  id
+                  title
+               }
+            }
+         }
+      `,
+   },
 }
 
 export default QUERIES

@@ -1,3 +1,4 @@
+export * from './tag'
 export * from './asc'
 export * from './desc'
 export * from './file'

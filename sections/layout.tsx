@@ -114,7 +114,7 @@ const Styles = {
    }),
    Item: styled.li({
       a: {
-         ...tw`flex items-center rounded h-10 text-white hover:bg-dark-200`,
+         ...tw`flex items-center rounded h-10 text-gray-400 hover:(text-white bg-dark-200)`,
          span: {
             ...tw`h-full w-10 flex items-center justify-center`,
          },
@@ -135,7 +135,7 @@ const Styles = {
          is_active: {
             true: {
                a: {
-                  ...tw`font-medium border-gray-600 border-b-2 text-indigo-400 bg-gray-700 hover:bg-gray-700`,
+                  ...tw`font-medium border-gray-600 border-b-2 text-indigo-400 bg-gray-700 hover:(text-indigo-400 bg-gray-700)`,
                },
             },
          },
