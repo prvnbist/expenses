@@ -2,3 +2,43 @@
    box-sizing: border-box;
    font-family: 'Inter', sans-serif;
 }
+
+.select__control {
+   height: 40px !important;
+   border-radius: 0px !important;
+   border: 1px solid #3b3936 !important;
+   background-color: transparent !important;
+}
+
+.select__indicator-separator {
+   background-color: #3b3936 !important;
+}
+
+.select__dropdown-indicator svg {
+   fill: #62615f;
+}
+
+.select__menu {
+   overflow: hidden;
+   background-color: #2b2a27 !important;
+}
+
+.select__option {
+   cursor: pointer;
+   color: #fff !important;
+}
+
+.select__option:hover,
+.select__option--is-focused {
+   background-color: #3b3936 !important;
+}
+
+.select__input,
+.select__single-value {
+   color: #fff !important;
+}
+
+.select__option--is-selected,
+.select__option--is-selected:hover {
+   background-color: #2684ff !important;
+}

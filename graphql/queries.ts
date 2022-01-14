@@ -59,6 +59,21 @@ const QUERIES = {
             }
          }
       `,
+      WITH_SUB_CATEGORIES: gql`
+         query categories(
+            $where: categories_bool_exp = {}
+            $where1: sub_categories_bool_exp = {}
+         ) {
+            categories(order_by: { title: asc }, where: $where) {
+               id
+               title
+               sub_categories(order_by: { title: asc }, where: $where1) {
+                  id
+                  title
+               }
+            }
+         }
+      `,
    },
    SUB_CATEGORIES: {
       LIST: gql`

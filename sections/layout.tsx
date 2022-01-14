@@ -20,7 +20,7 @@ const Layout = ({ children }: ILayout): JSX.Element => {
             icon: <Icon.File tw="stroke-current" />,
             title: 'Transactions',
             href: '/prvnbist/transactions',
-            isActive: router.asPath.includes('transactions'),
+            isActive: router.asPath.endsWith('transactions'),
          },
          {
             id: 'settings',
@@ -31,7 +31,7 @@ const Layout = ({ children }: ILayout): JSX.Element => {
             title: 'Categories',
             href: '/prvnbist/settings/categories',
             icon: <Icon.Tag tw="stroke-current" />,
-            isActive: router.asPath.includes('categories'),
+            isActive: router.asPath.endsWith('categories'),
          },
       ],
       [router.asPath]
