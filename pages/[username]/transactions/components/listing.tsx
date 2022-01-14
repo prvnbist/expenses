@@ -9,8 +9,8 @@ import SortBy from './sort_by'
 import * as Icon from '../../../../icons'
 import { useUser } from '../../../../lib/user'
 import { Loader } from '../../../../components'
-import { useDebounce } from '../../../../hooks'
 import QUERIES from '../../../../graphql/queries'
+import { useDebounce, usePrevious } from '../../../../hooks'
 
 interface ISortByState {
    title: 'asc' | 'desc'
@@ -46,10 +46,15 @@ const Listing = (): JSX.Element => {
       setPagination(value => ({ ...value, page }))
    }, [])
 
-   const debouncedSearch = useDebounce(search, 500, () => {
-      onPageChange(0)
-      childRef?.current?.(0)
-   })
+   const debouncedSearch = useDebounce(search, 500)
+   const previousSearch = usePrevious(search)
+
+   React.useEffect(() => {
+      if (search !== previousSearch) {
+         onPageChange(0)
+         childRef?.current?.(0)
+      }
+   }, [previousSearch, search])
 
    useQuery(QUERIES.TRANSACTIONS.LIST, {
       skip: !user?.id,
