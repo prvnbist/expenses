@@ -5,8 +5,10 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import CookieService from '../../lib/cookie'
 
-const client = new GraphQLClient(process.env.NEXT_HASURA_ENDPOINT, {
-   headers: { 'x-hasura-admin-secret': process.env.NEXT_HASURA_ADMIN_SECRET },
+const client = new GraphQLClient(process.env.NEXT_HASURA_ENDPOINT || '', {
+   headers: {
+      'x-hasura-admin-secret': process.env.NEXT_HASURA_ADMIN_SECRET || '',
+   },
 })
 
 const UPSERT_USER = `

@@ -3,12 +3,10 @@ import { styled } from '@stitches/react'
 
 import { Listing } from './components'
 import Layout from '../../../../sections/layout'
-import useAuth from '../../../../hooks/useAuth'
 
 export default function Categories() {
-   const { loading } = useAuth()
    return (
-      <Layout is_loading={loading}>
+      <Layout>
          <Styles.Header>
             <h1>Categories</h1>
          </Styles.Header>

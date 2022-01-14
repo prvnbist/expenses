@@ -13,4 +13,7 @@ module.exports = {
       config.resolve.preferRelative = true
       return config
    },
+   typescript: {
+      ignoreBuildErrors: true,
+   },
 }

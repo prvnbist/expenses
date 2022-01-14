@@ -12,12 +12,14 @@ export default function Login() {
       if (!loading && user?.username) {
          router.push(`${user?.username}/transactions`)
       }
-   }, [loading, user])
+   }, [loading, user, router])
 
-   const handleSubmit = async event => {
+   const handleSubmit = async (event: React.SyntheticEvent) => {
       event.preventDefault()
 
-      const { elements } = event.target
+      const { elements } = event.target as typeof event.target & {
+         elements: { email: { value: string } }
+      }
 
       const did = await magic.auth.loginWithMagicLink({
          email: elements.email.value,

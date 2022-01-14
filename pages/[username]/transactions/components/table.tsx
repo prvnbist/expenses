@@ -16,7 +16,9 @@ interface ITransaction {
    raw_date: string
 }
 interface ITableProps {
-   childRef: () => void | null
+   childRef: {
+      current: (input: number) => void | null
+   }
    transactions: ITransaction[]
    pagination: {
       page: number
@@ -105,7 +107,7 @@ const Table = ({
       childRef.current = gotoPage
    }, [childRef, gotoPage])
 
-   const switchPage = page => {
+   const switchPage = (page: number) => {
       gotoPage(page)
       onPageChange(page)
    }
@@ -124,30 +126,55 @@ const Table = ({
          <Styles.Container>
             <MyTable {...getTableProps()}>
                <MyTable.Head>
-                  {headerGroups.map(headerGroup => (
-                     <MyTable.Row {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => {
-                           return (
-                              <MyTable.HCell
-                                 {...column.getHeaderProps()}
-                                 is_right={column.alignment === 'right'}
-                              >
-                                 {column.render('Header')}
-                              </MyTable.HCell>
-                           )
-                        })}
-                     </MyTable.Row>
-                  ))}
+                  {headerGroups.map(headerGroup => {
+                     const { key: header_group_key, ...rest_header_group } =
+                        headerGroup.getHeaderGroupProps()
+                     return (
+                        <MyTable.Row
+                           key={header_group_key}
+                           {...rest_header_group}
+                        >
+                           {headerGroup.headers.map(column => {
+                              const { key: column_key, ...rest_column } =
+                                 column.getHeaderProps()
+                              return (
+                                 <MyTable.HCell
+                                    key={column_key}
+                                    {...rest_column}
+                                    is_right={column.alignment === 'right'}
+                                 >
+                                    {column.render('Header')}
+                                 </MyTable.HCell>
+                              )
+                           })}
+                        </MyTable.Row>
+                     )
+                  })}
                </MyTable.Head>
                <MyTable.Body {...getTableBodyProps()}>
                   {page.map((row, i) => {
                      prepareRow(row)
+                     const { key: row_key, ...rest_row_keys } =
+                        row.getRowProps()
                      return (
-                        <Row
-                           {...row.getRowProps()}
-                           row={row}
-                           isOdd={i % 2 !== 0}
-                        />
+                        <MyTable.Row key={row_key} {...rest_row_keys}>
+                           {row.cells.map(cell => {
+                              const { key: cell_key, ...rest_cell_keys } =
+                                 cell.getCellProps()
+                              return (
+                                 <MyTable.Cell
+                                    key={cell_key}
+                                    {...rest_cell_keys}
+                                    is_right={cell.column.alignment === 'right'}
+                                    {...(cell.column.id !== 'title' && {
+                                       width: cell.column.width,
+                                    })}
+                                 >
+                                    {cell.render('Cell')}
+                                 </MyTable.Cell>
+                              )
+                           })}
+                        </MyTable.Row>
                      )
                   })}
                </MyTable.Body>
@@ -171,31 +198,15 @@ const Table = ({
 
 export default Table
 
-const Row = ({ row, isOdd, ...props }: any) => {
-   return (
-      <MyTable.Row {...props} odd={!isOdd}>
-         {row.cells.map(cell => {
-            return <Cell {...cell.getCellProps()} cell={cell} />
-         })}
-      </MyTable.Row>
-   )
+interface IProps {
+   pageIndex: number
+   canNextPage: boolean
+   pageOptions: number[]
+   canPreviousPage: boolean
+   switchPage: (page: number) => void
 }
 
-const Cell = ({ cell, ...props }: any) => {
-   return (
-      <MyTable.Cell
-         {...props}
-         is_right={cell.column.alignment === 'right'}
-         {...(cell.column.id !== 'title' && {
-            width: cell.column.width,
-         })}
-      >
-         {cell.render('Cell')}
-      </MyTable.Cell>
-   )
-}
-
-const Pagination = props => {
+const Pagination = (props: IProps): JSX.Element => {
    const { pageIndex, switchPage, pageOptions, canNextPage, canPreviousPage } =
       props
    return (

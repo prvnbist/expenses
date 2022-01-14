@@ -26,7 +26,7 @@ interface ICell {
    is_right?: boolean
    is_center?: boolean
    children?: React.ReactNode
-   width?: number
+   width?: number | string | undefined
 }
 
 const Cell = ({ children, ...props }: ICell): JSX.Element => (

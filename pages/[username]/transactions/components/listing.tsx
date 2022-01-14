@@ -17,9 +17,13 @@ interface ISortByState {
    raw_date: 'asc' | 'desc'
 }
 
+interface IChildRef {
+   current?: (input: number) => void | null
+}
+
 const Listing = (): JSX.Element => {
    const { user } = useUser()
-   const childRef = React.useRef(null)
+   const childRef = React.useRef<IChildRef>(null)
    const [search, setSearch] = React.useState('')
    const [pagination, setPagination] = React.useState({
       page: 0,

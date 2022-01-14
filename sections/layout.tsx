@@ -51,7 +51,7 @@ const Layout = ({ children }: ILayout): JSX.Element => {
                         is_collapsed={isCollapsed}
                         is_active={route.isActive}
                      >
-                        <Link href={route.href}>
+                        <Link href={route.href || ''}>
                            <a title={route.title}>
                               <span>{route.icon}</span> <h4>{route.title}</h4>
                            </a>

@@ -65,9 +65,11 @@ const Listing = () => {
             </Styles.CategoriesList>
             <Styles.CategoriesSelect
                value={selectedCategory?.id}
-               onChange={e =>
+               onChange={(e: React.FormEvent<HTMLInputElement>) =>
                   setSelectedCategory(
-                     categories.nodes.find(node => node.id === e.target.value)
+                     categories.nodes.find(
+                        (node: ICategory) => node.id === e.target.value
+                     )
                   )
                }
             >
@@ -93,7 +95,11 @@ const Listing = () => {
 
 export default Listing
 
-const SubCategoryListing = ({ selectedCategory = {} }) => {
+interface ISubCategoryListingProps {
+   selectedCategory: ISubCategory
+}
+
+const SubCategoryListing = ({ selectedCategory }: ISubCategoryListingProps) => {
    const { user } = useUser()
    const {
       loading,

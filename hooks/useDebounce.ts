@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const useDebounce = (value: string, delay: number, cb) => {
+export const useDebounce = (value: string, delay: number, cb: () => void) => {
    const [debouncedValue, setDebouncedValue] = React.useState(value)
    React.useEffect(() => {
       const handler = setTimeout(() => {
@@ -10,6 +10,6 @@ export const useDebounce = (value: string, delay: number, cb) => {
       return () => {
          clearTimeout(handler)
       }
-   }, [value, delay])
+   }, [value, delay, cb])
    return debouncedValue
 }

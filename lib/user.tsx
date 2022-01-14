@@ -3,7 +3,21 @@ import React from 'react'
 import { Loader } from '../components'
 import useAuth from '../hooks/useAuth'
 
-const Context = React.createContext(null)
+export interface IUser {
+   issuer?: string
+   publicAddress?: string
+   email?: string
+   oauthProvider?: null
+   phoneNumber?: null
+   id?: string
+   username?: string
+}
+
+export interface IUserContext {
+   user: IUser
+}
+
+const Context = React.createContext<IUserContext | null>(null)
 
 interface IUserProviderProps {
    children: React.ReactNode
