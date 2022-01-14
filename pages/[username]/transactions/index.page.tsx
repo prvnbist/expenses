@@ -2,7 +2,7 @@ import tw from 'twin.macro'
 import { styled } from '@stitches/react'
 
 import { Listing } from './components'
-import Layout from '../../sections/layout'
+import Layout from '../../../sections/layout'
 
 export default function Dashboard() {
    return (

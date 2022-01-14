@@ -4,8 +4,8 @@ import Dinero from 'dinero.js'
 import { styled } from '@stitches/react'
 import { useTable, usePagination } from 'react-table'
 
-import * as Icon from './../../../icons'
-import { Table as MyTable } from '../../../components'
+import * as Icon from '../../../../icons'
+import { Table as MyTable } from '../../../../components'
 
 interface ITransaction {
    id: string
