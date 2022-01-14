@@ -9,4 +9,8 @@ module.exports = {
       NEXT_HASURA_ENDPOINT: process.env.NEXT_HASURA_ENDPOINT,
       NEXT_HASURA_ADMIN_SECRET: process.env.NEXT_HASURA_ADMIN_SECRET,
    },
+   webpack: config => {
+      config.resolve.preferRelative = true
+      return config
+   },
 }
