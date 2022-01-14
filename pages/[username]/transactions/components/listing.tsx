@@ -19,6 +19,7 @@ interface ISortByState {
 
 const Listing = (): JSX.Element => {
    const { user } = useUser()
+   const childRef = React.useRef(null)
    const [search, setSearch] = React.useState('')
    const [pagination, setPagination] = React.useState({
       page: 0,
@@ -37,16 +38,26 @@ const Listing = (): JSX.Element => {
          sum: { credit: 0, debit: 0 },
       })
 
-   const debouncedSearch = useDebounce(search, 500)
+   const onPageChange = React.useCallback(page => {
+      setPagination(value => ({ ...value, page }))
+   }, [])
+
+   const debouncedSearch = useDebounce(search, 500, () => {
+      onPageChange(0)
+      childRef?.current?.(0)
+   })
 
    useQuery(QUERIES.TRANSACTIONS.LIST, {
       skip: !user?.id,
       fetchPolicy: 'network-only',
       variables: {
-         user_id: user?.id,
          order_by: { ...sortBy },
          offset: pagination.page * pagination.size,
          where: {
+            user_id: { _eq: user?.id },
+            _or: [{ title: { _ilike: `%${debouncedSearch.trim()}%` } }],
+         },
+         where2: {
             user_id: { _eq: user?.id },
             _or: [{ title: { _ilike: `%${debouncedSearch.trim()}%` } }],
          },
@@ -65,7 +76,11 @@ const Listing = (): JSX.Element => {
                ? total_transactions / page_size
                : total_transactions / page_size + 1
          )
-         setPagination(value => ({ ...value, count: total_pages }))
+         setPagination(value => ({
+            ...value,
+            count:
+               transactions_aggregate.aggregate.count <= 10 ? 1 : total_pages,
+         }))
          setStatus('SUCCESS')
       },
       onError: error => {
@@ -73,11 +88,6 @@ const Listing = (): JSX.Element => {
          setStatus('ERROR')
       },
    })
-
-   const onPageChange = React.useCallback(page => {
-      setStatus('LOADING')
-      setPagination(value => ({ ...value, page }))
-   }, [])
 
    if (status === 'LOADING') return <Loader />
    if (status === 'ERROR')
@@ -124,6 +134,7 @@ const Listing = (): JSX.Element => {
             <SortBy sortBy={{ ...sortBy }} setSortBy={setSortBy} />
          </Styles.Filters>
          <Table
+            childRef={childRef}
             pagination={pagination}
             transactions={transactions}
             onPageChange={onPageChange}

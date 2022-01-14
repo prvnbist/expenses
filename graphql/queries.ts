@@ -4,10 +4,10 @@ const QUERIES = {
    TRANSACTIONS: {
       LIST: gql`
          query transactions(
-            $user_id: uuid!
             $offset: Int = 0
             $limit: Int = 10
             $where: transactions_view_bool_exp = {}
+            $where2: transactions_view_bool_exp = {}
             $order_by: [transactions_view_order_by!] = {}
          ) {
             transactions: transactions_view_aggregate(
@@ -28,7 +28,7 @@ const QUERIES = {
                }
             }
             transactions_aggregate: transactions_view_aggregate(
-               where: { user_id: { _eq: $user_id } }
+               where: $where2
             ) {
                aggregate {
                   count

@@ -16,6 +16,7 @@ interface ITransaction {
    raw_date: string
 }
 interface ITableProps {
+   childRef: () => void | null
    transactions: ITransaction[]
    pagination: {
       page: number
@@ -26,6 +27,7 @@ interface ITableProps {
 }
 
 const Table = ({
+   childRef,
    transactions = [],
    pagination,
    onPageChange,
@@ -92,12 +94,16 @@ const Table = ({
          manualPagination: true,
          pageCount: pagination.count - 1,
          initialState: {
-            pageSize: pagination.size,
-            pageIndex: pagination.page,
+            pageSize: 10,
+            pageIndex: 0,
          },
       },
       usePagination
    )
+
+   React.useEffect(() => {
+      childRef.current = gotoPage
+   }, [childRef, gotoPage])
 
    const switchPage = page => {
       gotoPage(page)
@@ -253,6 +259,13 @@ const Styles = {
          ...tw`border border-dark-200 h-10 w-10 flex items-center justify-center hover:bg-dark-300`,
          '+ button': { ...tw`ml-[-1px]` },
          svg: { ...tw`stroke-current text-gray-400` },
+         variants: {
+            disabled: {
+               true: {
+                  ...tw`opacity-50 cursor-not-allowed hover:bg-transparent`,
+               },
+            },
+         },
       }),
    },
 }
