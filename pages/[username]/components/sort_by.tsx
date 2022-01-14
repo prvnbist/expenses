@@ -7,6 +7,7 @@ import * as Icon from '../../../icons'
 interface ISortBy {
    title?: 'asc' | 'desc'
    raw_date?: 'asc' | 'desc'
+   category?: 'asc' | 'desc'
 }
 
 interface ISortByProps {
@@ -17,7 +18,10 @@ interface ISortByProps {
 const SortBy = ({ sortBy, setSortBy }: ISortByProps) => {
    const [isOpen, setIsOpen] = React.useState(false)
 
-   const sort = (key: 'title' | 'raw_date', value: 'asc' | 'desc') => {
+   const sort = (
+      key: 'title' | 'raw_date' | 'category',
+      value: 'asc' | 'desc'
+   ) => {
       setSortBy((_sortBy: ISortBy) => {
          if (sortBy[key] === value) {
             delete _sortBy[key]
@@ -61,6 +65,23 @@ const SortBy = ({ sortBy, setSortBy }: ISortByProps) => {
                   <Styles.DescButton
                      is_active={sortBy?.raw_date === 'desc'}
                      onClick={() => sort('raw_date', 'desc')}
+                  >
+                     <Icon.Descending />
+                  </Styles.DescButton>
+               </aside>
+            </Styles.Dropdown.Option>
+            <Styles.Dropdown.Option>
+               <span>Category</span>
+               <aside>
+                  <Styles.AscButton
+                     is_active={sortBy?.category === 'asc'}
+                     onClick={() => sort('category', 'asc')}
+                  >
+                     <Icon.Ascending />
+                  </Styles.AscButton>
+                  <Styles.DescButton
+                     is_active={sortBy?.category === 'desc'}
+                     onClick={() => sort('category', 'desc')}
                   >
                      <Icon.Descending />
                   </Styles.DescButton>

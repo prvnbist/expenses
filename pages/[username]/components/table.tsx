@@ -64,6 +64,12 @@ const Table = ({
             width: 180,
             alignment: 'right',
          },
+         {
+            Header: 'Category',
+            accessor: 'category',
+            type: 'text',
+            width: 180,
+         },
       ],
       []
    )

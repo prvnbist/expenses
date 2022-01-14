@@ -23,6 +23,8 @@ const QUERIES = {
                   date
                   amount
                   raw_date
+                  category
+                  category_id
                }
             }
             transactions_aggregate: transactions_view_aggregate(
