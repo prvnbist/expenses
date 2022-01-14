@@ -9,5 +9,15 @@ export const MUTATIONS = {
             }
          }
       `,
+      UPDATE: gql`
+         mutation update_transaction(
+            $id: uuid = ""
+            $_set: transactions_set_input = {}
+         ) {
+            update_transaction(pk_columns: { id: $id }, _set: $_set) {
+               id
+            }
+         }
+      `,
    },
 }

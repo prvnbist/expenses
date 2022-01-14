@@ -44,9 +44,18 @@ interface ISelectedCategoryState {
 const CreateTransaction = () => {
    const { user } = useUser()
    const router = useRouter()
+   const FORM_TYPE = router.query.id ? 'EDIT' : 'CREATE'
    const [type, setType] = React.useState<'expense' | 'income'>('expense')
    const [selectedCategory, setSelectedCategory] =
       React.useState<ISelectedCategoryState | null>(null)
+   const {
+      watch,
+      reset,
+      register,
+      setValue,
+      handleSubmit,
+      formState: { errors },
+   } = useForm<Inputs>()
    const { loading, data: { categories = [] } = {} } = useQuery(
       QUERIES.CATEGORIES.WITH_SUB_CATEGORIES,
       {
@@ -67,18 +76,63 @@ const CreateTransaction = () => {
          },
       }
    )
+   useQuery(QUERIES.TRANSACTIONS.ONE, {
+      skip: !router.isReady || FORM_TYPE === 'CREATE',
+      fetchPolicy: 'network-only',
+      variables: { id: router.query.id },
+      onCompleted: ({ transaction = {} }) => {
+         if (!transaction?.id) return
+         if (transaction.user_id !== user.id)
+            router.push(`/${user.username}/transactions`)
+
+         setValue('title', transaction.title, { shouldValidate: true })
+         setValue('amount', `${transaction.amount / 100}`, {
+            shouldValidate: true,
+         })
+         setValue('date', transaction.date, { shouldValidate: true }),
+            setType(transaction.type)
+         if (transaction.category_id) {
+            setSelectedCategory({ value: transaction.category_id, label: '' })
+         }
+      },
+   })
+
+   React.useEffect(() => {
+      if (
+         !loading &&
+         categories.length > 0 &&
+         selectedCategory?.value &&
+         !selectedCategory?.label
+      ) {
+         categories.forEach((category: ICategory) => {
+            if (category.sub_categories.length > 0) {
+               category.sub_categories.forEach((subCategory: ISubCategory) => {
+                  if (subCategory.id === selectedCategory.value) {
+                     setSelectedCategory({
+                        value: subCategory.id,
+                        label: subCategory.title,
+                     })
+                  }
+               })
+            }
+         })
+      }
+   }, [loading, categories, selectedCategory])
+
    const [create_transaction, { loading: creating_transaction }] = useMutation(
       MUTATIONS.TRANSACTIONS.CREATE,
       {
-         onCompleted: () => router.push(`/${user.username}/transactions`),
+         onCompleted: () => {
+            reset()
+            setType('expense')
+            setSelectedCategory(null)
+            router.push(`/${user.username}/transactions`)
+         },
       }
    )
-   const {
-      watch,
-      register,
-      handleSubmit,
-      formState: { errors },
-   } = useForm<Inputs>()
+   const [update_transaction, { loading: updating_transaction }] = useMutation(
+      MUTATIONS.TRANSACTIONS.UPDATE
+   )
 
    const isFormValid = [
       ...watch(['title', 'date', 'amount']),
@@ -99,7 +153,12 @@ const CreateTransaction = () => {
          amount: parseFloat(amount) * 100,
          category_id: selectedCategory?.value || '',
       }
-      create_transaction({ variables: { object: transaction } })
+      if (FORM_TYPE === 'CREATE') {
+         create_transaction({ variables: { object: transaction } })
+      } else if (FORM_TYPE === 'EDIT') {
+         const { user_id, ...rest } = transaction
+         update_transaction({ variables: { id: router.query.id, _set: rest } })
+      }
    }
 
    return (
@@ -213,7 +272,7 @@ const CreateTransaction = () => {
             />
             <button
                type="submit"
-               disabled={creating_transaction}
+               disabled={creating_transaction || updating_transaction}
                tw="border border-dark-200 h-10 px-3 text-white hover:bg-dark-300 disabled:(cursor-not-allowed opacity-50 hover:bg-transparent)"
             >
                {creating_transaction ? 'Saving...' : 'Save'}

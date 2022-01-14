@@ -14,7 +14,6 @@ const Head = ({ children }: IChildren): JSX.Element => (
 const Body = ({ children }: IChildren): JSX.Element => <tbody>{children}</tbody>
 
 interface IRow {
-   odd?: boolean
    children: React.ReactNode
 }
 
@@ -26,6 +25,7 @@ interface ICell {
    is_right?: boolean
    is_center?: boolean
    children?: React.ReactNode
+   onClick?: (input: any) => void
    width?: number | string | undefined
 }
 
@@ -62,7 +62,7 @@ const Styles = {
       variants: {
          is_right: { true: { ...tw`text-right` } },
          is_center: { true: { ...tw`flex justify-center` } },
-         on_hover: { true: { ...tw`hover:(bg-dark-300)` } },
+         on_hover: { true: { ...tw`cursor-pointer hover:(bg-dark-300)` } },
       },
    }),
    HCell: styled('th', {

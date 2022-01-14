@@ -1,10 +1,12 @@
 import React from 'react'
 import tw from 'twin.macro'
 import Dinero from 'dinero.js'
+import { useRouter } from 'next/router'
 import { styled } from '@stitches/react'
 import { useTable, usePagination } from 'react-table'
 
 import * as Icon from '../../../../icons'
+import { useUser } from '../../../../lib/user'
 import { Table as MyTable } from '../../../../components'
 
 interface ITransaction {
@@ -34,6 +36,8 @@ const Table = ({
    pagination,
    onPageChange,
 }: ITableProps): JSX.Element => {
+   const { user } = useUser()
+   const router = useRouter()
    const columns = React.useMemo(
       () => [
          {
@@ -168,6 +172,13 @@ const Table = ({
                                     is_right={cell.column.alignment === 'right'}
                                     {...(cell.column.id !== 'title' && {
                                        width: cell.column.width,
+                                    })}
+                                    {...(cell.column.id === 'title' && {
+                                       on_hover: true,
+                                       onClick: () =>
+                                          router.push(
+                                             `/${user.username}/transactions/create?id=${cell.row.original.id}`
+                                          ),
                                     })}
                                  >
                                     {cell.render('Cell')}

@@ -40,6 +40,19 @@ const QUERIES = {
             }
          }
       `,
+      ONE: gql`
+         query transaction($id: uuid = "") {
+            transaction(id: $id) {
+               id
+               type
+               date
+               title
+               amount
+               user_id
+               category_id
+            }
+         }
+      `,
    },
    CATEGORIES: {
       LIST: gql`
