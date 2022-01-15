@@ -18,12 +18,15 @@ interface IRow {
 }
 
 const Row = ({ children, ...props }: IRow): JSX.Element => (
-   <Styles.Row {...props}>{children}</Styles.Row>
+   <Styles.Row {...props} className="group">
+      {children}
+   </Styles.Row>
 )
 
 interface ICell {
    is_right?: boolean
    is_center?: boolean
+   no_padding?: boolean
    children?: React.ReactNode
    onClick?: (input: any) => void
    width?: number | string | undefined
@@ -62,14 +65,14 @@ const Styles = {
       variants: {
          is_right: { true: { ...tw`text-right` } },
          is_center: { true: { ...tw`flex justify-center` } },
-         on_hover: { true: { ...tw`cursor-pointer hover:(bg-dark-300)` } },
+         no_padding: { true: { ...tw`p-0` } },
       },
    }),
    HCell: styled('th', {
       ...tw`sticky top-0 h-8 px-3 text-left text-xs text-gray-400 uppercase font-medium tracking-wider whitespace-nowrap`,
       variants: {
          is_right: { true: { ...tw`text-right` } },
-         is_center: { true: { ...tw`flex justify-center` } },
+         is_center: { true: { ...tw`flex items-center justify-center` } },
       },
    }),
 }

@@ -3,7 +3,10 @@ import tw from 'twin.macro'
 import Dinero from 'dinero.js'
 import { useRouter } from 'next/router'
 import { styled } from '@stitches/react'
+import { useMutation } from '@apollo/client'
 import { useTable, usePagination } from 'react-table'
+import { useToasts } from 'react-toast-notifications'
+import { MUTATIONS } from '../../../../graphql/mutations'
 
 import * as Icon from '../../../../icons'
 import { useUser } from '../../../../lib/user'
@@ -38,6 +41,16 @@ const Table = ({
 }: ITableProps): JSX.Element => {
    const { user } = useUser()
    const router = useRouter()
+   const { addToast } = useToasts()
+   const [delete_transaction] = useMutation(MUTATIONS.TRANSACTIONS.DELETE, {
+      refetchQueries: ['transactions'],
+      onCompleted: () =>
+         addToast('Successfully deleted the transaction.', {
+            appearance: 'success',
+         }),
+      onError: () =>
+         addToast('Failed to delete the transaction.', { appearance: 'error' }),
+   })
    const columns = React.useMemo(
       () => [
          {
@@ -62,7 +75,6 @@ const Table = ({
                      }).toFormat()}
                   </Styles.Amount>
                )
-               return ''
             },
          },
          {
@@ -77,6 +89,41 @@ const Table = ({
             accessor: 'category',
             type: 'text',
             width: 180,
+         },
+         {
+            Header: 'Actions',
+            width: 120,
+            alignment: 'center',
+            no_padding: true,
+            Cell: ({ cell }: any) => {
+               return (
+                  <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
+                     <button
+                        onClick={() =>
+                           router.push(
+                              `/${user.username}/transactions/create?id=${cell.row.original.id}`
+                           )
+                        }
+                        tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+                     >
+                        <Icon.Edit size={16} tw="fill-current text-gray-400" />
+                     </button>
+                     <button
+                        onClick={() =>
+                           delete_transaction({
+                              variables: { id: cell.row.original.id },
+                           })
+                        }
+                        tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+                     >
+                        <Icon.Delete
+                           size={16}
+                           tw="stroke-current text-gray-400"
+                        />
+                     </button>
+                  </div>
+               )
+            },
          },
       ],
       []
@@ -146,6 +193,7 @@ const Table = ({
                                     key={column_key}
                                     {...rest_column}
                                     is_right={column.alignment === 'right'}
+                                    is_center={column.alignment === 'center'}
                                  >
                                     {column.render('Header')}
                                  </MyTable.HCell>
@@ -169,16 +217,10 @@ const Table = ({
                                  <MyTable.Cell
                                     key={cell_key}
                                     {...rest_cell_keys}
+                                    no_padding={cell.column.no_padding}
                                     is_right={cell.column.alignment === 'right'}
                                     {...(cell.column.id !== 'title' && {
                                        width: cell.column.width,
-                                    })}
-                                    {...(cell.column.id === 'title' && {
-                                       on_hover: true,
-                                       onClick: () =>
-                                          router.push(
-                                             `/${user.username}/transactions/create?id=${cell.row.original.id}`
-                                          ),
                                     })}
                                  >
                                     {cell.render('Cell')}

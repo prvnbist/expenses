@@ -19,6 +19,13 @@ export const MUTATIONS = {
             }
          }
       `,
+      DELETE: gql`
+         mutation delete_transaction($id: uuid = "") {
+            delete_transaction(id: $id) {
+               id
+            }
+         }
+      `,
    },
    CATEGORIES: {
       CREATE: gql`
