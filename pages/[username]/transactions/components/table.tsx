@@ -225,13 +225,13 @@ const Pagination = (props: IProps): JSX.Element => {
          <aside>
             <Styles.Button.Icon
                disabled={!canPreviousPage}
-               onClick={() => switchPage(0)}
+               onClick={() => canPreviousPage && switchPage(0)}
             >
                <Icon.ChevronsLeft size={16} />
             </Styles.Button.Icon>
             <Styles.Button.Icon
                disabled={!canPreviousPage}
-               onClick={() => switchPage(pageIndex - 1)}
+               onClick={() => canPreviousPage && switchPage(pageIndex - 1)}
             >
                <Icon.ChevronLeft size={16} />
             </Styles.Button.Icon>
@@ -243,13 +243,13 @@ const Pagination = (props: IProps): JSX.Element => {
          <aside>
             <Styles.Button.Icon
                disabled={!canNextPage}
-               onClick={() => switchPage(pageIndex + 1)}
+               onClick={() => canNextPage && switchPage(pageIndex + 1)}
             >
                <Icon.ChevronRight size={16} />
             </Styles.Button.Icon>
             <Styles.Button.Icon
                disabled={!canNextPage}
-               onClick={() => switchPage(pageOptions.length - 1)}
+               onClick={() => canNextPage && switchPage(pageOptions.length - 1)}
             >
                <Icon.ChevronsRight size={16} />
             </Styles.Button.Icon>

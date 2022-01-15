@@ -8,7 +8,7 @@ import Table from './table'
 import SortBy from './sort_by'
 import * as Icon from '../../../../icons'
 import { useUser } from '../../../../lib/user'
-import { Loader } from '../../../../components'
+import { Empty, Loader } from '../../../../components'
 import QUERIES from '../../../../graphql/queries'
 import { useDebounce, usePrevious } from '../../../../hooks'
 
@@ -101,7 +101,8 @@ const Listing = (): JSX.Element => {
    if (status === 'LOADING') return <Loader />
    if (status === 'ERROR')
       return <p>Something went wrong, please refresh the page.</p>
-   if (status === 'EMPTY') return <p>Start by creating a transaction.</p>
+   if (status === 'EMPTY')
+      return <Empty message="Create a transaction to begin" />
    return (
       <Styles.Container>
          <Styles.Metrics>
