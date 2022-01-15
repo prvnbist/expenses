@@ -7,7 +7,7 @@ import { useTable, usePagination } from 'react-table'
 
 import * as Icon from '../../../../icons'
 import { useUser } from '../../../../lib/user'
-import { Table as MyTable } from '../../../../components'
+import { Empty, Table as MyTable } from '../../../../components'
 
 interface ITransaction {
    id: string
@@ -191,7 +191,7 @@ const Table = ({
                </MyTable.Body>
             </MyTable>
             {transactions.length === 0 && (
-               <Styles.Empty>No transactions yet!</Styles.Empty>
+               <Empty message="Create a transaction to begin" />
             )}
          </Styles.Container>
          <Pagination
@@ -269,7 +269,6 @@ const Styles = {
          },
       },
    }),
-   Empty: styled('p', { ...tw`text-gray-500 py-4 text-lg text-center` }),
    Pagination: styled('section', {
       ...tw`flex items-center justify-center`,
       aside: { ...tw`flex items-center` },

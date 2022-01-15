@@ -5,8 +5,8 @@ import { useQuery } from '@apollo/client'
 
 import * as Icon from '../../../../../icons'
 import { useUser } from '../../../../../lib/user'
-import { Loader } from '../../../../../components'
 import QUERIES from '../../../../../graphql/queries'
+import { Empty, Loader } from '../../../../../components'
 
 interface ICategory {
    id: string
@@ -48,7 +48,7 @@ const Listing = () => {
    if (loading) return <Loader />
    if (error) return <p>Something went wrong, please refresh the page.</p>
    if (categories.aggregate.count === 0)
-      return <p tw="text-gray-400">Please start by creating a category.</p>
+      return <Empty message="Create a category to begin" />
    return (
       <Styles.Categories>
          {categories.nodes.map((category: ICategory) => (

@@ -9,7 +9,7 @@ import * as Icon from '../../../../icons'
 import { useUser } from '../../../../lib/user'
 import Layout from '../../../../sections/layout'
 import QUERIES from '../../../../graphql/queries'
-import { Loader, Table as MyTable } from '../../../../components'
+import { Empty, Loader, Table as MyTable } from '../../../../components'
 
 const Category = () => {
    const { user } = useUser()
@@ -76,9 +76,7 @@ const Category = () => {
                      <main tw="p-4">
                         <h3 tw="text-lg text-gray-400 mb-2">Sub Categories</h3>
                         {category.sub_categories?.length === 0 ? (
-                           <p tw="text-gray-400">
-                              Start by creating a sub category.
-                           </p>
+                           <Empty message="Create a sub category to begin" />
                         ) : (
                            <Table
                               columns={columns}
