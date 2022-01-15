@@ -20,4 +20,23 @@ export const MUTATIONS = {
          }
       `,
    },
+   CATEGORIES: {
+      CREATE: gql`
+         mutation insert_category($object: categories_insert_input = {}) {
+            insert_category(object: $object) {
+               id
+            }
+         }
+      `,
+      UPDATE: gql`
+         mutation update_category(
+            $id: uuid = ""
+            $_set: categories_set_input = {}
+         ) {
+            update_category(pk_columns: { id: $id }, _set: $_set) {
+               id
+            }
+         }
+      `,
+   },
 }

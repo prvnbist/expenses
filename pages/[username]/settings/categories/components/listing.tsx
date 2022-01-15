@@ -1,8 +1,10 @@
 import React from 'react'
+import Link from 'next/link'
 import tw, { styled } from 'twin.macro'
 import { useTable } from 'react-table'
 import { useQuery } from '@apollo/client'
 
+import * as Icon from '../../../../../icons'
 import { useUser } from '../../../../../lib/user'
 import QUERIES from '../../../../../graphql/queries'
 import { Loader, Table as MyTable } from '../../../../../components'
@@ -10,6 +12,7 @@ import { Loader, Table as MyTable } from '../../../../../components'
 interface ICategory {
    id: string
    title: string
+   user_id: string | null
    type: 'expense' | 'income'
    sub_categories: {
       aggregate: {
@@ -42,6 +45,11 @@ const Listing = () => {
                { user_id: { _is_null: true } },
             ],
          },
+      },
+      onCompleted: ({ categories = {} }) => {
+         if (categories.aggregate.count > 0) {
+            setSelectedCategory(categories.nodes[0])
+         }
       },
    })
 
@@ -81,6 +89,23 @@ const Listing = () => {
             </Styles.CategoriesSelect>
          </Styles.Aside>
          <main tw="flex-1 p-3">
+            <header tw="flex items-center mb-3 gap-3">
+               <h2 tw="text-lg font-medium text-gray-400">
+                  Sub Categories for {selectedCategory?.title}
+               </h2>
+               {selectedCategory?.user_id === user?.id && (
+                  <Link
+                     href={`/${user.username}/settings/categories/create?id=${selectedCategory?.id}`}
+                  >
+                     <a
+                        title="Edit Sub Category"
+                        tw="cursor-pointer h-8 w-8 border border-dark-200 flex items-center justify-center hover:bg-dark-300"
+                     >
+                        <Icon.Edit size={16} tw="fill-current text-white" />
+                     </a>
+                  </Link>
+               )}
+            </header>
             {selectedCategory?.id ? (
                <SubCategoryListing selectedCategory={selectedCategory} />
             ) : (
@@ -145,14 +170,7 @@ const SubCategoryListing = ({ selectedCategory }: ISubCategoryListingProps) => {
       )
    if (categories.aggregate.count === 0)
       return <p tw="text-gray-400">No sub categories found.</p>
-   return (
-      <>
-         <h2 tw="text-lg font-medium text-gray-400 mb-3">
-            Sub Categories for {selectedCategory?.title}
-         </h2>
-         <Table columns={columns} categories={categories.nodes} />
-      </>
-   )
+   return <Table columns={columns} categories={categories.nodes} />
 }
 
 const Table = ({ columns = [], categories = [] }) => {

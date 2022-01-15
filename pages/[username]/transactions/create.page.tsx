@@ -89,8 +89,8 @@ const CreateTransaction = () => {
          setValue('amount', `${transaction.amount / 100}`, {
             shouldValidate: true,
          })
-         setValue('date', transaction.date, { shouldValidate: true }),
-            setType(transaction.type)
+         setValue('date', transaction.date, { shouldValidate: true })
+         setType(transaction.type)
          if (transaction.category_id) {
             setSelectedCategory({ value: transaction.category_id, label: '' })
          }
@@ -275,7 +275,9 @@ const CreateTransaction = () => {
                disabled={creating_transaction || updating_transaction}
                tw="border border-dark-200 h-10 px-3 text-white hover:bg-dark-300 disabled:(cursor-not-allowed opacity-50 hover:bg-transparent)"
             >
-               {creating_transaction ? 'Saving...' : 'Save'}
+               {creating_transaction || updating_transaction
+                  ? 'Saving...'
+                  : 'Save'}
             </button>
          </form>
       </Layout>

@@ -68,7 +68,18 @@ const QUERIES = {
                   id
                   title
                   type
+                  user_id
                }
+            }
+         }
+      `,
+      ONE: gql`
+         query category($id: uuid = "") {
+            category(id: $id) {
+               id
+               title
+               type
+               user_id
             }
          }
       `,
