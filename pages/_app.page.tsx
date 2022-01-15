@@ -1,5 +1,6 @@
 import { AppProps } from 'next/app'
 import { ApolloProvider } from '@apollo/client'
+import { ToastProvider } from 'react-toast-notifications'
 
 import client from '../lib/apollo'
 import globalStyles from '../styles/globalStyles'
@@ -10,11 +11,17 @@ import { UserProvider } from '../lib/user'
 const App = ({ Component, pageProps }: AppProps) => {
    globalStyles()
    return (
-      <ApolloProvider client={client}>
-         <UserProvider>
-            <Component {...pageProps} />
-         </UserProvider>
-      </ApolloProvider>
+      <ToastProvider
+         autoDismiss
+         placement="top-center"
+         autoDismissTimeout={3000}
+      >
+         <ApolloProvider client={client}>
+            <UserProvider>
+               <Component {...pageProps} />
+            </UserProvider>
+         </ApolloProvider>
+      </ToastProvider>
    )
 }
 

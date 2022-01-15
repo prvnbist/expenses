@@ -2,14 +2,15 @@ import React from 'react'
 import Select from 'react-select'
 import tw, { styled } from 'twin.macro'
 import { useRouter } from 'next/router'
+import { useToasts } from 'react-toast-notifications'
 import { useMutation, useQuery } from '@apollo/client'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
 import { useUser } from '../../../lib/user'
+import { Loader } from '../../../components'
 import Layout from '../../../sections/layout'
 import QUERIES from '../../../graphql/queries'
 import { MUTATIONS } from '../../../graphql/mutations'
-import { Loader } from '../../../components'
 
 type Inputs = {
    title: string
@@ -45,6 +46,7 @@ interface ISelectedCategoryState {
 const CreateTransaction = () => {
    const { user } = useUser()
    const router = useRouter()
+   const { addToast } = useToasts()
    const FORM_TYPE = router.query.id ? 'EDIT' : 'CREATE'
    const [status, setStatus] = React.useState(
       FORM_TYPE === 'EDIT' ? 'LOADING' : 'SUCCESS'
@@ -132,12 +134,29 @@ const CreateTransaction = () => {
             reset()
             setType('expense')
             setSelectedCategory(null)
+            addToast('Successfully added the transaction', {
+               appearance: 'success',
+            })
             router.push(`/${user.username}/transactions`)
          },
+         onError: () =>
+            addToast('Failed to add the transaction', {
+               appearance: 'error',
+            }),
       }
    )
    const [update_transaction, { loading: updating_transaction }] = useMutation(
-      MUTATIONS.TRANSACTIONS.UPDATE
+      MUTATIONS.TRANSACTIONS.UPDATE,
+      {
+         onCompleted: () =>
+            addToast('Successfully updated the transaction', {
+               appearance: 'success',
+            }),
+         onError: () =>
+            addToast('Failed to update the transaction', {
+               appearance: 'error',
+            }),
+      }
    )
 
    const isFormValid = [

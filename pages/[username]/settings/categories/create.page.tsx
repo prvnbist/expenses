@@ -1,6 +1,7 @@
 import React from 'react'
 import tw, { styled } from 'twin.macro'
 import { useRouter } from 'next/router'
+import { useToasts } from 'react-toast-notifications'
 import { useMutation, useQuery } from '@apollo/client'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
@@ -17,6 +18,7 @@ type Inputs = {
 const CreateCategory = () => {
    const { user } = useUser()
    const router = useRouter()
+   const { addToast } = useToasts()
    const FORM_TYPE = router.query.id ? 'EDIT' : 'CREATE'
    const [status, setStatus] = React.useState(
       FORM_TYPE === 'EDIT' ? 'LOADING' : 'SUCCESS'
@@ -37,14 +39,29 @@ const CreateCategory = () => {
          refetchQueries: ['categories'],
          onCompleted: () => {
             reset()
+            addToast('Successfully added the category', {
+               appearance: 'success',
+            })
             router.push(`/${user.username}/settings/categories`)
          },
+         onError: () =>
+            addToast('Failed to add the category', {
+               appearance: 'error',
+            }),
       }
    )
    const [update_category, { loading: updating_category }] = useMutation(
       MUTATIONS.CATEGORIES.UPDATE,
       {
          refetchQueries: ['categories'],
+         onCompleted: () =>
+            addToast('Successfully updated the category', {
+               appearance: 'success',
+            }),
+         onError: () =>
+            addToast('Failed to update the category', {
+               appearance: 'error',
+            }),
       }
    )
 
