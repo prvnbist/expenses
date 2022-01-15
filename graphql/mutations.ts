@@ -46,4 +46,25 @@ export const MUTATIONS = {
          }
       `,
    },
+   SUB_CATEGORIES: {
+      CREATE: gql`
+         mutation insert_sub_category(
+            $object: sub_categories_insert_input = {}
+         ) {
+            insert_sub_category(object: $object) {
+               id
+            }
+         }
+      `,
+      UPDATE: gql`
+         mutation update_sub_category(
+            $id: uuid = ""
+            $_set: sub_categories_set_input = {}
+         ) {
+            update_sub_category(pk_columns: { id: $id }, _set: $_set) {
+               id
+            }
+         }
+      `,
+   },
 }

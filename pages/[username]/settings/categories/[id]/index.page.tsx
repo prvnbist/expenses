@@ -5,11 +5,11 @@ import { useTable } from 'react-table'
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 
-import * as Icon from '../../../../icons'
-import { useUser } from '../../../../lib/user'
-import Layout from '../../../../sections/layout'
-import QUERIES from '../../../../graphql/queries'
-import { Empty, Loader, Table as MyTable } from '../../../../components'
+import * as Icon from '../../../../../icons'
+import { useUser } from '../../../../../lib/user'
+import Layout from '../../../../../sections/layout'
+import QUERIES from '../../../../../graphql/queries'
+import { Empty, Loader, Table as MyTable } from '../../../../../components'
 
 const Category = () => {
    const { user } = useUser()
@@ -37,6 +37,30 @@ const Category = () => {
          {
             Header: 'Title',
             accessor: 'title',
+         },
+         {
+            Header: 'Actions',
+            width: 120,
+            alignment: 'center',
+            no_padding: true,
+            Cell: ({ cell }: any) => {
+               console.log(cell)
+               if (cell.row.original.user_id !== user.id) return null
+               return (
+                  <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
+                     <button
+                        onClick={() =>
+                           router.push(
+                              `/${user.username}/settings/categories/${router.query.id}/create?id=${cell.row.original.id}`
+                           )
+                        }
+                        tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+                     >
+                        <Icon.Edit size={16} tw="fill-current text-gray-400" />
+                     </button>
+                  </div>
+               )
+            },
          },
       ],
       []
@@ -74,7 +98,22 @@ const Category = () => {
                         )}
                      </header>
                      <main tw="p-4">
-                        <h3 tw="text-lg text-gray-400 mb-2">Sub Categories</h3>
+                        <header tw="mb-2 flex items-center space-x-3">
+                           <h3 tw="text-lg text-gray-400">Sub Categories</h3>
+                           <Link
+                              href={`/${user.username}/settings/categories/${router.query.id}/create`}
+                           >
+                              <a
+                                 title="Create Sub Category"
+                                 tw="cursor-pointer h-8 w-8 border border-dark-200 flex items-center justify-center hover:bg-dark-300"
+                              >
+                                 <Icon.Add
+                                    size={16}
+                                    tw="stroke-current text-white"
+                                 />
+                              </a>
+                           </Link>
+                        </header>
                         {category.sub_categories?.length === 0 ? (
                            <Empty message="Create a sub category to begin" />
                         ) : (

@@ -107,6 +107,7 @@ const QUERIES = {
                sub_categories(order_by: { title: asc }, where: $where) {
                   id
                   title
+                  user_id
                }
             }
          }
@@ -126,6 +127,15 @@ const QUERIES = {
                   id
                   title
                }
+            }
+         }
+      `,
+      ONE: gql`
+         query sub_category($id: uuid = "") {
+            sub_category(id: $id) {
+               id
+               title
+               user_id
             }
          }
       `,
