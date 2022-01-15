@@ -5,6 +5,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
 import { useUser } from '../../../../lib/user'
+import { Loader } from '../../../../components'
 import Layout from '../../../../sections/layout'
 import QUERIES from '../../../../graphql/queries'
 import { MUTATIONS } from '../../../../graphql/mutations'
@@ -17,6 +18,9 @@ const CreateCategory = () => {
    const { user } = useUser()
    const router = useRouter()
    const FORM_TYPE = router.query.id ? 'EDIT' : 'CREATE'
+   const [status, setStatus] = React.useState(
+      FORM_TYPE === 'EDIT' ? 'LOADING' : 'SUCCESS'
+   )
 
    const {
       watch,
@@ -55,6 +59,10 @@ const CreateCategory = () => {
 
          setType(category.type)
          setValue('title', category.title, { shouldValidate: true })
+         setStatus('SUCCESS')
+      },
+      onError: () => {
+         setStatus('ERROR')
       },
    })
 
@@ -87,63 +95,75 @@ const CreateCategory = () => {
       <Layout>
          <header tw="px-4 pt-4">
             <h1 tw="font-heading text-3xl font-medium text-gray-400">
-               Create Category
+               {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Category
             </h1>
          </header>
-         <form
-            onSubmit={handleSubmit(onSubmit)}
-            tw="w-full max-w-[380px] mt-4 px-4 space-y-3"
-         >
-            <fieldset>
-               <Styles.Label htmlFor="title">Title</Styles.Label>
-               <Styles.Text
-                  {...register('title', {
-                     required: true,
-                     minLength: 2,
-                     maxLength: 60,
-                  })}
-                  id="title"
-                  name="title"
-                  placeholder="Enter the title"
-               />
-               {errors.title?.type === 'required' && (
-                  <Styles.Error>Please fill the title</Styles.Error>
+         {status === 'LOADING' ? (
+            <Loader />
+         ) : (
+            <>
+               {status === 'ERROR' ? (
+                  <p>Something went wrong, please try again!</p>
+               ) : (
+                  <form
+                     onSubmit={handleSubmit(onSubmit)}
+                     tw="w-full max-w-[380px] mt-4 px-4 space-y-3"
+                  >
+                     <fieldset>
+                        <Styles.Label htmlFor="title">Title</Styles.Label>
+                        <Styles.Text
+                           {...register('title', {
+                              required: true,
+                              minLength: 2,
+                              maxLength: 60,
+                           })}
+                           id="title"
+                           name="title"
+                           placeholder="Enter the title"
+                        />
+                        {errors.title?.type === 'required' && (
+                           <Styles.Error>Please fill the title</Styles.Error>
+                        )}
+                        {errors.title?.type === 'minLength' && (
+                           <Styles.Error>Title is too short</Styles.Error>
+                        )}
+                        {errors.title?.type === 'maxLength' && (
+                           <Styles.Error>Title is too long</Styles.Error>
+                        )}
+                     </fieldset>
+                     <div tw="flex items-center bg-dark-300 p-1 rounded-lg">
+                        <Styles.GroupButton
+                           is_selected={type === 'expense'}
+                           onClick={(e: React.FormEvent<HTMLInputElement>) => {
+                              e.preventDefault()
+                              setType('expense')
+                           }}
+                        >
+                           Expense
+                        </Styles.GroupButton>
+                        <Styles.GroupButton
+                           is_selected={type === 'income'}
+                           onClick={(e: React.FormEvent<HTMLInputElement>) => {
+                              e.preventDefault()
+                              setType('income')
+                           }}
+                        >
+                           Income
+                        </Styles.GroupButton>
+                     </div>
+                     <button
+                        type="submit"
+                        disabled={creating_category || updating_category}
+                        tw="border border-dark-200 h-10 px-3 text-white hover:bg-dark-300 disabled:(cursor-not-allowed opacity-50 hover:bg-transparent)"
+                     >
+                        {creating_category || updating_category
+                           ? 'Saving'
+                           : 'Save'}
+                     </button>
+                  </form>
                )}
-               {errors.title?.type === 'minLength' && (
-                  <Styles.Error>Title is too short</Styles.Error>
-               )}
-               {errors.title?.type === 'maxLength' && (
-                  <Styles.Error>Title is too long</Styles.Error>
-               )}
-            </fieldset>
-            <div tw="flex items-center bg-dark-300 p-1 rounded-lg">
-               <Styles.GroupButton
-                  is_selected={type === 'expense'}
-                  onClick={(e: React.FormEvent<HTMLInputElement>) => {
-                     e.preventDefault()
-                     setType('expense')
-                  }}
-               >
-                  Expense
-               </Styles.GroupButton>
-               <Styles.GroupButton
-                  is_selected={type === 'income'}
-                  onClick={(e: React.FormEvent<HTMLInputElement>) => {
-                     e.preventDefault()
-                     setType('income')
-                  }}
-               >
-                  Income
-               </Styles.GroupButton>
-            </div>
-            <button
-               type="submit"
-               disabled={creating_category || updating_category}
-               tw="border border-dark-200 h-10 px-3 text-white hover:bg-dark-300 disabled:(cursor-not-allowed opacity-50 hover:bg-transparent)"
-            >
-               {creating_category || updating_category ? 'Saving' : 'Save'}
-            </button>
-         </form>
+            </>
+         )}
       </Layout>
    )
 }

@@ -1,13 +1,12 @@
 import React from 'react'
 import Link from 'next/link'
 import tw, { styled } from 'twin.macro'
-import { useTable } from 'react-table'
 import { useQuery } from '@apollo/client'
 
 import * as Icon from '../../../../../icons'
 import { useUser } from '../../../../../lib/user'
+import { Loader } from '../../../../../components'
 import QUERIES from '../../../../../graphql/queries'
-import { Loader, Table as MyTable } from '../../../../../components'
 
 interface ICategory {
    id: string
@@ -29,8 +28,6 @@ interface ISubCategory {
 
 const Listing = () => {
    const { user } = useUser()
-   const [selectedCategory, setSelectedCategory] =
-      React.useState<ICategory | null>(null)
 
    const {
       loading,
@@ -46,11 +43,6 @@ const Listing = () => {
             ],
          },
       },
-      onCompleted: ({ categories = {} }) => {
-         if (categories.aggregate.count > 0) {
-            setSelectedCategory(categories.nodes[0])
-         }
-      },
    })
 
    if (loading) return <Loader />
@@ -58,206 +50,44 @@ const Listing = () => {
    if (categories.aggregate.count === 0)
       return <p tw="text-gray-400">Please start by creating a category.</p>
    return (
-      <Styles.Container>
-         <Styles.Aside>
-            <Styles.CategoriesList>
-               {categories.nodes.map((category: ICategory) => (
-                  <Styles.Category
-                     key={category.id}
-                     onClick={() => setSelectedCategory(category)}
-                     is_selected={category.id === selectedCategory?.id}
-                  >
-                     {category.title}
-                  </Styles.Category>
-               ))}
-            </Styles.CategoriesList>
-            <Styles.CategoriesSelect
-               value={selectedCategory?.id}
-               onChange={(e: React.FormEvent<HTMLInputElement>) =>
-                  setSelectedCategory(
-                     categories.nodes.find(
-                        (node: ICategory) => node.id === e.target.value
-                     )
-                  )
-               }
-            >
-               {categories.nodes.map((category: ICategory) => (
-                  <option key={category.id} value={category.id}>
-                     {category.title}
-                  </option>
-               ))}
-            </Styles.CategoriesSelect>
-         </Styles.Aside>
-         <main tw="flex-1 p-3">
-            <header tw="flex items-center mb-3 gap-3">
-               <h2 tw="text-lg font-medium text-gray-400">
-                  Sub Categories for {selectedCategory?.title}
-               </h2>
-               {selectedCategory?.user_id === user?.id && (
+      <Styles.Categories>
+         {categories.nodes.map((category: ICategory) => (
+            <Styles.Category key={category.id}>
+               <h2 tw="border-l border-indigo-500 border-l-2 py-3 px-3 mb-3 text-lg truncate">
                   <Link
-                     href={`/${user.username}/settings/categories/create?id=${selectedCategory?.id}`}
+                     href={`/${user.username}/settings/categories/${category.id}`}
                   >
-                     <a
-                        title="Edit Sub Category"
-                        tw="cursor-pointer h-8 w-8 border border-dark-200 flex items-center justify-center hover:bg-dark-300"
-                     >
-                        <Icon.Edit size={16} tw="fill-current text-white" />
+                     <a tw="text-white hover:text-indigo-400 cursor-pointer">
+                        {category.title}
                      </a>
                   </Link>
+               </h2>
+               {category.user_id === user.id && (
+                  <footer tw="w-full justify-end mt-auto flex gap-3 px-3 border-t border-dark-200 pt-3">
+                     <Link
+                        href={`/${user.username}/settings/categories/create?id=${category.id}`}
+                     >
+                        <a tw="cursor-pointer border border-dark-200 h-8 w-8 flex items-center justify-center hover:bg-dark-300">
+                           <Icon.Edit size={16} tw="fill-current text-white" />
+                        </a>
+                     </Link>
+                  </footer>
                )}
-            </header>
-            {selectedCategory?.id ? (
-               <SubCategoryListing selectedCategory={selectedCategory} />
-            ) : (
-               <p tw="text-gray-400">
-                  Select a category to view sub categories
-               </p>
-            )}
-         </main>
-      </Styles.Container>
+            </Styles.Category>
+         ))}
+      </Styles.Categories>
    )
 }
 
 export default Listing
 
-interface ISubCategoryListingProps {
-   selectedCategory: ISubCategory
-}
-
-const SubCategoryListing = ({ selectedCategory }: ISubCategoryListingProps) => {
-   const { user } = useUser()
-   const {
-      loading,
-      error,
-      data: { categories = {} } = {},
-   } = useQuery(QUERIES.SUB_CATEGORIES.LIST, {
-      skip: !user?.id || !selectedCategory?.id,
-      variables: {
-         where: {
-            category_id: {
-               _eq: selectedCategory?.id,
-            },
-            _or: [
-               {
-                  user_id: {
-                     _eq: user.id,
-                  },
-               },
-               {
-                  user_id: {
-                     _is_null: true,
-                  },
-               },
-            ],
-         },
-      },
-   })
-   const columns = React.useMemo(
-      () => [
-         {
-            Header: 'Title',
-            accessor: 'title',
-         },
-      ],
-      []
-   )
-   if (loading) return <Loader />
-   if (error)
-      return (
-         <p tw="text-gray-400">
-            Something went wrong, please refresh the page.
-         </p>
-      )
-   if (categories.aggregate.count === 0)
-      return <p tw="text-gray-400">No sub categories found.</p>
-   return <Table columns={columns} categories={categories.nodes} />
-}
-
-const Table = ({ columns = [], categories = [] }) => {
-   const { rows, prepareRow, headerGroups, getTableProps, getTableBodyProps } =
-      useTable({
-         columns,
-         data: categories,
-      })
-   return (
-      <main tw="overflow-x-auto">
-         <MyTable {...getTableProps()}>
-            <MyTable.Head>
-               {headerGroups.map(headerGroup => {
-                  const { key: header_group_key, ...rest_header_group } =
-                     headerGroup.getHeaderGroupProps()
-                  return (
-                     <MyTable.Row key={header_group_key} {...rest_header_group}>
-                        {headerGroup.headers.map(column => {
-                           const { key: column_key, ...rest_column } =
-                              column.getHeaderProps()
-                           return (
-                              <MyTable.HCell
-                                 key={column_key}
-                                 {...rest_column}
-                                 is_right={column.alignment === 'right'}
-                              >
-                                 {column.render('Header')}
-                              </MyTable.HCell>
-                           )
-                        })}
-                     </MyTable.Row>
-                  )
-               })}
-            </MyTable.Head>
-
-            <MyTable.Body {...getTableBodyProps()}>
-               {rows.map((row, i) => {
-                  prepareRow(row)
-                  const { key: row_key, ...rest_row_keys } = row.getRowProps()
-                  return (
-                     <MyTable.Row key={row_key} {...rest_row_keys}>
-                        {row.cells.map(cell => {
-                           const { key: cell_key, ...rest_cell_keys } =
-                              cell.getCellProps()
-                           return (
-                              <MyTable.Cell
-                                 key={cell_key}
-                                 {...rest_cell_keys}
-                                 is_right={cell.column.alignment === 'right'}
-                                 {...(cell.column.id !== 'title' && {
-                                    width: cell.column.width,
-                                 })}
-                              >
-                                 {cell.render('Cell')}
-                              </MyTable.Cell>
-                           )
-                        })}
-                     </MyTable.Row>
-                  )
-               })}
-            </MyTable.Body>
-         </MyTable>
-      </main>
-   )
-}
-
 const Styles = {
-   Container: styled.div({
-      ...tw`h-[calc(100% - 68px)] flex mt-4 border-t border-dark-200`,
-      '@tablet': { ...tw`h-auto flex-col` },
-   }),
-   Aside: styled.aside({
-      ...tw`w-[240px] h-full border-r border-dark-200`,
-      '@tablet': { ...tw`w-full border-r-0 border-b p-2` },
-   }),
-   CategoriesList: styled.ul({
-      ...tw`p-1`,
-      '@tablet': { ...tw`hidden` },
-   }),
-   CategoriesSelect: styled.select({
-      ...tw`hidden rounded w-full h-10 px-1 bg-dark-300 text-white focus:outline-none`,
-      '@tablet': { ...tw`block` },
+   Categories: styled.ul({
+      ...tw`grid p-3 mt-1`,
+      gridGap: '16px',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
    }),
    Category: styled.li({
-      ...tw`px-2 cursor-pointer text-gray-400 hover:bg-dark-300 h-8 flex items-center`,
-      variants: {
-         is_selected: { true: { ...tw`bg-dark-300` } },
-      },
+      ...tw`flex flex-col border border-dark-200 py-3`,
    }),
 }

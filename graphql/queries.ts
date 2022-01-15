@@ -98,6 +98,19 @@ const QUERIES = {
             }
          }
       `,
+      ONE_WITH_SUB_CATEGORIES: gql`
+         query category($where: sub_categories_bool_exp = {}, $id: uuid = "") {
+            category(id: $id) {
+               id
+               title
+               user_id
+               sub_categories(order_by: { title: asc }, where: $where) {
+                  id
+                  title
+               }
+            }
+         }
+      `,
    },
    SUB_CATEGORIES: {
       LIST: gql`
