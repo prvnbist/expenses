@@ -64,6 +64,17 @@ const Listing = () => {
                return (
                   <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
                      <button
+                        title="Edit Sub Category"
+                        onClick={() =>
+                           router.push(
+                              `/${user.username}/accounts/create?id=${cell.row.original.id}`
+                           )
+                        }
+                        tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+                     >
+                        <Icon.Edit size={16} tw="fill-current text-gray-400" />
+                     </button>
+                     <button
                         onClick={() =>
                            delete_account({
                               variables: { id: cell.row.original.id },

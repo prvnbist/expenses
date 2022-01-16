@@ -161,6 +161,16 @@ const QUERIES = {
             }
          }
       `,
+      ONE: gql`
+         query account($id: uuid = "") {
+            account(id: $id) {
+               id
+               title
+               amount
+               user_id
+            }
+         }
+      `,
    },
 }
 

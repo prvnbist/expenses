@@ -82,6 +82,23 @@ export const MUTATIONS = {
       `,
    },
    ACCOUNTS: {
+      CREATE: gql`
+         mutation insert_account($object: accounts_insert_input = {}) {
+            insert_account(object: $object) {
+               id
+            }
+         }
+      `,
+      UPDATE: gql`
+         mutation update_account(
+            $id: uuid = ""
+            $_set: accounts_set_input = {}
+         ) {
+            update_account(pk_columns: { id: $id }, _set: $_set) {
+               id
+            }
+         }
+      `,
       DELETE: gql`
          mutation delete_account($id: uuid = "") {
             delete_account(id: $id) {
