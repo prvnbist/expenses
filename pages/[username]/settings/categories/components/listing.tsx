@@ -36,6 +36,12 @@ const Listing = () => {
             accessor: 'title',
          },
          {
+            Header: 'Type',
+            accessor: 'type',
+            Cell: ({ cell }): string =>
+               cell.value.replace(/./, (c: string) => c.toUpperCase()),
+         },
+         {
             Header: 'Owned',
             alignment: 'center',
             width: 120,
