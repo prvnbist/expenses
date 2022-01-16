@@ -145,6 +145,23 @@ const QUERIES = {
          }
       `,
    },
+   ACCOUNTS: {
+      LIST: gql`
+         query accounts {
+            accounts: accounts_aggregate(order_by: { title: asc }) {
+               aggregate {
+                  count
+               }
+               nodes {
+                  id
+                  title
+                  amount
+                  user_id
+               }
+            }
+         }
+      `,
+   },
 }
 
 export default QUERIES

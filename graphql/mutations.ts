@@ -81,4 +81,13 @@ export const MUTATIONS = {
          }
       `,
    },
+   ACCOUNTS: {
+      DELETE: gql`
+         mutation delete_account($id: uuid = "") {
+            delete_account(id: $id) {
+               id
+            }
+         }
+      `,
+   },
 }

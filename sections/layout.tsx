@@ -4,7 +4,6 @@ import tw, { styled } from 'twin.macro'
 import { useRouter } from 'next/router'
 
 import * as Icon from '../icons'
-import { Loader } from '../components'
 
 interface ILayout {
    children: React.ReactNode
@@ -21,6 +20,12 @@ const Layout = ({ children }: ILayout): JSX.Element => {
             title: 'Transactions',
             href: '/prvnbist/transactions',
             isActive: router.asPath.endsWith('transactions'),
+         },
+         {
+            icon: <Icon.Account tw="stroke-current" />,
+            title: 'Accounts',
+            href: '/prvnbist/accounts',
+            isActive: router.asPath.endsWith('accounts'),
          },
          {
             id: 'settings',
