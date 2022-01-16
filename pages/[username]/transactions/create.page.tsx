@@ -238,7 +238,7 @@ const CreateTransaction = () => {
                         <Styles.Text
                            {...register('amount', {
                               required: true,
-                              pattern: /^[\d]{1,3}(\.[\d]{1,2})?$/,
+                              pattern: /^[\d]{1,}(\.[\d]{1,2})?$/,
                            })}
                            id="amount"
                            name="amount"
