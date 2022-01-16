@@ -39,25 +39,39 @@ const Category = () => {
             accessor: 'title',
          },
          {
+            Header: 'Owned',
+            alignment: 'center',
+            width: 120,
+            Cell: ({ cell }: any) => {
+               const isOwned = cell.row.original.user_id === user.id
+               if (isOwned)
+                  return (
+                     <span tw="flex justify-center">
+                        <Icon.Tick tw="stroke-current" />
+                     </span>
+                  )
+               return (
+                  <span tw="flex justify-center">
+                     <Icon.Cross tw="stroke-current" />
+                  </span>
+               )
+            },
+         },
+         {
             Header: 'Actions',
             width: 120,
             alignment: 'center',
             no_padding: true,
             Cell: ({ cell }: any) => {
-               console.log(cell)
                if (cell.row.original.user_id !== user.id) return null
                return (
                   <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
-                     <button
-                        onClick={() =>
-                           router.push(
-                              `/${user.username}/settings/categories/${router.query.id}/create?id=${cell.row.original.id}`
-                           )
-                        }
-                        tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
-                     >
-                        <Icon.Edit size={16} tw="fill-current text-gray-400" />
-                     </button>
+                     <EditButton
+                        goto={router.push}
+                        username={user.username}
+                        id={cell.row.original.id}
+                        parent_id={router.query.id ?? ''}
+                     />
                   </div>
                )
             },
@@ -155,7 +169,12 @@ const Table = ({ columns = [], categories = [] }) => {
                               <MyTable.HCell
                                  key={column_key}
                                  {...rest_column}
-                                 is_right={column.alignment === 'right'}
+                                 {...(column.alignment === 'right' && {
+                                    is_right: true,
+                                 })}
+                                 {...(column.alignment === 'center' && {
+                                    is_center: true,
+                                 })}
                               >
                                  {column.render('Header')}
                               </MyTable.HCell>
@@ -165,7 +184,6 @@ const Table = ({ columns = [], categories = [] }) => {
                   )
                })}
             </MyTable.Head>
-
             <MyTable.Body {...getTableBodyProps()}>
                {rows.map((row, i) => {
                   prepareRow(row)
@@ -179,7 +197,12 @@ const Table = ({ columns = [], categories = [] }) => {
                               <MyTable.Cell
                                  key={cell_key}
                                  {...rest_cell_keys}
-                                 is_right={cell.column.alignment === 'right'}
+                                 {...(cell.column.alignment === 'right' && {
+                                    is_right: true,
+                                 })}
+                                 {...(cell.column.alignment === 'center' && {
+                                    is_center: true,
+                                 })}
                                  {...(cell.column.id !== 'title' && {
                                     width: cell.column.width,
                                  })}
@@ -194,5 +217,29 @@ const Table = ({ columns = [], categories = [] }) => {
             </MyTable.Body>
          </MyTable>
       </main>
+   )
+}
+
+interface EditButtonProps {
+   id: string
+   username: string
+   parent_id: string | string[]
+   goto: (path: string) => void
+}
+
+const EditButton = (props: EditButtonProps): JSX.Element => {
+   const { id, goto, username, parent_id } = props
+   return (
+      <button
+         title="Edit Category"
+         onClick={() =>
+            goto(
+               `/${username}/settings/categories/${parent_id}/create?id=${id}`
+            )
+         }
+         tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+      >
+         <Icon.Edit size={16} tw="fill-current text-gray-400" />
+      </button>
    )
 }

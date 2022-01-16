@@ -64,7 +64,7 @@ const Styles = {
       '&:nth-child(1)': { ...tw`truncate` },
       variants: {
          is_right: { true: { ...tw`text-right` } },
-         is_center: { true: { ...tw`flex justify-center` } },
+         is_center: { true: { ...tw`text-center` } },
          no_padding: { true: { ...tw`p-0` } },
       },
    }),
@@ -72,7 +72,7 @@ const Styles = {
       ...tw`sticky top-0 h-8 px-3 text-left text-xs text-gray-400 uppercase font-medium tracking-wider whitespace-nowrap`,
       variants: {
          is_right: { true: { ...tw`text-right` } },
-         is_center: { true: { ...tw`flex items-center justify-center` } },
+         is_center: { true: { ...tw`text-center` } },
       },
    }),
 }
