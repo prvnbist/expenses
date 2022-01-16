@@ -25,6 +25,8 @@ const QUERIES = {
                   raw_date
                   category
                   category_id
+                  account
+                  account_id
                }
             }
             transactions_aggregate: transactions_view_aggregate(
@@ -41,14 +43,18 @@ const QUERIES = {
          }
       `,
       ONE: gql`
-         query transaction($id: uuid = "") {
-            transaction(id: $id) {
+         query transactions_views($where: transactions_view_bool_exp = {}) {
+            transactions_views(where: $where) {
                id
                type
                date
                title
                amount
                user_id
+               raw_date
+               account
+               account_id
+               category
                category_id
             }
          }
@@ -147,8 +153,11 @@ const QUERIES = {
    },
    ACCOUNTS: {
       LIST: gql`
-         query accounts {
-            accounts: accounts_aggregate(order_by: { title: asc }) {
+         query accounts($where: accounts_bool_exp = {}) {
+            accounts: accounts_aggregate(
+               where: $where
+               order_by: { title: asc }
+            ) {
                aggregate {
                   count
                }

@@ -29,16 +29,22 @@ interface ICategory {
    sub_categories: ISubCategory[]
 }
 
+interface IAccount {
+   id: string
+   title: string
+}
+
 interface ITransaction {
    title: string
    date: string
    amount: number
    user_id: string
    category_id: string
+   account_id: string
    type: 'income' | 'expense'
 }
 
-interface ISelectedCategoryState {
+interface ISelectedTypeAccountState {
    value: string
    label: string
 }
@@ -53,7 +59,9 @@ const CreateTransaction = () => {
    )
    const [type, setType] = React.useState<'expense' | 'income'>('expense')
    const [selectedCategory, setSelectedCategory] =
-      React.useState<ISelectedCategoryState | null>(null)
+      React.useState<ISelectedTypeAccountState | null>(null)
+   const [selectedAccount, setSelectedAccount] =
+      React.useState<ISelectedTypeAccountState | null>(null)
    const {
       watch,
       reset,
@@ -82,12 +90,33 @@ const CreateTransaction = () => {
          },
       }
    )
+   const { loading: loading_accounts, data: { accounts = {} } = {} } = useQuery(
+      QUERIES.ACCOUNTS.LIST,
+      {
+         skip: !user?.id,
+         variables: { where: { user_id: { _eq: user.id } } },
+      }
+   )
    useQuery(QUERIES.TRANSACTIONS.ONE, {
-      skip: !router.isReady || FORM_TYPE === 'CREATE',
+      skip: !user.id || !router.isReady || FORM_TYPE === 'CREATE',
       fetchPolicy: 'network-only',
-      variables: { id: router.query.id },
-      onCompleted: ({ transaction = {} }) => {
-         if (!transaction?.id) return
+      variables: {
+         where: {
+            _and: [
+               {
+                  user_id: { _eq: user.id },
+                  id: { _eq: router.query.id },
+               },
+            ],
+         },
+      },
+      onCompleted: ({ transactions_views = [] }) => {
+         if (transactions_views.length === 0)
+            router.push(`/${user.username}/transactions`)
+
+         const [transaction] = transactions_views
+
+         if (!transaction.id) router.push(`/${user.username}/transactions`)
          if (transaction.user_id !== user.id)
             router.push(`/${user.username}/transactions`)
 
@@ -95,16 +124,26 @@ const CreateTransaction = () => {
          setValue('amount', `${transaction.amount / 100}`, {
             shouldValidate: true,
          })
-         setValue('date', transaction.date, { shouldValidate: true })
+         setValue('date', transaction.raw_date, { shouldValidate: true })
          setType(transaction.type)
          if (transaction.category_id) {
-            setSelectedCategory({ value: transaction.category_id, label: '' })
+            setSelectedCategory({
+               value: transaction.category_id,
+               label: transaction.category,
+            })
+         }
+         if (transaction.account_id) {
+            setSelectedAccount({
+               value: transaction.account_id,
+               label: transaction.account,
+            })
          }
          setStatus('SUCCESS')
       },
       onError: () => setStatus('ERROR'),
    })
-
+   {
+      /*
    React.useEffect(() => {
       if (
          !loading &&
@@ -112,7 +151,7 @@ const CreateTransaction = () => {
          selectedCategory?.value &&
          !selectedCategory?.label
       ) {
-         categories.forEach((category: ICategory) => {
+         categories.forEach((category: IAccount) => {
             if (category.sub_categories.length > 0) {
                category.sub_categories.forEach((subCategory: ISubCategory) => {
                   if (subCategory.id === selectedCategory.value) {
@@ -126,6 +165,8 @@ const CreateTransaction = () => {
          })
       }
    }, [loading, categories, selectedCategory])
+   */
+   }
 
    const [create_transaction, { loading: creating_transaction }] = useMutation(
       MUTATIONS.TRANSACTIONS.CREATE,
@@ -134,6 +175,7 @@ const CreateTransaction = () => {
             reset()
             setType('expense')
             setSelectedCategory(null)
+            setSelectedAccount(null)
             addToast('Successfully added the transaction', {
                appearance: 'success',
             })
@@ -163,6 +205,7 @@ const CreateTransaction = () => {
       ...watch(['title', 'date', 'amount']),
       type,
       selectedCategory?.value,
+      selectedAccount?.value,
    ].every(node => node)
 
    const onSubmit: SubmitHandler<Inputs> = data => {
@@ -177,6 +220,7 @@ const CreateTransaction = () => {
          user_id: user.id,
          amount: parseFloat(amount) * 100,
          category_id: selectedCategory?.value || '',
+         account_id: selectedAccount?.value || '',
       }
       if (FORM_TYPE === 'CREATE') {
          create_transaction({ variables: { object: transaction } })
@@ -288,24 +332,49 @@ const CreateTransaction = () => {
                            Income
                         </Styles.GroupButton>
                      </div>
-                     <Select
-                        isClearable
-                        isSearchable
-                        name="category"
-                        isLoading={loading}
-                        classNamePrefix="select"
-                        value={selectedCategory}
-                        onChange={(option: any) => setSelectedCategory(option)}
-                        options={categories.map((category: ICategory) => ({
-                           label: category.title,
-                           options: category.sub_categories.map(
-                              (sub_category: ISubCategory) => ({
-                                 value: sub_category.id,
-                                 label: sub_category.title,
+                     <fieldset>
+                        <Styles.Label>Category</Styles.Label>
+                        <Select
+                           isClearable
+                           isSearchable
+                           name="category"
+                           isLoading={loading}
+                           classNamePrefix="select"
+                           value={selectedCategory}
+                           onChange={(option: any) =>
+                              setSelectedCategory(option)
+                           }
+                           options={categories.map((category: IAccount) => ({
+                              label: category.title,
+                              options: category.sub_categories.map(
+                                 (sub_category: ISubCategory) => ({
+                                    value: sub_category.id,
+                                    label: sub_category.title,
+                                 })
+                              ),
+                           }))}
+                        />
+                     </fieldset>
+                     <fieldset>
+                        <Styles.Label>Account</Styles.Label>
+                        <Select
+                           isClearable
+                           isSearchable
+                           name="account"
+                           classNamePrefix="select"
+                           value={selectedAccount}
+                           isLoading={loading_accounts}
+                           onChange={(option: any) =>
+                              setSelectedAccount(option)
+                           }
+                           options={accounts?.nodes?.map(
+                              (account: ICategory) => ({
+                                 value: account.id,
+                                 label: account.title,
                               })
-                           ),
-                        }))}
-                     />
+                           )}
+                        />
+                     </fieldset>
                      <button
                         type="submit"
                         disabled={creating_transaction || updating_transaction}

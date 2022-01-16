@@ -33,14 +33,7 @@ const Listing = () => {
       data: { accounts = {} } = {},
    } = useQuery(QUERIES.ACCOUNTS.LIST, {
       skip: !user?.id,
-      variables: {
-         where: {
-            _or: [
-               { user_id: { _eq: user.id } },
-               { user_id: { _is_null: true } },
-            ],
-         },
-      },
+      variables: { where: { user_id: { _eq: user.id } } },
    })
 
    const columns = React.useMemo(

@@ -87,7 +87,11 @@ const Table = ({
          {
             Header: 'Category',
             accessor: 'category',
-            type: 'text',
+            width: 180,
+         },
+         {
+            Header: 'Account',
+            accessor: 'account',
             width: 180,
          },
          {
