@@ -43,7 +43,7 @@ const Table = ({
    const router = useRouter()
    const { addToast } = useToasts()
    const [delete_transaction] = useMutation(MUTATIONS.TRANSACTIONS.DELETE, {
-      refetchQueries: ['transactions'],
+      refetchQueries: ['transactions', 'category'],
       onCompleted: () =>
          addToast('Successfully deleted the transaction.', {
             appearance: 'success',

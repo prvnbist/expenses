@@ -22,6 +22,7 @@ const Category = () => {
    } = useQuery(QUERIES.CATEGORIES.ONE_WITH_SUB_CATEGORIES, {
       skip: !user?.id || !router.isReady || !router.query.id,
       variables: {
+         userid: user.id,
          id: router.query.id,
          where: {
             _or: [
@@ -37,6 +38,11 @@ const Category = () => {
          {
             Header: 'Title',
             accessor: 'title',
+         },
+         {
+            alignment: 'right',
+            Header: 'Transactions',
+            accessor: 'transactions_count',
          },
          {
             Header: 'Owned',

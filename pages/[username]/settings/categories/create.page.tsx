@@ -36,7 +36,7 @@ const CreateCategory = () => {
    const [create_category, { loading: creating_category }] = useMutation(
       MUTATIONS.CATEGORIES.CREATE,
       {
-         refetchQueries: ['categories'],
+         refetchQueries: ['categories', 'category'],
          onCompleted: () => {
             reset()
             addToast('Successfully added the category', {
@@ -53,7 +53,7 @@ const CreateCategory = () => {
    const [update_category, { loading: updating_category }] = useMutation(
       MUTATIONS.CATEGORIES.UPDATE,
       {
-         refetchQueries: ['categories'],
+         refetchQueries: ['categories', 'category'],
          onCompleted: () =>
             addToast('Successfully updated the category', {
                appearance: 'success',

@@ -99,7 +99,11 @@ const QUERIES = {
          }
       `,
       ONE_WITH_SUB_CATEGORIES: gql`
-         query category($where: sub_categories_bool_exp = {}, $id: uuid = "") {
+         query category(
+            $userid: uuid!
+            $id: uuid = ""
+            $where: sub_categories_bool_exp = {}
+         ) {
             category(id: $id) {
                id
                title
@@ -108,6 +112,7 @@ const QUERIES = {
                   id
                   title
                   user_id
+                  transactions_count(args: { userid: $userid })
                }
             }
          }
