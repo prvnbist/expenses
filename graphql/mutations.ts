@@ -45,6 +45,13 @@ export const MUTATIONS = {
             }
          }
       `,
+      DELETE: gql`
+         mutation delete_category($id: uuid = "") {
+            delete_category(id: $id) {
+               id
+            }
+         }
+      `,
    },
    SUB_CATEGORIES: {
       CREATE: gql`
@@ -62,6 +69,13 @@ export const MUTATIONS = {
             $_set: sub_categories_set_input = {}
          ) {
             update_sub_category(pk_columns: { id: $id }, _set: $_set) {
+               id
+            }
+         }
+      `,
+      DELETE: gql`
+         mutation delete_sub_category($id: uuid = "") {
+            delete_sub_category(id: $id) {
                id
             }
          }

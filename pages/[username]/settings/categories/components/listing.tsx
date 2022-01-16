@@ -2,16 +2,29 @@ import React from 'react'
 import tw from 'twin.macro'
 import { useTable } from 'react-table'
 import { useRouter } from 'next/router'
-import { useQuery } from '@apollo/client'
+import { useToasts } from 'react-toast-notifications'
+import { useMutation, useQuery } from '@apollo/client'
 
 import * as Icon from '../../../../../icons'
 import { useUser } from '../../../../../lib/user'
 import QUERIES from '../../../../../graphql/queries'
+import { MUTATIONS } from '../../../../../graphql/mutations'
 import { Empty, Loader, Table as MyTable } from '../../../../../components'
 
 const Listing = () => {
    const { user } = useUser()
    const router = useRouter()
+   const { addToast } = useToasts()
+
+   const [delete_category] = useMutation(MUTATIONS.CATEGORIES.DELETE, {
+      refetchQueries: ['categories', 'category'],
+      onCompleted: () =>
+         addToast('Successfully deleted the category', {
+            appearance: 'success',
+         }),
+      onError: () =>
+         addToast('Failed to delete the category', { appearance: 'error' }),
+   })
 
    const {
       loading,
@@ -88,6 +101,20 @@ const Listing = () => {
                         username={user.username}
                         id={cell.row.original.id}
                      />
+                     <button
+                        title="Delete Category"
+                        onClick={() =>
+                           delete_category({
+                              variables: { id: cell.row.original.id },
+                           })
+                        }
+                        tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+                     >
+                        <Icon.Delete
+                           size={16}
+                           tw="stroke-current text-gray-400"
+                        />
+                     </button>
                   </div>
                )
             },

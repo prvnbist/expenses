@@ -3,18 +3,30 @@ import tw from 'twin.macro'
 import Link from 'next/link'
 import { useTable } from 'react-table'
 import { useRouter } from 'next/router'
-import { useQuery } from '@apollo/client'
+import { useToasts } from 'react-toast-notifications'
+import { useMutation, useQuery } from '@apollo/client'
 
 import * as Icon from '../../../../../icons'
 import { useUser } from '../../../../../lib/user'
 import Layout from '../../../../../sections/layout'
 import QUERIES from '../../../../../graphql/queries'
+import { MUTATIONS } from '../../../../../graphql/mutations'
 import { Empty, Loader, Table as MyTable } from '../../../../../components'
 
 const Category = () => {
    const { user } = useUser()
    const router = useRouter()
+   const { addToast } = useToasts()
 
+   const [delete_sub_category] = useMutation(MUTATIONS.SUB_CATEGORIES.DELETE, {
+      refetchQueries: ['category'],
+      onCompleted: () =>
+         addToast('Successfully deleted the sub category', {
+            appearance: 'success',
+         }),
+      onError: () =>
+         addToast('Failed to delete the sub category', { appearance: 'error' }),
+   })
    const {
       loading,
       error,
@@ -78,6 +90,20 @@ const Category = () => {
                         id={cell.row.original.id}
                         parent_id={router.query.id ?? ''}
                      />
+                     <button
+                        title="Delete Sub Category"
+                        onClick={() =>
+                           delete_sub_category({
+                              variables: { id: cell.row.original.id },
+                           })
+                        }
+                        tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+                     >
+                        <Icon.Delete
+                           size={16}
+                           tw="stroke-current text-gray-400"
+                        />
+                     </button>
                   </div>
                )
             },
@@ -237,7 +263,7 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
    const { id, goto, username, parent_id } = props
    return (
       <button
-         title="Edit Category"
+         title="Edit Sub Category"
          onClick={() =>
             goto(
                `/${username}/settings/categories/${parent_id}/create?id=${id}`
