@@ -153,7 +153,7 @@ const QUERIES = {
    },
    ACCOUNTS: {
       LIST: gql`
-         query accounts($where: accounts_bool_exp = {}) {
+         query accounts($userid: uuid = "", $where: accounts_bool_exp = {}) {
             accounts: accounts_aggregate(
                where: $where
                order_by: { title: asc }
@@ -166,6 +166,7 @@ const QUERIES = {
                   title
                   amount
                   user_id
+                  transactions_count(args: { userid: $userid })
                }
             }
          }

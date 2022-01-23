@@ -33,7 +33,7 @@ const Listing = () => {
       data: { accounts = {} } = {},
    } = useQuery(QUERIES.ACCOUNTS.LIST, {
       skip: !user?.id,
-      variables: { where: { user_id: { _eq: user.id } } },
+      variables: { userid: user.id, where: { user_id: { _eq: user.id } } },
    })
 
    const columns = React.useMemo(
@@ -43,10 +43,16 @@ const Listing = () => {
             accessor: 'title',
          },
          {
-            Header: 'Amount',
+            Header: 'Balance',
             accessor: 'amount',
+            alignment: 'right',
             Cell: ({ cell }): string =>
                Dinero({ amount: cell.value, currency: 'INR' }).toFormat(),
+         },
+         {
+            Header: 'Transactions',
+            accessor: 'transactions_count',
+            alignment: 'right',
          },
          {
             Header: 'Actions',
