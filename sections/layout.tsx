@@ -28,6 +28,12 @@ const Layout = ({ children }: ILayout): JSX.Element => {
             isActive: router.asPath.endsWith('accounts'),
          },
          {
+            icon: <Icon.Group tw="stroke-current" />,
+            title: 'Groups',
+            href: '/prvnbist/groups',
+            isActive: router.asPath.endsWith('groups'),
+         },
+         {
             id: 'settings',
             type: 'divider',
             title: 'Settings',

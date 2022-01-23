@@ -95,6 +95,11 @@ const Table = ({
             width: 180,
          },
          {
+            Header: 'Group',
+            accessor: 'group',
+            width: 180,
+         },
+         {
             Header: 'Actions',
             width: 120,
             alignment: 'center',

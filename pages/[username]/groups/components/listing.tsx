@@ -1,6 +1,5 @@
 import React from 'react'
 import tw from 'twin.macro'
-import Dinero from 'dinero.js'
 import { useTable } from 'react-table'
 import { useRouter } from 'next/router'
 import { useToasts } from 'react-toast-notifications'
@@ -17,21 +16,21 @@ const Listing = () => {
    const router = useRouter()
    const { addToast } = useToasts()
 
-   const [delete_account] = useMutation(MUTATIONS.ACCOUNTS.DELETE, {
-      refetchQueries: ['accounts'],
+   const [delete_acount] = useMutation(MUTATIONS.GROUPS.DELETE, {
+      refetchQueries: ['groups'],
       onCompleted: () =>
-         addToast('Successfully deleted the account', {
+         addToast('Successfully deleted the group', {
             appearance: 'success',
          }),
       onError: () =>
-         addToast('Failed to delete the account', { appearance: 'error' }),
+         addToast('Failed to delete the group', { appearance: 'error' }),
    })
 
    const {
       loading,
       error,
-      data: { accounts = {} } = {},
-   } = useQuery(QUERIES.ACCOUNTS.LIST, {
+      data: { groups = {} } = {},
+   } = useQuery(QUERIES.GROUPS.LIST, {
       skip: !user?.id,
       variables: { userid: user.id, where: { user_id: { _eq: user.id } } },
    })
@@ -41,13 +40,6 @@ const Listing = () => {
          {
             Header: 'Title',
             accessor: 'title',
-         },
-         {
-            Header: 'Balance',
-            accessor: 'amount',
-            alignment: 'right',
-            Cell: ({ cell }): string =>
-               Dinero({ amount: cell.value, currency: 'INR' }).toFormat(),
          },
          {
             Header: 'Transactions',
@@ -63,10 +55,10 @@ const Listing = () => {
                return (
                   <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
                      <button
-                        title="Edit Account"
+                        title="Edit Group"
                         onClick={() =>
                            router.push(
-                              `/${user.username}/accounts/create?id=${cell.row.original.id}`
+                              `/${user.username}/groups/create?id=${cell.row.original.id}`
                            )
                         }
                         tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
@@ -74,9 +66,9 @@ const Listing = () => {
                         <Icon.Edit size={16} tw="fill-current text-gray-400" />
                      </button>
                      <button
-                        title="Delete Account"
+                        title="Delete Group"
                         onClick={() =>
-                           delete_account({
+                           delete_acount({
                               variables: { id: cell.row.original.id },
                            })
                         }
@@ -97,12 +89,12 @@ const Listing = () => {
 
    if (loading) return <Loader />
    if (error) return <p>Something went wrong, please refresh the page.</p>
-   if (accounts.aggregate.count === 0)
-      return <Empty message="Create an account to begin" />
+   if (groups.aggregate.count === 0)
+      return <Empty message="Create a group to begin" />
 
    return (
       <main tw="p-4">
-         <Table columns={columns} categories={accounts.nodes} />
+         <Table columns={columns} categories={groups.nodes} />
       </main>
    )
 }

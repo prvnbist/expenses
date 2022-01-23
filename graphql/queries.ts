@@ -27,6 +27,8 @@ const QUERIES = {
                   category_id
                   account
                   account_id
+                  group
+                  group_id
                }
             }
             transactions_aggregate: transactions_view_aggregate(
@@ -56,6 +58,8 @@ const QUERIES = {
                account_id
                category
                category_id
+               group
+               group_id
             }
          }
       `,
@@ -178,6 +182,34 @@ const QUERIES = {
                title
                amount
                user_id
+            }
+         }
+      `,
+   },
+   GROUPS: {
+      LIST: gql`
+         query groups($userid: uuid = "", $where: groups_bool_exp = {}) {
+            groups: groups_aggregate(where: $where, order_by: { title: asc }) {
+               aggregate {
+                  count
+               }
+               nodes {
+                  id
+                  title
+                  description
+                  user_id
+                  transactions_count(args: { userid: $userid })
+               }
+            }
+         }
+      `,
+      ONE: gql`
+         query group($id: uuid = "") {
+            group(id: $id) {
+               id
+               title
+               user_id
+               description
             }
          }
       `,

@@ -23,6 +23,11 @@ interface ISubCategory {
    title: string
 }
 
+interface IGroup {
+   id: string
+   title: string
+}
+
 interface ICategory {
    id: string
    title: string
@@ -39,12 +44,13 @@ interface ITransaction {
    date: string
    amount: number
    user_id: string
+   group_id: string | null
    category_id: string | null
    account_id: string | null
    type: 'income' | 'expense'
 }
 
-interface ISelectedTypeAccountState {
+interface ISelectedTypeAccountGroupState {
    value: string
    label: string
 }
@@ -59,9 +65,11 @@ const CreateTransaction = () => {
    )
    const [type, setType] = React.useState<'expense' | 'income'>('expense')
    const [selectedCategory, setSelectedCategory] =
-      React.useState<ISelectedTypeAccountState | null>(null)
+      React.useState<ISelectedTypeAccountGroupState | null>(null)
    const [selectedAccount, setSelectedAccount] =
-      React.useState<ISelectedTypeAccountState | null>(null)
+      React.useState<ISelectedTypeAccountGroupState | null>(null)
+   const [selectedGroup, setSelectedGroup] =
+      React.useState<ISelectedTypeAccountGroupState | null>(null)
    const {
       watch,
       reset,
@@ -92,6 +100,13 @@ const CreateTransaction = () => {
    )
    const { loading: loading_accounts, data: { accounts = {} } = {} } = useQuery(
       QUERIES.ACCOUNTS.LIST,
+      {
+         skip: !user?.id,
+         variables: { userid: user.id, where: { user_id: { _eq: user.id } } },
+      }
+   )
+   const { loading: loading_groups, data: { groups = {} } = {} } = useQuery(
+      QUERIES.GROUPS.LIST,
       {
          skip: !user?.id,
          variables: { userid: user.id, where: { user_id: { _eq: user.id } } },
@@ -140,6 +155,12 @@ const CreateTransaction = () => {
             setSelectedAccount({
                value: transaction.account_id,
                label: transaction.account,
+            })
+         }
+         if (transaction.group_id) {
+            setSelectedGroup({
+               value: transaction.group_id,
+               label: transaction.group,
             })
          }
          setStatus('SUCCESS')
@@ -197,6 +218,7 @@ const CreateTransaction = () => {
          amount: parseFloat(amount) * 100,
          account_id: selectedAccount?.value || null,
          category_id: selectedCategory?.value || null,
+         group_id: selectedGroup?.value || null,
       }
       if (FORM_TYPE === 'CREATE') {
          create_transaction({ variables: { object: transaction } })
@@ -320,7 +342,7 @@ const CreateTransaction = () => {
                            onChange={(option: any) =>
                               setSelectedCategory(option)
                            }
-                           options={categories.map((category: IAccount) => ({
+                           options={categories.map((category: ICategory) => ({
                               label: category.title,
                               options: category.sub_categories.map(
                                  (sub_category: ISubCategory) => ({
@@ -349,6 +371,22 @@ const CreateTransaction = () => {
                                  label: account.title,
                               })
                            )}
+                        />
+                     </fieldset>
+                     <fieldset>
+                        <Styles.Label>Group</Styles.Label>
+                        <Select
+                           isClearable
+                           isSearchable
+                           name="group"
+                           classNamePrefix="select"
+                           value={selectedGroup}
+                           isLoading={loading_groups}
+                           onChange={(option: any) => setSelectedGroup(option)}
+                           options={groups?.nodes?.map((account: IGroup) => ({
+                              value: account.id,
+                              label: account.title,
+                           }))}
                         />
                      </fieldset>
                      <button

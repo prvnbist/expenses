@@ -107,4 +107,27 @@ export const MUTATIONS = {
          }
       `,
    },
+   GROUPS: {
+      CREATE: gql`
+         mutation insert_group($object: groups_insert_input = {}) {
+            insert_group(object: $object) {
+               id
+            }
+         }
+      `,
+      UPDATE: gql`
+         mutation update_group($id: uuid = "", $_set: groups_set_input = {}) {
+            update_group(pk_columns: { id: $id }, _set: $_set) {
+               id
+            }
+         }
+      `,
+      DELETE: gql`
+         mutation delete_group($id: uuid = "") {
+            delete_group(id: $id) {
+               id
+            }
+         }
+      `,
+   },
 }
