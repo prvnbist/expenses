@@ -39,8 +39,8 @@ interface ITransaction {
    date: string
    amount: number
    user_id: string
-   category_id: string
-   account_id: string
+   category_id: string | null
+   account_id: string | null
    type: 'income' | 'expense'
 }
 
@@ -94,11 +94,15 @@ const CreateTransaction = () => {
       QUERIES.ACCOUNTS.LIST,
       {
          skip: !user?.id,
-         variables: { where: { user_id: { _eq: user.id } } },
+         variables: { userid: user.id, where: { user_id: { _eq: user.id } } },
       }
    )
    useQuery(QUERIES.TRANSACTIONS.ONE, {
-      skip: !user.id || !router.isReady || FORM_TYPE === 'CREATE',
+      skip:
+         !user.id ||
+         !router.isReady ||
+         !router.query.id ||
+         FORM_TYPE === 'CREATE',
       fetchPolicy: 'network-only',
       variables: {
          where: {
@@ -142,31 +146,6 @@ const CreateTransaction = () => {
       },
       onError: () => setStatus('ERROR'),
    })
-   {
-      /*
-   React.useEffect(() => {
-      if (
-         !loading &&
-         categories.length > 0 &&
-         selectedCategory?.value &&
-         !selectedCategory?.label
-      ) {
-         categories.forEach((category: IAccount) => {
-            if (category.sub_categories.length > 0) {
-               category.sub_categories.forEach((subCategory: ISubCategory) => {
-                  if (subCategory.id === selectedCategory.value) {
-                     setSelectedCategory({
-                        value: subCategory.id,
-                        label: subCategory.title,
-                     })
-                  }
-               })
-            }
-         })
-      }
-   }, [loading, categories, selectedCategory])
-   */
-   }
 
    const [create_transaction, { loading: creating_transaction }] = useMutation(
       MUTATIONS.TRANSACTIONS.CREATE,
@@ -201,12 +180,9 @@ const CreateTransaction = () => {
       }
    )
 
-   const isFormValid = [
-      ...watch(['title', 'date', 'amount']),
-      type,
-      selectedCategory?.value,
-      selectedAccount?.value,
-   ].every(node => node)
+   const isFormValid = [...watch(['title', 'date', 'amount'])].every(
+      node => node
+   )
 
    const onSubmit: SubmitHandler<Inputs> = data => {
       if (!isFormValid) return
@@ -219,8 +195,8 @@ const CreateTransaction = () => {
          title,
          user_id: user.id,
          amount: parseFloat(amount) * 100,
-         category_id: selectedCategory?.value || '',
-         account_id: selectedAccount?.value || '',
+         account_id: selectedAccount?.value || null,
+         category_id: selectedCategory?.value || null,
       }
       if (FORM_TYPE === 'CREATE') {
          create_transaction({ variables: { object: transaction } })
