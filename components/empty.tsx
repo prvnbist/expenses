@@ -3,9 +3,12 @@ import tw from 'twin.macro'
 
 import * as Icon from '../icons'
 
-export const Empty = ({ icon = null, message = '' }) => {
+export const Empty = ({ icon = null, message = '', dataTest = '' }) => {
    return (
-      <div tw="flex flex-col items-center justify-center w-full h-[180px]">
+      <div
+         data-test={dataTest}
+         tw="flex flex-col items-center justify-center w-full h-[180px]"
+      >
          {icon ?? (
             <Icon.CircleAdd size={64} tw="stroke-current text-gray-400" />
          )}

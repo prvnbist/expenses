@@ -56,6 +56,7 @@ const Listing = () => {
                   <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
                      <button
                         title="Edit Group"
+                        data-test="edit-button"
                         onClick={() =>
                            router.push(
                               `/${user.username}/groups/create?id=${cell.row.original.id}`
@@ -67,6 +68,7 @@ const Listing = () => {
                      </button>
                      <button
                         title="Delete Group"
+                        data-test="delete-button"
                         onClick={() =>
                            delete_acount({
                               variables: { id: cell.row.original.id },
@@ -90,7 +92,12 @@ const Listing = () => {
    if (loading) return <Loader />
    if (error) return <p>Something went wrong, please refresh the page.</p>
    if (groups.aggregate.count === 0)
-      return <Empty message="Create a group to begin" />
+      return (
+         <Empty
+            message="Create a group to begin"
+            dataTest="groups-empty-placeholder"
+         />
+      )
 
    return (
       <main tw="p-4">
@@ -107,7 +114,7 @@ const Table = ({ columns = [], categories = [] }) => {
       })
    return (
       <main tw="overflow-x-auto">
-         <MyTable {...getTableProps()}>
+         <MyTable {...getTableProps()} dataTest="table">
             <MyTable.Head>
                {headerGroups.map(headerGroup => {
                   const { key: header_group_key, ...rest_header_group } =

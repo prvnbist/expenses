@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 import tw, { styled } from 'twin.macro'
 import { useRouter } from 'next/router'
 import { useToasts } from 'react-toast-notifications'
@@ -112,8 +113,16 @@ const CreateGroup = () => {
 
    return (
       <Layout>
+         <Head>
+            <title>{`${
+               FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'
+            } Group`}</title>
+         </Head>
          <header tw="px-4 pt-4">
-            <h1 tw="font-heading text-3xl font-medium text-gray-400">
+            <h1
+               data-test="page-title"
+               tw="font-heading text-3xl font-medium text-gray-400"
+            >
                {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Group
             </h1>
          </header>
@@ -138,16 +147,23 @@ const CreateGroup = () => {
                            })}
                            id="title"
                            name="title"
+                           data-test="title"
                            placeholder="Enter the title"
                         />
                         {errors.title?.type === 'required' && (
-                           <Styles.Error>Please fill the title</Styles.Error>
+                           <Styles.Error data-test="title-required">
+                              Please fill the title
+                           </Styles.Error>
                         )}
                         {errors.title?.type === 'minLength' && (
-                           <Styles.Error>Title is too short</Styles.Error>
+                           <Styles.Error data-test="title-too-short">
+                              Title is too short
+                           </Styles.Error>
                         )}
                         {errors.title?.type === 'maxLength' && (
-                           <Styles.Error>Title is too long</Styles.Error>
+                           <Styles.Error data-test="title-too-long">
+                              Title is too long
+                           </Styles.Error>
                         )}
                      </fieldset>
                      <fieldset>
@@ -162,6 +178,7 @@ const CreateGroup = () => {
                            rows="5"
                            id="description"
                            name="description"
+                           data-test="description"
                            placeholder="Enter the description"
                         />
                         {errors.description?.type === 'required' && (
@@ -178,6 +195,7 @@ const CreateGroup = () => {
                      </fieldset>
                      <button
                         type="submit"
+                        data-test="submit"
                         disabled={creating_group || updating_group}
                         tw="border border-dark-200 h-10 px-3 text-white hover:bg-dark-300 disabled:(cursor-not-allowed opacity-50 hover:bg-transparent)"
                      >
