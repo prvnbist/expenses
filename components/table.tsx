@@ -1,11 +1,15 @@
 import tw, { styled } from 'twin.macro'
 
-interface IChildren {
+interface ITableProps {
+   dataTest?: string
    children: React.ReactNode
 }
 
-export const Table = ({ children }: IChildren): JSX.Element => (
-   <Styles.Table>{children}</Styles.Table>
+export const Table = ({
+   children,
+   dataTest = '',
+}: ITableProps): JSX.Element => (
+   <Styles.Table data-test={dataTest}>{children}</Styles.Table>
 )
 
 const Head = ({ children }: IChildren): JSX.Element => (
