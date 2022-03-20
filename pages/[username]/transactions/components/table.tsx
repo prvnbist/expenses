@@ -86,7 +86,7 @@ const Table = ({
          },
          {
             Header: 'Category',
-            accessor: 'category',
+            accessor: 'sub_category',
             width: 180,
          },
          {

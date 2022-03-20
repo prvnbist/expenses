@@ -24,7 +24,8 @@ const QUERIES = {
                   amount
                   raw_date
                   category
-                  category_id
+                  sub_category
+                  sub_category_id
                   account
                   account_id
                   group
@@ -57,7 +58,8 @@ const QUERIES = {
                account
                account_id
                category
-               category_id
+               sub_category
+               sub_category_id
                group
                group_id
             }
