@@ -28,6 +28,11 @@ interface IGroup {
    title: string
 }
 
+interface IPaymentMethod {
+   id: string
+   title: string
+}
+
 interface ICategory {
    id: string
    title: string
@@ -45,12 +50,12 @@ interface ITransaction {
    amount: number
    user_id: string
    group_id: string | null
-   category_id: string | null
+   sub_category_id: string | null
    account_id: string | null
    type: 'income' | 'expense'
 }
 
-interface ISelectedTypeAccountGroupState {
+interface ISelectedTypeAccountGroupPaymentMethodState {
    value: string
    label: string
 }
@@ -65,11 +70,13 @@ const CreateTransaction = () => {
    )
    const [type, setType] = React.useState<'expense' | 'income'>('expense')
    const [selectedCategory, setSelectedCategory] =
-      React.useState<ISelectedTypeAccountGroupState | null>(null)
+      React.useState<ISelectedTypeAccountGroupPaymentMethodState | null>(null)
    const [selectedAccount, setSelectedAccount] =
-      React.useState<ISelectedTypeAccountGroupState | null>(null)
+      React.useState<ISelectedTypeAccountGroupPaymentMethodState | null>(null)
    const [selectedGroup, setSelectedGroup] =
-      React.useState<ISelectedTypeAccountGroupState | null>(null)
+      React.useState<ISelectedTypeAccountGroupPaymentMethodState | null>(null)
+   const [selectedPaymentMethod, setSelectedPaymentMethod] =
+      React.useState<ISelectedTypeAccountGroupPaymentMethodState | null>(null)
    const {
       watch,
       reset,
@@ -112,6 +119,13 @@ const CreateTransaction = () => {
          variables: { userid: user.id, where: { user_id: { _eq: user.id } } },
       }
    )
+   const {
+      loading: loading_payment_methods,
+      data: { payment_methods = {} } = {},
+   } = useQuery(QUERIES.PAYMENT_METHODS.LIST, {
+      skip: !user?.id,
+      variables: { userid: user.id, where: { user_id: { _eq: user.id } } },
+   })
    useQuery(QUERIES.TRANSACTIONS.ONE, {
       skip:
          !user.id ||
@@ -129,11 +143,11 @@ const CreateTransaction = () => {
             ],
          },
       },
-      onCompleted: ({ transactions_views = [] }) => {
-         if (transactions_views.length === 0)
+      onCompleted: ({ transactions_view = [] }) => {
+         if (transactions_view.length === 0)
             router.push(`/${user.username}/transactions`)
 
-         const [transaction] = transactions_views
+         const [transaction] = transactions_view
 
          if (!transaction.id) router.push(`/${user.username}/transactions`)
          if (transaction.user_id !== user.id)
@@ -145,10 +159,10 @@ const CreateTransaction = () => {
          })
          setValue('date', transaction.raw_date, { shouldValidate: true })
          setType(transaction.type)
-         if (transaction.category_id) {
+         if (transaction.sub_category_id) {
             setSelectedCategory({
-               value: transaction.category_id,
-               label: transaction.category,
+               value: transaction.sub_category_id,
+               label: transaction.sub_category,
             })
          }
          if (transaction.account_id) {
@@ -161,6 +175,12 @@ const CreateTransaction = () => {
             setSelectedGroup({
                value: transaction.group_id,
                label: transaction.group,
+            })
+         }
+         if (transaction.payment_method_id) {
+            setSelectedPaymentMethod({
+               value: transaction.payment_method_id,
+               label: transaction.payment_method,
             })
          }
          setStatus('SUCCESS')
@@ -215,9 +235,9 @@ const CreateTransaction = () => {
          type,
          title,
          user_id: user.id,
-         amount: parseFloat(amount) * 100,
+         amount: Math.round(parseFloat(amount) * 100),
          account_id: selectedAccount?.value || null,
-         category_id: selectedCategory?.value || null,
+         sub_category_id: selectedCategory?.value || null,
          group_id: selectedGroup?.value || null,
       }
       if (FORM_TYPE === 'CREATE') {
@@ -351,6 +371,26 @@ const CreateTransaction = () => {
                                  })
                               ),
                            }))}
+                        />
+                     </fieldset>
+                     <fieldset>
+                        <Styles.Label>Payment Method</Styles.Label>
+                        <Select
+                           isClearable
+                           isSearchable
+                           name="payment_method"
+                           isLoading={loading_payment_methods}
+                           classNamePrefix="select"
+                           value={selectedPaymentMethod}
+                           onChange={(option: any) =>
+                              setSelectedPaymentMethod(option)
+                           }
+                           options={payment_methods.nodes.map(
+                              (payment_method: IPaymentMethod) => ({
+                                 label: payment_method.title,
+                                 value: payment_method.id,
+                              })
+                           )}
                         />
                      </fieldset>
                      <fieldset>

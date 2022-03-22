@@ -30,6 +30,8 @@ const QUERIES = {
                   account_id
                   group
                   group_id
+                  payment_method
+                  payment_method_id
                }
             }
             transactions_aggregate: transactions_view_aggregate(
@@ -47,7 +49,7 @@ const QUERIES = {
       `,
       ONE: gql`
          query transactions_views($where: transactions_view_bool_exp = {}) {
-            transactions_views(where: $where) {
+            transactions_view(where: $where) {
                id
                type
                date
@@ -62,6 +64,8 @@ const QUERIES = {
                sub_category_id
                group
                group_id
+               payment_method
+               payment_method_id
             }
          }
       `,
@@ -212,6 +216,29 @@ const QUERIES = {
                title
                user_id
                description
+            }
+         }
+      `,
+   },
+   PAYMENT_METHODS: {
+      LIST: gql`
+         query payment_methods(
+            $userid: uuid = ""
+            $where: settings_payment_method_bool_exp = {}
+         ) {
+            payment_methods: payment_methods_aggregate(
+               order_by: { title: asc }
+               where: $where
+            ) {
+               aggregate {
+                  count
+               }
+               nodes {
+                  id
+                  title
+                  user_id
+                  transactions_count(args: { userid: $userid })
+               }
             }
          }
       `,

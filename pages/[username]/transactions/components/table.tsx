@@ -90,6 +90,11 @@ const Table = ({
             width: 180,
          },
          {
+            Header: 'Payment Method',
+            accessor: 'payment_method',
+            width: 180,
+         },
+         {
             Header: 'Account',
             accessor: 'account',
             width: 180,

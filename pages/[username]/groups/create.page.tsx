@@ -83,7 +83,7 @@ const CreateGroup = () => {
       },
    })
 
-   const isFormValid = [...watch(['title', 'description'])].every(node => node)
+   const isFormValid = [...watch(['title'])].every(node => node)
 
    const onSubmit: SubmitHandler<Inputs> = data => {
       if (isFormValid) {
