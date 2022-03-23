@@ -4,6 +4,7 @@ import tw, { styled } from 'twin.macro'
 import { useRouter } from 'next/router'
 
 import * as Icon from '../icons'
+import { auth } from '../lib/supabase'
 
 interface ILayout {
    children: React.ReactNode
@@ -71,14 +72,7 @@ const Layout = ({ children }: ILayout): JSX.Element => {
                   )
                )}
             </Styles.Items>
-            <Styles.Collapse is_collapsed={isCollapsed}>
-               <button
-                  title="Collapse Sidebar"
-                  onClick={() => setIsCollapsed(v => !v)}
-               >
-                  <Icon.Menu tw="stroke-current" />
-               </button>
-            </Styles.Collapse>
+            <Styles.Logout onClick={auth.signout}>Log Out</Styles.Logout>
          </Styles.Sidebar>
          <Styles.Main>{children}</Styles.Main>
       </Styles.Layout>
@@ -187,5 +181,8 @@ const Styles = {
             },
          },
       },
+   }),
+   Logout: styled.button({
+      ...tw`mt-auto mx-2 mb-2 px-2 py-1 rounded text-red-400 border border-transparent hover:(border-red-400)`,
    }),
 }

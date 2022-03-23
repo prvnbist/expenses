@@ -1,11 +1,15 @@
-import Link from 'next/link'
+import { auth } from '../lib/supabase'
+import { useUser } from '../lib/user'
 
 export default function Home() {
+   const { user } = useUser()
    return (
       <>
-         <Link href="/login">
-            <a>Login</a>
-         </Link>
+         {user?.id ? (
+            <button onClick={auth.signout}>Logout</button>
+         ) : (
+            <button onClick={auth.signin}>Login</button>
+         )}
       </>
    )
 }

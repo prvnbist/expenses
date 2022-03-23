@@ -243,6 +243,19 @@ const QUERIES = {
          }
       `,
    },
+   USERS: {
+      LIST: gql`
+         query users($where: user_bool_exp = {}) {
+            users(where: $where) {
+               id
+               name
+               email
+               profile_picture
+               username
+            }
+         }
+      `,
+   },
 }
 
 export default QUERIES
