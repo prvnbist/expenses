@@ -130,4 +130,23 @@ export const MUTATIONS = {
          }
       `,
    },
+   USER: {
+      UPSERT: gql`
+         mutation insert_user($object: user_insert_input = {}) {
+            insert_user(
+               object: $object
+               on_conflict: {
+                  constraint: user_email_key
+                  update_columns: [email]
+               }
+            ) {
+               id
+               name
+               email
+               username
+               profile_picture
+            }
+         }
+      `,
+   },
 }

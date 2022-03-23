@@ -1,7 +1,10 @@
 import React from 'react'
+import { useRouter } from 'next/router'
+import { useLazyQuery, useMutation } from '@apollo/client'
 
-import { Loader } from '../components'
-import useAuth from '../hooks/useAuth'
+import supabase from './supabase'
+import QUERIES from '../graphql/queries'
+import { MUTATIONS } from '../graphql/mutations'
 
 export interface IUser {
    issuer?: string
@@ -24,9 +27,66 @@ interface IUserProviderProps {
 }
 
 export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
-   const { user, loading } = useAuth()
+   const router = useRouter()
+   const [user, setUser] = React.useState({})
+   const [getUser] = useLazyQuery(QUERIES.USERS.LIST, {
+      onCompleted: ({ users = [] }) => {
+         if (users.length > 0) {
+            setUser(users[0])
+            router.push(`/${users[0].username}/transactions`)
+         }
+      },
+      onError: () => {
+         setUser({})
+         router.push('/')
+      },
+   })
+   const [upsert_user] = useMutation(MUTATIONS.USER.UPSERT, {
+      onCompleted: ({ insert_user = {} }) => {
+         setUser(insert_user)
+         router.push(`/${insert_user.username}/transactions`)
+      },
+      onError: () => {
+         setUser({})
+         router.push('/')
+      },
+   })
+   React.useEffect(() => {
+      supabase.auth.onAuthStateChange((event, session) => {
+         if (event === 'SIGNED_IN') {
+            if (session?.user?.app_metadata?.provider === 'google') {
+               const user = session?.user?.user_metadata
+               upsert_user({
+                  variables: {
+                     object: {
+                        name: user?.name || '',
+                        email: user?.email || '',
+                        supabase_user_id: session?.user?.id,
+                        profile_picture: user?.picture || '',
+                        username: user?.email?.replace(/@.*$/, '') || '',
+                     },
+                  },
+               })
+            }
+         } else if (event === 'SIGNED_OUT') {
+            setUser({})
+            router.push('/')
+         }
+      })
+   }, [])
 
-   if (loading) return <Loader />
+   React.useEffect(() => {
+      const user = supabase.auth.user()
+      if (user?.id) {
+         getUser({
+            variables: { where: { supabase_user_id: { _eq: user?.id } } },
+         })
+      } else {
+         setUser({})
+         router.push('/')
+      }
+   }, [])
+
    return <Context.Provider value={{ user }}>{children}</Context.Provider>
 }
 
