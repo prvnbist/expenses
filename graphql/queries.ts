@@ -242,6 +242,15 @@ const QUERIES = {
             }
          }
       `,
+      ONE: gql`
+         query payment_method($id: uuid = "") {
+            payment_method(id: $id) {
+               id
+               title
+               user_id
+            }
+         }
+      `,
    },
    USERS: {
       LIST: gql`

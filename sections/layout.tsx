@@ -4,6 +4,7 @@ import tw, { styled } from 'twin.macro'
 import { useRouter } from 'next/router'
 
 import * as Icon from '../icons'
+import { useUser } from '../lib/user'
 import { auth } from '../lib/supabase'
 
 interface ILayout {
@@ -12,6 +13,7 @@ interface ILayout {
 
 const Layout = ({ children }: ILayout): JSX.Element => {
    const router = useRouter()
+   const { user } = useUser()
    const [isCollapsed, setIsCollapsed] = React.useState(false)
 
    const routes = React.useMemo(
@@ -19,19 +21,19 @@ const Layout = ({ children }: ILayout): JSX.Element => {
          {
             icon: <Icon.File tw="stroke-current" />,
             title: 'Transactions',
-            href: '/prvnbist/transactions',
+            href: `/${user.username}/transactions`,
             isActive: router.asPath.endsWith('transactions'),
          },
          {
-            icon: <Icon.Account tw="stroke-current" />,
+            icon: <Icon.DollarSign tw="stroke-current" />,
             title: 'Accounts',
-            href: '/prvnbist/accounts',
+            href: `/${user.username}/accounts`,
             isActive: router.asPath.endsWith('accounts'),
          },
          {
             icon: <Icon.Group tw="stroke-current" />,
             title: 'Groups',
-            href: '/prvnbist/groups',
+            href: `/${user.username}/groups`,
             isActive: router.asPath.endsWith('groups'),
          },
          {
@@ -41,12 +43,18 @@ const Layout = ({ children }: ILayout): JSX.Element => {
          },
          {
             title: 'Categories',
-            href: '/prvnbist/settings/categories',
+            href: `/${user.username}/settings/categories`,
             icon: <Icon.Tag tw="stroke-current" />,
             isActive: router.asPath.endsWith('categories'),
          },
+         {
+            title: 'Payment Methods',
+            href: `/${user.username}/settings/payment-methods`,
+            icon: <Icon.Account tw="stroke-current" />,
+            isActive: router.asPath.endsWith('payment-methods'),
+         },
       ],
-      [router.asPath]
+      [router.asPath, user]
    )
    return (
       <Styles.Layout>

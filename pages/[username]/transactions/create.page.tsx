@@ -385,7 +385,7 @@ const CreateTransaction = () => {
                            onChange={(option: any) =>
                               setSelectedPaymentMethod(option)
                            }
-                           options={payment_methods.nodes.map(
+                           options={payment_methods?.nodes?.map(
                               (payment_method: IPaymentMethod) => ({
                                  label: payment_method.title,
                                  value: payment_method.id,

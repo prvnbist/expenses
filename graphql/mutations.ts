@@ -149,4 +149,42 @@ export const MUTATIONS = {
          }
       `,
    },
+   PAYMENT_METHODS: {
+      CREATE: gql`
+         mutation insert_payment_method(
+            $object: settings_payment_method_insert_input = {}
+         ) {
+            insert_payment_method: insert_settings_payment_method_one(
+               object: $object
+            ) {
+               id
+               title
+            }
+         }
+      `,
+      UPDATE: gql`
+         mutation update_payment_method(
+            $id: uuid = ""
+            $_set: settings_payment_method_set_input = {}
+         ) {
+            update_payment_method: update_settings_payment_method_by_pk(
+               pk_columns: { id: $id }
+               _set: $_set
+            ) {
+               id
+               title
+            }
+         }
+      `,
+      DELETE: gql`
+         mutation delete_payment_method($id: uuid = "") {
+            delete_payment_method: delete_settings_payment_method_by_pk(
+               id: $id
+            ) {
+               id
+               title
+            }
+         }
+      `,
+   },
 }
