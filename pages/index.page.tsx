@@ -13,7 +13,7 @@ export default function Home() {
 
    const signInUser = async () => {
       setIsSigningIn(true)
-      const { error } = await auth.signin()
+      const { error = null } = await auth.signin()
       if (error) {
          setIsSigningIn(false)
       }

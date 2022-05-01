@@ -79,23 +79,8 @@ const Listing = () => {
             alignment: 'center',
             no_padding: true,
             Cell: ({ cell }: any) => {
-               if (cell.row.original.user_id !== user.id)
-                  return (
-                     <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
-                        <ViewButton
-                           goto={router.push}
-                           username={user.username}
-                           id={cell.row.original.id}
-                        />
-                     </div>
-                  )
                return (
                   <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
-                     <ViewButton
-                        goto={router.push}
-                        username={user.username}
-                        id={cell.row.original.id}
-                     />
                      <EditButton
                         goto={router.push}
                         username={user.username}
@@ -125,7 +110,7 @@ const Listing = () => {
 
    if (loading) return <Loader />
    if (error) return <p>Something went wrong, please refresh the page.</p>
-   if (categories.aggregate.count === 0)
+   if (categories?.aggregate?.count === 0)
       return <Empty message="Create a category to begin" />
 
    return (
@@ -210,26 +195,13 @@ const Table = ({ columns = [], categories = [] }) => {
 
 export default Listing
 
-interface ViewEditButtonProps {
+interface EditButtonProps {
    id: string
    username: string
    goto: (path: string) => void
 }
 
-const ViewButton = (props: ViewEditButtonProps): JSX.Element => {
-   const { id, goto, username } = props
-   return (
-      <button
-         title="View Category"
-         onClick={() => goto(`/${username}/settings/categories/${id}`)}
-         tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
-      >
-         <Icon.Eye size={16} tw="stroke-current text-gray-400" />
-      </button>
-   )
-}
-
-const EditButton = (props: ViewEditButtonProps): JSX.Element => {
+const EditButton = (props: EditButtonProps): JSX.Element => {
    const { id, goto, username } = props
    return (
       <button

@@ -18,11 +18,6 @@ type Inputs = {
    amount: string
 }
 
-interface ISubCategory {
-   id: string
-   title: string
-}
-
 interface IGroup {
    id: string
    title: string
@@ -36,7 +31,6 @@ interface IPaymentMethod {
 interface ICategory {
    id: string
    title: string
-   sub_categories: ISubCategory[]
 }
 
 interface IAccount {
@@ -50,7 +44,7 @@ interface ITransaction {
    amount: number
    user_id: string
    group_id: string | null
-   sub_category_id: string | null
+   category_id: string | null
    account_id: string | null
    type: 'income' | 'expense'
 }
@@ -86,7 +80,7 @@ const CreateTransaction = () => {
       formState: { errors },
    } = useForm<Inputs>()
    const { loading, data: { categories = [] } = {} } = useQuery(
-      QUERIES.CATEGORIES.WITH_SUB_CATEGORIES,
+      QUERIES.CATEGORIES.LIST,
       {
          skip: !user?.id,
          variables: {
@@ -159,10 +153,10 @@ const CreateTransaction = () => {
          })
          setValue('date', transaction.raw_date, { shouldValidate: true })
          setType(transaction.type)
-         if (transaction.sub_category_id) {
+         if (transaction.category_id) {
             setSelectedCategory({
-               value: transaction.sub_category_id,
-               label: transaction.sub_category,
+               value: transaction.category_id,
+               label: transaction.category,
             })
          }
          if (transaction.account_id) {
@@ -237,7 +231,7 @@ const CreateTransaction = () => {
          user_id: user.id,
          amount: Math.round(parseFloat(amount) * 100),
          account_id: selectedAccount?.value || null,
-         sub_category_id: selectedCategory?.value || null,
+         category_id: selectedCategory?.value || null,
          group_id: selectedGroup?.value || null,
       }
       if (FORM_TYPE === 'CREATE') {
@@ -362,15 +356,12 @@ const CreateTransaction = () => {
                            onChange={(option: any) =>
                               setSelectedCategory(option)
                            }
-                           options={categories.map((category: ICategory) => ({
-                              label: category.title,
-                              options: category.sub_categories.map(
-                                 (sub_category: ISubCategory) => ({
-                                    value: sub_category.id,
-                                    label: sub_category.title,
-                                 })
-                              ),
-                           }))}
+                           options={categories?.nodes?.map(
+                              (category: ICategory) => ({
+                                 label: category.title,
+                                 value: category.id,
+                              })
+                           )}
                         />
                      </fieldset>
                      <fieldset>

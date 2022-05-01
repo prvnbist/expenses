@@ -24,8 +24,7 @@ const QUERIES = {
                   amount
                   raw_date
                   category
-                  sub_category
-                  sub_category_id
+                  category_id
                   account
                   account_id
                   group
@@ -60,8 +59,7 @@ const QUERIES = {
                account
                account_id
                category
-               sub_category
-               sub_category_id
+               category_id
                group
                group_id
                payment_method
@@ -95,67 +93,6 @@ const QUERIES = {
                id
                title
                type
-               user_id
-            }
-         }
-      `,
-      WITH_SUB_CATEGORIES: gql`
-         query categories(
-            $where: categories_bool_exp = {}
-            $where1: sub_categories_bool_exp = {}
-         ) {
-            categories(order_by: { title: asc }, where: $where) {
-               id
-               title
-               sub_categories(order_by: { title: asc }, where: $where1) {
-                  id
-                  title
-               }
-            }
-         }
-      `,
-      ONE_WITH_SUB_CATEGORIES: gql`
-         query category(
-            $userid: uuid!
-            $id: uuid = ""
-            $where: sub_categories_bool_exp = {}
-         ) {
-            category(id: $id) {
-               id
-               title
-               user_id
-               sub_categories(order_by: { title: asc }, where: $where) {
-                  id
-                  title
-                  user_id
-                  transactions_count(args: { userid: $userid })
-               }
-            }
-         }
-      `,
-   },
-   SUB_CATEGORIES: {
-      LIST: gql`
-         query categories($where: sub_categories_bool_exp = {}) {
-            categories: sub_categories_aggregate(
-               order_by: { title: asc }
-               where: $where
-            ) {
-               aggregate {
-                  count
-               }
-               nodes {
-                  id
-                  title
-               }
-            }
-         }
-      `,
-      ONE: gql`
-         query sub_category($id: uuid = "") {
-            sub_category(id: $id) {
-               id
-               title
                user_id
             }
          }

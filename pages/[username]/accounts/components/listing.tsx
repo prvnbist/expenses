@@ -97,7 +97,7 @@ const Listing = () => {
 
    if (loading) return <Loader />
    if (error) return <p>Something went wrong, please refresh the page.</p>
-   if (accounts.aggregate.count === 0)
+   if (accounts?.aggregate?.count === 0)
       return <Empty message="Create an account to begin" />
 
    return (

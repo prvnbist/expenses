@@ -91,7 +91,7 @@ const Listing = () => {
 
    if (loading) return <Loader />
    if (error) return <p>Something went wrong, please refresh the page.</p>
-   if (groups.aggregate.count === 0)
+   if (groups?.aggregate?.count === 0)
       return (
          <Empty
             message="Create a group to begin"
