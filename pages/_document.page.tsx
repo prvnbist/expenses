@@ -27,6 +27,14 @@ export default class Document extends NextDocument {
       return (
          <Html lang="en">
             <Head>
+               {process.env.NODE_ENV === 'production' && (
+                  <script
+                     async
+                     defer
+                     data-website-id="4bedc0be-01a4-4486-8bb6-3d1f799c6eda"
+                     src="https://x-umami.vercel.app/umami.js"
+                  ></script>
+               )}
                <link rel="preconnect" href="https://fonts.googleapis.com" />
                <link
                   crossOrigin="true"
