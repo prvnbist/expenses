@@ -45,6 +45,7 @@ interface ITransaction {
    user_id: string
    group_id: string | null
    category_id: string | null
+   payment_method_id: string | null
    account_id: string | null
    type: 'income' | 'expense'
 }
@@ -232,6 +233,7 @@ const CreateTransaction = () => {
          amount: Math.round(parseFloat(amount) * 100),
          account_id: selectedAccount?.value || null,
          category_id: selectedCategory?.value || null,
+         payment_method_id: selectedPaymentMethod?.value || null,
          group_id: selectedGroup?.value || null,
       }
       if (FORM_TYPE === 'CREATE') {
