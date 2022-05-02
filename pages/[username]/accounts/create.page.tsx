@@ -5,11 +5,11 @@ import { useToasts } from 'react-toast-notifications'
 import { useMutation, useQuery } from '@apollo/client'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
-import { useUser } from '../../../lib/user'
+import { useUser } from 'lib/user'
+import Layout from 'sections/layout'
+import QUERIES from 'graphql/queries'
 import { Loader } from '../../../components'
-import Layout from '../../../sections/layout'
-import QUERIES from '../../../graphql/queries'
-import { MUTATIONS } from '../../../graphql/mutations'
+import { MUTATIONS } from 'graphql/mutations'
 
 type Inputs = {
    title: string

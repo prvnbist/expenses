@@ -1,11 +1,11 @@
 import React from 'react'
 import tw, { styled } from 'twin.macro'
-import { Loader } from '../components'
 
-import * as Icon from '../icons'
-import { auth } from '../lib/supabase'
-import { useUser } from '../lib/user'
-import styles from '../styles/globalStyles'
+import * as Icon from 'icons'
+import { Loader } from 'components'
+import { auth } from 'lib/supabase'
+import { useUser } from 'lib/user'
+import styles from 'styles/globalStyles'
 
 export default function Home() {
    const { user } = useUser()

@@ -1,10 +1,10 @@
 import tw from 'twin.macro'
 import Link from 'next/link'
 
+import * as Icon from 'icons'
+import { useUser } from 'lib/user'
+import Layout from 'sections/layout'
 import { Listing } from './components'
-import * as Icon from '../../../../icons'
-import { useUser } from '../../../../lib/user'
-import Layout from '../../../../sections/layout'
 
 export default function Categories() {
    const { user } = useUser()

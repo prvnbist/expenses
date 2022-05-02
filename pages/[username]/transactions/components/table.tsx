@@ -6,11 +6,11 @@ import { styled } from '@stitches/react'
 import { useMutation } from '@apollo/client'
 import { useTable, usePagination } from 'react-table'
 import { useToasts } from 'react-toast-notifications'
-import { MUTATIONS } from '../../../../graphql/mutations'
 
-import * as Icon from '../../../../icons'
-import { useUser } from '../../../../lib/user'
-import { Empty, Table as MyTable } from '../../../../components'
+import * as Icon from 'icons'
+import { useUser } from 'lib/user'
+import { MUTATIONS } from 'graphql/mutations'
+import { Empty, Table as MyTable } from 'components'
 
 interface ITransaction {
    id: string

@@ -3,8 +3,8 @@ import { useRouter } from 'next/router'
 import { useLazyQuery, useMutation } from '@apollo/client'
 
 import supabase from './supabase'
-import QUERIES from '../graphql/queries'
-import { MUTATIONS } from '../graphql/mutations'
+import QUERIES from 'graphql/queries'
+import { MUTATIONS } from 'graphql/mutations'
 
 export interface IUser {
    issuer?: string

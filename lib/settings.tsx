@@ -2,8 +2,8 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 
-import QUERIES from '../graphql/queries'
 import { useUser } from './user'
+import QUERIES from 'graphql/queries'
 
 export interface ISettingContext {
    settings: {

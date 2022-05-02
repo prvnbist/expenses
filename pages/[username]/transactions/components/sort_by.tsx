@@ -2,7 +2,7 @@ import React from 'react'
 import tw from 'twin.macro'
 import { styled } from '@stitches/react'
 
-import * as Icon from '../../../../icons'
+import * as Icon from 'icons'
 
 interface ISortBy {
    title?: 'asc' | 'desc'

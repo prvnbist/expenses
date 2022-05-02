@@ -6,12 +6,12 @@ import { useQuery } from '@apollo/client'
 
 import Table from './table'
 import SortBy from './sort_by'
-import * as Icon from '../../../../icons'
-import { useUser } from '../../../../lib/user'
-import { Empty, Loader } from '../../../../components'
-import QUERIES from '../../../../graphql/queries'
-import { useSetting } from '../../../../lib/settings'
-import { useDebounce, usePrevious } from '../../../../hooks'
+import * as Icon from 'icons'
+import { useUser } from 'lib/user'
+import QUERIES from 'graphql/queries'
+import { useSetting } from 'lib/settings'
+import { Empty, Loader } from 'components'
+import { useDebounce, usePrevious } from 'hooks'
 
 interface ISortByState {
    title: 'asc' | 'desc'

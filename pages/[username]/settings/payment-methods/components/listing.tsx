@@ -6,11 +6,11 @@ import { useRouter } from 'next/router'
 import { useToasts } from 'react-toast-notifications'
 import { useMutation, useQuery } from '@apollo/client'
 
-import * as Icon from '../../../../../icons'
-import { useUser } from '../../../../../lib/user'
-import QUERIES from '../../../../../graphql/queries'
-import { MUTATIONS } from '../../../../../graphql/mutations'
-import { Empty, Loader, Table as MyTable } from '../../../../../components'
+import * as Icon from 'icons'
+import { useUser } from 'lib/user'
+import QUERIES from 'graphql/queries'
+import { MUTATIONS } from 'graphql/mutations'
+import { Empty, Loader, Table as MyTable } from 'components'
 
 const Listing = () => {
    const { user } = useUser()
