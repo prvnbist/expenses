@@ -202,6 +202,16 @@ const QUERIES = {
          }
       `,
    },
+   SETTINGS: {
+      LIST: gql`
+         query settings($where: settings_bool_exp = {}) {
+            settings(order_by: { title: asc }, where: $where) {
+               title
+               value
+            }
+         }
+      `,
+   },
 }
 
 export default QUERIES

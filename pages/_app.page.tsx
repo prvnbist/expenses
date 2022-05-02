@@ -7,6 +7,7 @@ import globalStyles from '../styles/globalStyles'
 
 import '../styles/globals.css'
 import { UserProvider } from '../lib/user'
+import { SettingProvider } from '../lib/settings'
 
 const App = ({ Component, pageProps }: AppProps) => {
    globalStyles()
@@ -18,7 +19,9 @@ const App = ({ Component, pageProps }: AppProps) => {
       >
          <ApolloProvider client={client}>
             <UserProvider>
-               <Component {...pageProps} />
+               <SettingProvider>
+                  <Component {...pageProps} />
+               </SettingProvider>
             </UserProvider>
          </ApolloProvider>
       </ToastProvider>

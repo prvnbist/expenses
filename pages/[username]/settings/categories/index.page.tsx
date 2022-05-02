@@ -14,7 +14,10 @@ export default function Categories() {
             <h1 tw="font-heading text-3xl font-medium text-gray-400">
                Categories
             </h1>
-            <Link href={`/${user.username}/settings/categories/create`}>
+            <Link
+               href={`/${user.username}/settings/categories/create`}
+               passHref
+            >
                <a
                   title="Create Category"
                   tw="cursor-pointer h-10 w-10 border border-dark-200 flex items-center justify-center hover:bg-dark-300"

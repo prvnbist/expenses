@@ -14,7 +14,7 @@ export default function Categories() {
             <h1 tw="font-heading text-3xl font-medium text-gray-400">
                Accounts
             </h1>
-            <Link href={`/${user.username}/accounts/create`}>
+            <Link href={`/${user.username}/accounts/create`} passHref>
                <a
                   title="Create Account"
                   tw="cursor-pointer h-10 w-10 border border-dark-200 flex items-center justify-center hover:bg-dark-300"

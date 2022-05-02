@@ -14,7 +14,7 @@ export default function Dashboard() {
             <h1 tw="font-heading text-3xl font-medium text-gray-400">
                Transactions
             </h1>
-            <Link href={`/${user.username}/transactions/create`}>
+            <Link href={`/${user.username}/transactions/create`} passHref>
                <a
                   title="Create Transaction"
                   tw="cursor-pointer h-10 w-10 border border-dark-200 flex items-center justify-center hover:bg-dark-300"

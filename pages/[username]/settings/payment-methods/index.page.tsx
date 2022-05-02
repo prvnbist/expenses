@@ -14,7 +14,10 @@ export default function PaymentMethods() {
             <h1 tw="font-heading text-3xl font-medium text-gray-400">
                Payment Methods
             </h1>
-            <Link href={`/${user.username}/settings/payment-methods/create`}>
+            <Link
+               href={`/${user.username}/settings/payment-methods/create`}
+               passHref
+            >
                <a
                   title="Create Payment Method"
                   tw="cursor-pointer h-10 w-10 border border-dark-200 flex items-center justify-center hover:bg-dark-300"

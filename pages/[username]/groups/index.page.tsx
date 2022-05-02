@@ -21,7 +21,7 @@ export default function Groups() {
             >
                Groups
             </h1>
-            <Link href={`/${user.username}/groups/create`}>
+            <Link href={`/${user.username}/groups/create`} passHref>
                <a
                   title="Create Group"
                   data-test="create-group"

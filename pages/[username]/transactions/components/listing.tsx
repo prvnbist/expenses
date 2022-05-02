@@ -10,6 +10,7 @@ import * as Icon from '../../../../icons'
 import { useUser } from '../../../../lib/user'
 import { Empty, Loader } from '../../../../components'
 import QUERIES from '../../../../graphql/queries'
+import { useSetting } from '../../../../lib/settings'
 import { useDebounce, usePrevious } from '../../../../hooks'
 
 interface ISortByState {
@@ -23,6 +24,7 @@ interface IChildRef {
 
 const Listing = (): JSX.Element => {
    const { user } = useUser()
+   const { settings } = useSetting()
    const childRef = React.useRef<IChildRef>(null)
    const [search, setSearch] = React.useState('')
    const [pagination, setPagination] = React.useState({
@@ -57,7 +59,9 @@ const Listing = (): JSX.Element => {
    }, [previousSearch, search])
 
    useQuery(QUERIES.TRANSACTIONS.LIST, {
-      skip: !user?.id,
+      skip:
+         !user?.id ||
+         !Array.isArray(settings?.excludeCategoriesFromTotalIncome),
       fetchPolicy: 'network-only',
       variables: {
          order_by: { ...sortBy },
@@ -68,6 +72,9 @@ const Listing = (): JSX.Element => {
          },
          where2: {
             user_id: { _eq: user?.id },
+            category: {
+               _nin: settings?.excludeCategoriesFromTotalIncome || [],
+            },
             _or: [{ title: { _ilike: `%${debouncedSearch.trim()}%` } }],
          },
       },
