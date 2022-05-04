@@ -73,7 +73,9 @@ const Listing = (): JSX.Element => {
          where2: {
             user_id: { _eq: user?.id },
             category: {
-               _nin: settings?.excludeCategoriesFromTotalIncome || [],
+               _nin: (settings?.excludeCategoriesFromTotalIncome || []).map(
+                  node => node.title
+               ),
             },
             _or: [{ title: { _ilike: `%${debouncedSearch.trim()}%` } }],
          },
