@@ -93,7 +93,7 @@ const CreateAccount = () => {
                   object: {
                      user_id: user.id,
                      title: data.title,
-                     amount: parseFloat(data.amount) * 100,
+                     amount: Math.round(parseFloat(data.amount) * 100),
                   },
                },
             })
@@ -103,7 +103,7 @@ const CreateAccount = () => {
                   id: router.query.id,
                   _set: {
                      title: data.title,
-                     amount: parseFloat(data.amount) * 100,
+                     amount: Math.round(parseFloat(data.amount) * 100),
                   },
                },
             })
