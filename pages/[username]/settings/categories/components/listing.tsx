@@ -79,29 +79,31 @@ const Listing = () => {
             alignment: 'center',
             no_padding: true,
             Cell: ({ cell }: any) => {
-               return (
-                  <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
-                     <EditButton
-                        goto={router.push}
-                        username={user.username}
-                        id={cell.row.original.id}
-                     />
-                     <button
-                        title="Delete Category"
-                        onClick={() =>
-                           delete_category({
-                              variables: { id: cell.row.original.id },
-                           })
-                        }
-                        tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
-                     >
-                        <Icon.Delete
-                           size={16}
-                           tw="stroke-current text-gray-400"
+               if (cell.row.original.user_id === user.id)
+                  return (
+                     <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
+                        <EditButton
+                           goto={router.push}
+                           username={user.username}
+                           id={cell.row.original.id}
                         />
-                     </button>
-                  </div>
-               )
+                        <button
+                           title="Delete Category"
+                           onClick={() =>
+                              delete_category({
+                                 variables: { id: cell.row.original.id },
+                              })
+                           }
+                           tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+                        >
+                           <Icon.Delete
+                              size={16}
+                              tw="stroke-current text-gray-400"
+                           />
+                        </button>
+                     </div>
+                  )
+               return null
             },
          },
       ],
