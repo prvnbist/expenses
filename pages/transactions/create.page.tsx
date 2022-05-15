@@ -10,7 +10,7 @@ import { useUser } from 'lib/user'
 import Layout from 'sections/layout'
 import QUERIES from 'graphql/queries'
 import { MUTATIONS } from 'graphql/mutations'
-import { Loader } from '../../../components'
+import { Loader } from '../../components'
 
 type Inputs = {
    title: string
