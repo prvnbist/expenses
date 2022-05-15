@@ -83,6 +83,16 @@ const Listing = (): JSX.Element => {
       onCompleted: ({ transactions = {}, transactions_aggregate = {} }) => {
          if (transactions_aggregate.aggregate.count === 0) {
             setStatus('EMPTY')
+            setTransactions([])
+            setAllTransactionsAggregate({
+               count: 0,
+               sum: { credit: 0, debit: 0 },
+            })
+            setPagination({
+               page: 0,
+               size: 10,
+               count: 0,
+            })
             return
          }
          setTransactions(transactions.nodes)
@@ -110,7 +120,7 @@ const Listing = (): JSX.Element => {
    if (status === 'LOADING') return <Loader />
    if (status === 'ERROR')
       return <p>Something went wrong, please refresh the page.</p>
-   if (status === 'EMPTY')
+   if (status === 'EMPTY' && search.length === 0)
       return <Empty message="Create a transaction to begin" />
    return (
       <Styles.Container>
