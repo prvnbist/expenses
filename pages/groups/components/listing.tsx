@@ -1,6 +1,5 @@
 import React from 'react'
 import tw from 'twin.macro'
-import Dinero from 'dinero.js'
 import { useTable } from 'react-table'
 import { useRouter } from 'next/router'
 import { useToasts } from 'react-toast-notifications'
@@ -17,26 +16,21 @@ const Listing = () => {
    const router = useRouter()
    const { addToast } = useToasts()
 
-   const [delete_payment_method] = useMutation(
-      MUTATIONS.PAYMENT_METHODS.DELETE,
-      {
-         refetchQueries: ['payment_methods'],
-         onCompleted: () =>
-            addToast('Successfully deleted the payment method.', {
-               appearance: 'success',
-            }),
-         onError: () =>
-            addToast('Failed to delete the payment method.', {
-               appearance: 'error',
-            }),
-      }
-   )
+   const [delete_acount] = useMutation(MUTATIONS.GROUPS.DELETE, {
+      refetchQueries: ['groups'],
+      onCompleted: () =>
+         addToast('Successfully deleted the group', {
+            appearance: 'success',
+         }),
+      onError: () =>
+         addToast('Failed to delete the group', { appearance: 'error' }),
+   })
 
    const {
       loading,
       error,
-      data: { payment_methods = {} } = {},
-   } = useQuery(QUERIES.PAYMENT_METHODS.LIST, {
+      data: { groups = {} } = {},
+   } = useQuery(QUERIES.GROUPS.LIST, {
       skip: !user?.id,
       variables: { userid: user.id, where: { user_id: { _eq: user.id } } },
    })
@@ -61,10 +55,11 @@ const Listing = () => {
                return (
                   <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
                      <button
-                        title="Edit Payment Method"
+                        title="Edit Group"
+                        data-test="edit-button"
                         onClick={() =>
                            router.push(
-                              `/${user.username}/settings/payment-methods/create?id=${cell.row.original.id}`
+                              `/groups/create?id=${cell.row.original.id}`
                            )
                         }
                         tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
@@ -72,9 +67,10 @@ const Listing = () => {
                         <Icon.Edit size={16} tw="fill-current text-gray-400" />
                      </button>
                      <button
-                        title="Delete Payment Method"
+                        title="Delete Group"
+                        data-test="delete-button"
                         onClick={() =>
-                           delete_payment_method({
+                           delete_acount({
                               variables: { id: cell.row.original.id },
                            })
                         }
@@ -95,12 +91,17 @@ const Listing = () => {
 
    if (loading) return <Loader />
    if (error) return <p>Something went wrong, please refresh the page.</p>
-   if (payment_methods?.aggregate?.count === 0)
-      return <Empty message="Create a payment method to begin" />
+   if (groups?.aggregate?.count === 0)
+      return (
+         <Empty
+            message="Create a group to begin"
+            dataTest="groups-empty-placeholder"
+         />
+      )
 
    return (
       <main tw="p-4">
-         <Table columns={columns} categories={payment_methods.nodes} />
+         <Table columns={columns} categories={groups.nodes} />
       </main>
    )
 }
@@ -113,7 +114,7 @@ const Table = ({ columns = [], categories = [] }) => {
       })
    return (
       <main tw="overflow-x-auto">
-         <MyTable {...getTableProps()}>
+         <MyTable {...getTableProps()} dataTest="table">
             <MyTable.Head>
                {headerGroups.map(headerGroup => {
                   const { key: header_group_key, ...rest_header_group } =

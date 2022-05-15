@@ -1,6 +1,5 @@
 import React from 'react'
 import tw from 'twin.macro'
-import Dinero from 'dinero.js'
 import { useTable } from 'react-table'
 import { useRouter } from 'next/router'
 import { useToasts } from 'react-toast-notifications'
@@ -17,23 +16,30 @@ const Listing = () => {
    const router = useRouter()
    const { addToast } = useToasts()
 
-   const [delete_account] = useMutation(MUTATIONS.ACCOUNTS.DELETE, {
-      refetchQueries: ['accounts'],
+   const [delete_category] = useMutation(MUTATIONS.CATEGORIES.DELETE, {
+      refetchQueries: ['categories'],
       onCompleted: () =>
-         addToast('Successfully deleted the account', {
+         addToast('Successfully deleted the category', {
             appearance: 'success',
          }),
       onError: () =>
-         addToast('Failed to delete the account', { appearance: 'error' }),
+         addToast('Failed to delete the category', { appearance: 'error' }),
    })
 
    const {
       loading,
       error,
-      data: { accounts = {} } = {},
-   } = useQuery(QUERIES.ACCOUNTS.LIST, {
+      data: { categories = {} } = {},
+   } = useQuery(QUERIES.CATEGORIES.LIST, {
       skip: !user?.id,
-      variables: { userid: user.id, where: { user_id: { _eq: user.id } } },
+      variables: {
+         where: {
+            _or: [
+               { user_id: { _eq: user.id } },
+               { user_id: { _is_null: true } },
+            ],
+         },
+      },
    })
 
    const columns = React.useMemo(
@@ -43,16 +49,29 @@ const Listing = () => {
             accessor: 'title',
          },
          {
-            Header: 'Balance',
-            accessor: 'amount',
-            alignment: 'right',
+            Header: 'Type',
+            accessor: 'type',
             Cell: ({ cell }): string =>
-               Dinero({ amount: cell.value, currency: 'INR' }).toFormat(),
+               cell.value.replace(/./, (c: string) => c.toUpperCase()),
          },
          {
-            Header: 'Transactions',
-            accessor: 'transactions_count',
-            alignment: 'right',
+            Header: 'Owned',
+            alignment: 'center',
+            width: 120,
+            Cell: ({ cell }: any) => {
+               const isOwned = cell.row.original.user_id === user.id
+               if (isOwned)
+                  return (
+                     <span tw="flex justify-center">
+                        <Icon.Tick tw="stroke-current" />
+                     </span>
+                  )
+               return (
+                  <span tw="flex justify-center">
+                     <Icon.Cross tw="stroke-current" />
+                  </span>
+               )
+            },
          },
          {
             Header: 'Actions',
@@ -60,35 +79,30 @@ const Listing = () => {
             alignment: 'center',
             no_padding: true,
             Cell: ({ cell }: any) => {
-               return (
-                  <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
-                     <button
-                        title="Edit Account"
-                        onClick={() =>
-                           router.push(
-                              `/${user.username}/accounts/create?id=${cell.row.original.id}`
-                           )
-                        }
-                        tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
-                     >
-                        <Icon.Edit size={16} tw="fill-current text-gray-400" />
-                     </button>
-                     <button
-                        title="Delete Account"
-                        onClick={() =>
-                           delete_account({
-                              variables: { id: cell.row.original.id },
-                           })
-                        }
-                        tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
-                     >
-                        <Icon.Delete
-                           size={16}
-                           tw="stroke-current text-gray-400"
+               if (cell.row.original.user_id === user.id)
+                  return (
+                     <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
+                        <EditButton
+                           goto={router.push}
+                           id={cell.row.original.id}
                         />
-                     </button>
-                  </div>
-               )
+                        <button
+                           title="Delete Category"
+                           onClick={() =>
+                              delete_category({
+                                 variables: { id: cell.row.original.id },
+                              })
+                           }
+                           tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+                        >
+                           <Icon.Delete
+                              size={16}
+                              tw="stroke-current text-gray-400"
+                           />
+                        </button>
+                     </div>
+                  )
+               return null
             },
          },
       ],
@@ -97,12 +111,12 @@ const Listing = () => {
 
    if (loading) return <Loader />
    if (error) return <p>Something went wrong, please refresh the page.</p>
-   if (accounts?.aggregate?.count === 0)
-      return <Empty message="Create an account to begin" />
+   if (categories?.aggregate?.count === 0)
+      return <Empty message="Create a category to begin" />
 
    return (
       <main tw="p-4">
-         <Table columns={columns} categories={accounts.nodes} />
+         <Table columns={columns} categories={categories.nodes} />
       </main>
    )
 }
@@ -181,3 +195,21 @@ const Table = ({ columns = [], categories = [] }) => {
 }
 
 export default Listing
+
+interface EditButtonProps {
+   id: string
+   goto: (path: string) => void
+}
+
+const EditButton = (props: EditButtonProps): JSX.Element => {
+   const { id, goto } = props
+   return (
+      <button
+         title="Edit Category"
+         onClick={() => goto(`/settings/categories/create?id=${id}`)}
+         tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+      >
+         <Icon.Edit size={16} tw="fill-current text-gray-400" />
+      </button>
+   )
+}

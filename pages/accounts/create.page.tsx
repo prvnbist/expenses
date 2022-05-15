@@ -6,16 +6,17 @@ import { useMutation, useQuery } from '@apollo/client'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
 import { useUser } from 'lib/user'
-import { Loader } from 'components'
 import Layout from 'sections/layout'
 import QUERIES from 'graphql/queries'
+import { Loader } from '../../components'
 import { MUTATIONS } from 'graphql/mutations'
 
 type Inputs = {
    title: string
+   amount: string
 }
 
-const CreateCategory = () => {
+const CreateAccount = () => {
    const { user } = useUser()
    const router = useRouter()
    const { addToast } = useToasts()
@@ -32,50 +33,48 @@ const CreateCategory = () => {
       handleSubmit,
       formState: { errors },
    } = useForm<Inputs>()
-   const [type, setType] = React.useState<'expense' | 'income'>('expense')
-   const [create_category, { loading: creating_category }] = useMutation(
-      MUTATIONS.CATEGORIES.CREATE,
+   const [create_account, { loading: creating_account }] = useMutation(
+      MUTATIONS.ACCOUNTS.CREATE,
       {
-         refetchQueries: ['categories', 'category'],
+         refetchQueries: ['accounts'],
          onCompleted: () => {
             reset()
-            addToast('Successfully added the category', {
+            addToast('Successfully added the account', {
                appearance: 'success',
             })
-            router.push(`/${user.username}/settings/categories`)
+            router.push(`/accounts`)
          },
          onError: () =>
-            addToast('Failed to add the category', {
+            addToast('Failed to add the account', {
                appearance: 'error',
             }),
       }
    )
-   const [update_category, { loading: updating_category }] = useMutation(
-      MUTATIONS.CATEGORIES.UPDATE,
+   const [update_account, { loading: updating_account }] = useMutation(
+      MUTATIONS.ACCOUNTS.UPDATE,
       {
-         refetchQueries: ['categories', 'category'],
+         refetchQueries: ['accounts'],
          onCompleted: () =>
-            addToast('Successfully updated the category', {
+            addToast('Successfully updated the account', {
                appearance: 'success',
             }),
          onError: () =>
-            addToast('Failed to update the category', {
+            addToast('Failed to update the account', {
                appearance: 'error',
             }),
       }
    )
 
-   useQuery(QUERIES.CATEGORIES.ONE, {
+   useQuery(QUERIES.ACCOUNTS.ONE, {
       fetchPolicy: 'network-only',
       variables: { id: router.query.id },
       skip: !router.isReady || FORM_TYPE === 'CREATE',
-      onCompleted: ({ category = {} }) => {
-         if (!category?.id) return
-         if (category.user_id !== user.id)
-            router.push(`/${user.username}/settings/categories`)
+      onCompleted: ({ account = {} }) => {
+         if (!account?.id) return
+         if (account.user_id !== user.id) router.push(`/accounts`)
 
-         setType(category.type)
-         setValue('title', category.title, { shouldValidate: true })
+         setValue('title', account.title, { shouldValidate: true })
+         setValue('amount', `${account.amount / 100}`, { shouldValidate: true })
          setStatus('SUCCESS')
       },
       onError: () => {
@@ -83,25 +82,28 @@ const CreateCategory = () => {
       },
    })
 
-   const isFormValid = [...watch(['title']), type].every(node => node)
+   const isFormValid = [...watch(['title', 'amount'])].every(node => node)
 
    const onSubmit: SubmitHandler<Inputs> = data => {
       if (isFormValid) {
          if (FORM_TYPE === 'CREATE') {
-            create_category({
+            create_account({
                variables: {
                   object: {
-                     type,
                      user_id: user.id,
                      title: data.title,
+                     amount: Math.round(parseFloat(data.amount) * 100),
                   },
                },
             })
          } else if (FORM_TYPE === 'EDIT') {
-            update_category({
+            update_account({
                variables: {
                   id: router.query.id,
-                  _set: { title: data.title, type },
+                  _set: {
+                     title: data.title,
+                     amount: Math.round(parseFloat(data.amount) * 100),
+                  },
                },
             })
          }
@@ -112,7 +114,7 @@ const CreateCategory = () => {
       <Layout>
          <header tw="px-4 pt-4">
             <h1 tw="font-heading text-3xl font-medium text-gray-400">
-               {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Category
+               {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Account
             </h1>
          </header>
          {status === 'LOADING' ? (
@@ -148,32 +150,37 @@ const CreateCategory = () => {
                            <Styles.Error>Title is too long</Styles.Error>
                         )}
                      </fieldset>
-                     <div tw="flex items-center bg-dark-300 p-1 rounded-lg">
-                        <Styles.GroupButton
-                           is_selected={type === 'expense'}
-                           onClick={(e: React.FormEvent<HTMLInputElement>) => {
-                              e.preventDefault()
-                              setType('expense')
-                           }}
-                        >
-                           Expense
-                        </Styles.GroupButton>
-                        <Styles.GroupButton
-                           is_selected={type === 'income'}
-                           onClick={(e: React.FormEvent<HTMLInputElement>) => {
-                              e.preventDefault()
-                              setType('income')
-                           }}
-                        >
-                           Income
-                        </Styles.GroupButton>
-                     </div>
+                     <fieldset>
+                        <Styles.Label htmlFor="amount">
+                           Amount{' '}
+                           <span tw="text-[12px] float-right normal-case">
+                              (Upto two decimals)
+                           </span>
+                        </Styles.Label>
+                        <Styles.Text
+                           {...register('amount', {
+                              required: true,
+                              pattern: /^[\d]{1,}(\.[\d]{1,2})?$/,
+                           })}
+                           id="amount"
+                           name="amount"
+                           placeholder="Enter the amount"
+                        />
+                        {errors.amount?.type === 'required' && (
+                           <Styles.Error>Please fill the amount</Styles.Error>
+                        )}
+                        {errors.amount?.type === 'pattern' && (
+                           <Styles.Error>
+                              Please enter numbers only
+                           </Styles.Error>
+                        )}
+                     </fieldset>
                      <button
                         type="submit"
-                        disabled={creating_category || updating_category}
+                        disabled={creating_account || updating_account}
                         tw="border border-dark-200 h-10 px-3 text-white hover:bg-dark-300 disabled:(cursor-not-allowed opacity-50 hover:bg-transparent)"
                      >
-                        {creating_category || updating_category
+                        {creating_account || updating_account
                            ? 'Saving'
                            : 'Save'}
                      </button>
@@ -185,7 +192,7 @@ const CreateCategory = () => {
    )
 }
 
-export default CreateCategory
+export default CreateAccount
 
 const Styles = {
    Label: tw.label`mb-1 block uppercase tracking-wide text-sm text-gray-400`,
@@ -193,8 +200,4 @@ const Styles = {
       ...tw`px-2 bg-transparent focus:outline-none w-full flex items-center border text-gray-300 h-10 border-dark-200 focus-within:border-indigo-500`,
    }),
    Error: tw.span`inline-block mt-1 text-red-400`,
-   GroupButton: styled.button({
-      ...tw`h-10 flex-1 text-gray-300 rounded`,
-      variants: { is_selected: { true: { ...tw`bg-dark-200` } } },
-   }),
 }

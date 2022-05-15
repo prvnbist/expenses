@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 import tw, { styled } from 'twin.macro'
 import { useRouter } from 'next/router'
 import { useToasts } from 'react-toast-notifications'
@@ -8,14 +9,15 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { useUser } from 'lib/user'
 import Layout from 'sections/layout'
 import QUERIES from 'graphql/queries'
+import { Loader } from '../../components'
 import { MUTATIONS } from 'graphql/mutations'
-import { Loader } from '../../../../components'
 
 type Inputs = {
    title: string
+   description: string
 }
 
-const CreatePaymentMethod = () => {
+const CreateGroup = () => {
    const { user } = useUser()
    const router = useRouter()
    const { addToast } = useToasts()
@@ -32,44 +34,48 @@ const CreatePaymentMethod = () => {
       handleSubmit,
       formState: { errors },
    } = useForm<Inputs>()
-   const [create_payment_method, { loading: creating_payment_method }] =
-      useMutation(MUTATIONS.PAYMENT_METHODS.CREATE, {
-         refetchQueries: ['payment_methods'],
+   const [create_group, { loading: creating_group }] = useMutation(
+      MUTATIONS.GROUPS.CREATE,
+      {
+         refetchQueries: ['groups'],
          onCompleted: () => {
             reset()
-            addToast('Successfully added the payment method.', {
+            addToast('Successfully added the group', {
                appearance: 'success',
             })
-            router.push(`/${user.username}/settings/payment-methods`)
+            router.push(`/groups`)
          },
          onError: () =>
-            addToast('Failed to add the payment method.', {
+            addToast('Failed to add the group', {
                appearance: 'error',
             }),
-      })
-   const [update_payment_method, { loading: updating_payment_method }] =
-      useMutation(MUTATIONS.PAYMENT_METHODS.UPDATE, {
-         refetchQueries: ['payment_methods'],
+      }
+   )
+   const [update_group, { loading: updating_group }] = useMutation(
+      MUTATIONS.GROUPS.UPDATE,
+      {
+         refetchQueries: ['groups'],
          onCompleted: () =>
-            addToast('Successfully updated the payment method.', {
+            addToast('Successfully updated the group', {
                appearance: 'success',
             }),
          onError: () =>
-            addToast('Failed to update the payment method.', {
+            addToast('Failed to update the group', {
                appearance: 'error',
             }),
-      })
+      }
+   )
 
-   useQuery(QUERIES.PAYMENT_METHODS.ONE, {
+   useQuery(QUERIES.GROUPS.ONE, {
       fetchPolicy: 'network-only',
       variables: { id: router.query.id },
       skip: !router.isReady || FORM_TYPE === 'CREATE',
-      onCompleted: ({ payment_method = {} }) => {
-         if (!payment_method?.id) return
-         if (payment_method.user_id !== user.id)
-            router.push(`/${user.username}/settings/payment-methods`)
+      onCompleted: ({ group = {} }) => {
+         if (!group?.id) return
+         if (group.user_id !== user.id) router.push(`/groups`)
 
-         setValue('title', payment_method.title, { shouldValidate: true })
+         setValue('title', group.title, { shouldValidate: true })
+         setValue('description', group.description, { shouldValidate: true })
          setStatus('SUCCESS')
       },
       onError: () => {
@@ -82,20 +88,22 @@ const CreatePaymentMethod = () => {
    const onSubmit: SubmitHandler<Inputs> = data => {
       if (isFormValid) {
          if (FORM_TYPE === 'CREATE') {
-            create_payment_method({
+            create_group({
                variables: {
                   object: {
                      user_id: user.id,
                      title: data.title,
+                     description: data.description,
                   },
                },
             })
          } else if (FORM_TYPE === 'EDIT') {
-            update_payment_method({
+            update_group({
                variables: {
                   id: router.query.id,
                   _set: {
                      title: data.title,
+                     description: data.description,
                   },
                },
             })
@@ -105,9 +113,17 @@ const CreatePaymentMethod = () => {
 
    return (
       <Layout>
+         <Head>
+            <title>{`${
+               FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'
+            } Group`}</title>
+         </Head>
          <header tw="px-4 pt-4">
-            <h1 tw="font-heading text-3xl font-medium text-gray-400">
-               {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Payment Method
+            <h1
+               data-test="page-title"
+               tw="font-heading text-3xl font-medium text-gray-400"
+            >
+               {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Group
             </h1>
          </header>
          {status === 'LOADING' ? (
@@ -131,28 +147,59 @@ const CreatePaymentMethod = () => {
                            })}
                            id="title"
                            name="title"
+                           data-test="title"
                            placeholder="Enter the title"
                         />
                         {errors.title?.type === 'required' && (
-                           <Styles.Error>Please fill the title</Styles.Error>
+                           <Styles.Error data-test="title-required">
+                              Please fill the title
+                           </Styles.Error>
                         )}
                         {errors.title?.type === 'minLength' && (
-                           <Styles.Error>Title is too short</Styles.Error>
+                           <Styles.Error data-test="title-too-short">
+                              Title is too short
+                           </Styles.Error>
                         )}
                         {errors.title?.type === 'maxLength' && (
-                           <Styles.Error>Title is too long</Styles.Error>
+                           <Styles.Error data-test="title-too-long">
+                              Title is too long
+                           </Styles.Error>
+                        )}
+                     </fieldset>
+                     <fieldset>
+                        <Styles.Label htmlFor="description">
+                           Description
+                        </Styles.Label>
+                        <Styles.TextArea
+                           {...register('description', {
+                              minLength: 2,
+                              maxLength: 320,
+                           })}
+                           rows="5"
+                           id="description"
+                           name="description"
+                           data-test="description"
+                           placeholder="Enter the description"
+                        />
+                        {errors.description?.type === 'required' && (
+                           <Styles.Error>
+                              Please fill the description
+                           </Styles.Error>
+                        )}
+                        {errors.description?.type === 'minLength' && (
+                           <Styles.Error>Description is too short</Styles.Error>
+                        )}
+                        {errors.description?.type === 'maxLength' && (
+                           <Styles.Error>Description is too long</Styles.Error>
                         )}
                      </fieldset>
                      <button
                         type="submit"
-                        disabled={
-                           creating_payment_method || updating_payment_method
-                        }
+                        data-test="submit"
+                        disabled={creating_group || updating_group}
                         tw="border border-dark-200 h-10 px-3 text-white hover:bg-dark-300 disabled:(cursor-not-allowed opacity-50 hover:bg-transparent)"
                      >
-                        {creating_payment_method || updating_payment_method
-                           ? 'Saving'
-                           : 'Save'}
+                        {creating_group || updating_group ? 'Saving' : 'Save'}
                      </button>
                   </form>
                )}
@@ -162,12 +209,15 @@ const CreatePaymentMethod = () => {
    )
 }
 
-export default CreatePaymentMethod
+export default CreateGroup
 
 const Styles = {
    Label: tw.label`mb-1 block uppercase tracking-wide text-sm text-gray-400`,
    Text: styled.input({
       ...tw`px-2 bg-transparent focus:outline-none w-full flex items-center border text-gray-300 h-10 border-dark-200 focus-within:border-indigo-500`,
+   }),
+   TextArea: styled.textarea({
+      ...tw`pt-1 px-2 bg-transparent focus:outline-none w-full flex items-center border text-gray-300 border-dark-200 focus-within:border-indigo-500`,
    }),
    Error: tw.span`inline-block mt-1 text-red-400`,
 }

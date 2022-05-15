@@ -33,7 +33,7 @@ export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
       onCompleted: ({ users = [] }) => {
          if (users.length > 0) {
             setUser(users[0])
-            router.push(`/${users[0].username}/transactions`)
+            router.push(`/transactions`)
          }
       },
       onError: () => {
@@ -44,7 +44,7 @@ export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
    const [upsert_user] = useMutation(MUTATIONS.USER.UPSERT, {
       onCompleted: ({ insert_user = {} }) => {
          setUser(insert_user)
-         router.push(`/${insert_user.username}/transactions`)
+         router.push(`/transactions`)
       },
       onError: () => {
          setUser({})

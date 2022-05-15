@@ -1,22 +1,30 @@
 import tw from 'twin.macro'
 import Link from 'next/link'
+import Head from 'next/head'
 
 import * as Icon from 'icons'
 import { useUser } from 'lib/user'
 import Layout from 'sections/layout'
 import { Listing } from './components'
 
-export default function Categories() {
+export default function Groups() {
    const { user } = useUser()
    return (
       <Layout>
+         <Head>
+            <title>Groups</title>
+         </Head>
          <header tw="px-4 pt-4 flex items-center space-x-3">
-            <h1 tw="font-heading text-3xl font-medium text-gray-400">
-               Accounts
+            <h1
+               data-test="page-title"
+               tw="font-heading text-3xl font-medium text-gray-400"
+            >
+               Groups
             </h1>
-            <Link href={`/${user.username}/accounts/create`} passHref>
+            <Link href={`/groups/create`} passHref>
                <a
-                  title="Create Account"
+                  title="Create Group"
+                  data-test="create-group"
                   tw="cursor-pointer h-10 w-10 border border-dark-200 flex items-center justify-center hover:bg-dark-300"
                >
                   <Icon.Add tw="stroke-current text-white" />

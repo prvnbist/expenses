@@ -91,6 +91,7 @@ export const MUTATIONS = {
          mutation update_group($id: uuid = "", $_set: groups_set_input = {}) {
             update_group(pk_columns: { id: $id }, _set: $_set) {
                id
+               title
             }
          }
       `,

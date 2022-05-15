@@ -8,15 +8,14 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { useUser } from 'lib/user'
 import Layout from 'sections/layout'
 import QUERIES from 'graphql/queries'
-import { Loader } from '../../../components'
 import { MUTATIONS } from 'graphql/mutations'
+import { Loader } from '../../../components'
 
 type Inputs = {
    title: string
-   amount: string
 }
 
-const CreateAccount = () => {
+const CreatePaymentMethod = () => {
    const { user } = useUser()
    const router = useRouter()
    const { addToast } = useToasts()
@@ -33,49 +32,44 @@ const CreateAccount = () => {
       handleSubmit,
       formState: { errors },
    } = useForm<Inputs>()
-   const [create_account, { loading: creating_account }] = useMutation(
-      MUTATIONS.ACCOUNTS.CREATE,
-      {
-         refetchQueries: ['accounts'],
+   const [create_payment_method, { loading: creating_payment_method }] =
+      useMutation(MUTATIONS.PAYMENT_METHODS.CREATE, {
+         refetchQueries: ['payment_methods'],
          onCompleted: () => {
             reset()
-            addToast('Successfully added the account', {
+            addToast('Successfully added the payment method.', {
                appearance: 'success',
             })
-            router.push(`/${user.username}/accounts`)
+            router.push(`/settings/payment-methods`)
          },
          onError: () =>
-            addToast('Failed to add the account', {
+            addToast('Failed to add the payment method.', {
                appearance: 'error',
             }),
-      }
-   )
-   const [update_account, { loading: updating_account }] = useMutation(
-      MUTATIONS.ACCOUNTS.UPDATE,
-      {
-         refetchQueries: ['accounts'],
+      })
+   const [update_payment_method, { loading: updating_payment_method }] =
+      useMutation(MUTATIONS.PAYMENT_METHODS.UPDATE, {
+         refetchQueries: ['payment_methods'],
          onCompleted: () =>
-            addToast('Successfully updated the account', {
+            addToast('Successfully updated the payment method.', {
                appearance: 'success',
             }),
          onError: () =>
-            addToast('Failed to update the account', {
+            addToast('Failed to update the payment method.', {
                appearance: 'error',
             }),
-      }
-   )
+      })
 
-   useQuery(QUERIES.ACCOUNTS.ONE, {
+   useQuery(QUERIES.PAYMENT_METHODS.ONE, {
       fetchPolicy: 'network-only',
       variables: { id: router.query.id },
       skip: !router.isReady || FORM_TYPE === 'CREATE',
-      onCompleted: ({ account = {} }) => {
-         if (!account?.id) return
-         if (account.user_id !== user.id)
-            router.push(`/${user.username}/accounts`)
+      onCompleted: ({ payment_method = {} }) => {
+         if (!payment_method?.id) return
+         if (payment_method.user_id !== user.id)
+            router.push(`/settings/payment-methods`)
 
-         setValue('title', account.title, { shouldValidate: true })
-         setValue('amount', `${account.amount / 100}`, { shouldValidate: true })
+         setValue('title', payment_method.title, { shouldValidate: true })
          setStatus('SUCCESS')
       },
       onError: () => {
@@ -83,27 +77,25 @@ const CreateAccount = () => {
       },
    })
 
-   const isFormValid = [...watch(['title', 'amount'])].every(node => node)
+   const isFormValid = [...watch(['title'])].every(node => node)
 
    const onSubmit: SubmitHandler<Inputs> = data => {
       if (isFormValid) {
          if (FORM_TYPE === 'CREATE') {
-            create_account({
+            create_payment_method({
                variables: {
                   object: {
                      user_id: user.id,
                      title: data.title,
-                     amount: Math.round(parseFloat(data.amount) * 100),
                   },
                },
             })
          } else if (FORM_TYPE === 'EDIT') {
-            update_account({
+            update_payment_method({
                variables: {
                   id: router.query.id,
                   _set: {
                      title: data.title,
-                     amount: Math.round(parseFloat(data.amount) * 100),
                   },
                },
             })
@@ -115,7 +107,7 @@ const CreateAccount = () => {
       <Layout>
          <header tw="px-4 pt-4">
             <h1 tw="font-heading text-3xl font-medium text-gray-400">
-               {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Account
+               {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Payment Method
             </h1>
          </header>
          {status === 'LOADING' ? (
@@ -151,37 +143,14 @@ const CreateAccount = () => {
                            <Styles.Error>Title is too long</Styles.Error>
                         )}
                      </fieldset>
-                     <fieldset>
-                        <Styles.Label htmlFor="amount">
-                           Amount{' '}
-                           <span tw="text-[12px] float-right normal-case">
-                              (Upto two decimals)
-                           </span>
-                        </Styles.Label>
-                        <Styles.Text
-                           {...register('amount', {
-                              required: true,
-                              pattern: /^[\d]{1,}(\.[\d]{1,2})?$/,
-                           })}
-                           id="amount"
-                           name="amount"
-                           placeholder="Enter the amount"
-                        />
-                        {errors.amount?.type === 'required' && (
-                           <Styles.Error>Please fill the amount</Styles.Error>
-                        )}
-                        {errors.amount?.type === 'pattern' && (
-                           <Styles.Error>
-                              Please enter numbers only
-                           </Styles.Error>
-                        )}
-                     </fieldset>
                      <button
                         type="submit"
-                        disabled={creating_account || updating_account}
+                        disabled={
+                           creating_payment_method || updating_payment_method
+                        }
                         tw="border border-dark-200 h-10 px-3 text-white hover:bg-dark-300 disabled:(cursor-not-allowed opacity-50 hover:bg-transparent)"
                      >
-                        {creating_account || updating_account
+                        {creating_payment_method || updating_payment_method
                            ? 'Saving'
                            : 'Save'}
                      </button>
@@ -193,7 +162,7 @@ const CreateAccount = () => {
    )
 }
 
-export default CreateAccount
+export default CreatePaymentMethod
 
 const Styles = {
    Label: tw.label`mb-1 block uppercase tracking-wide text-sm text-gray-400`,

@@ -139,14 +139,12 @@ const CreateTransaction = () => {
          },
       },
       onCompleted: ({ transactions_view = [] }) => {
-         if (transactions_view.length === 0)
-            router.push(`/${user.username}/transactions`)
+         if (transactions_view.length === 0) router.push(`/transactions`)
 
          const [transaction] = transactions_view
 
-         if (!transaction.id) router.push(`/${user.username}/transactions`)
-         if (transaction.user_id !== user.id)
-            router.push(`/${user.username}/transactions`)
+         if (!transaction.id) router.push(`/transactions`)
+         if (transaction.user_id !== user.id) router.push(`/transactions`)
 
          setValue('title', transaction.title, { shouldValidate: true })
          setValue('amount', `${transaction.amount / 100}`, {
@@ -194,7 +192,7 @@ const CreateTransaction = () => {
             addToast('Successfully added the transaction', {
                appearance: 'success',
             })
-            router.push(`/${user.username}/transactions`)
+            router.push(`/transactions`)
          },
          onError: () =>
             addToast('Failed to add the transaction', {

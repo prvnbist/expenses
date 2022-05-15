@@ -21,19 +21,19 @@ const Layout = ({ children }: ILayout): JSX.Element => {
          {
             icon: <Icon.File tw="stroke-current" />,
             title: 'Transactions',
-            href: `/${user.username}/transactions`,
+            href: `/transactions`,
             isActive: router.asPath.endsWith('transactions'),
          },
          {
             icon: <Icon.DollarSign tw="stroke-current" />,
             title: 'Accounts',
-            href: `/${user.username}/accounts`,
+            href: `/accounts`,
             isActive: router.asPath.endsWith('accounts'),
          },
          {
             icon: <Icon.Group tw="stroke-current" />,
             title: 'Groups',
-            href: `/${user.username}/groups`,
+            href: `/groups`,
             isActive: router.asPath.endsWith('groups'),
          },
          {
@@ -43,15 +43,21 @@ const Layout = ({ children }: ILayout): JSX.Element => {
          },
          {
             title: 'Categories',
-            href: `/${user.username}/settings/categories`,
+            href: `/settings/categories`,
             icon: <Icon.Tag tw="stroke-current" />,
             isActive: router.asPath.endsWith('categories'),
          },
          {
             title: 'Payment Methods',
-            href: `/${user.username}/settings/payment-methods`,
+            href: `/settings/payment-methods`,
             icon: <Icon.Account tw="stroke-current" />,
             isActive: router.asPath.endsWith('payment-methods'),
+         },
+         {
+            title: 'Preferences',
+            href: `/settings/preferences`,
+            icon: <Icon.Settings tw="stroke-current" />,
+            isActive: router.asPath.endsWith('preferences'),
          },
       ],
       [router.asPath, user]
