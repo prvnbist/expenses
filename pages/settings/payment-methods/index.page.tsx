@@ -2,12 +2,10 @@ import tw from 'twin.macro'
 import Link from 'next/link'
 
 import * as Icon from 'icons'
-import { useUser } from 'lib/user'
 import Layout from 'sections/layout'
 import { Listing } from './components'
 
 export default function PaymentMethods() {
-   const { user } = useUser()
    return (
       <Layout>
          <header tw="px-4 pt-4 flex items-center space-x-3">

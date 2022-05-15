@@ -33,7 +33,6 @@ export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
       onCompleted: ({ users = [] }) => {
          if (users.length > 0) {
             setUser(users[0])
-            router.push(`/transactions`)
          }
       },
       onError: () => {

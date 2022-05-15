@@ -3,11 +3,9 @@ import Link from 'next/link'
 
 import * as Icon from 'icons'
 import { Listing } from './components'
-import { useUser } from 'lib/user'
 import Layout from 'sections/layout'
 
 export default function Dashboard() {
-   const { user } = useUser()
    return (
       <Layout>
          <header tw="px-4 pt-4 flex items-center space-x-3">

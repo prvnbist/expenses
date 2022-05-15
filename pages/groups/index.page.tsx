@@ -3,12 +3,10 @@ import Link from 'next/link'
 import Head from 'next/head'
 
 import * as Icon from 'icons'
-import { useUser } from 'lib/user'
 import Layout from 'sections/layout'
 import { Listing } from './components'
 
 export default function Groups() {
-   const { user } = useUser()
    return (
       <Layout>
          <Head>
