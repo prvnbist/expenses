@@ -53,12 +53,6 @@ const Layout = ({ children }: ILayout): JSX.Element => {
             icon: <Icon.Account tw="stroke-current" />,
             isActive: router.asPath.endsWith('payment-methods'),
          },
-         {
-            title: 'Preferences',
-            href: `/settings/preferences`,
-            icon: <Icon.Settings tw="stroke-current" />,
-            isActive: router.asPath.endsWith('preferences'),
-         },
       ],
       [router.asPath, user]
    )
