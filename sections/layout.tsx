@@ -14,7 +14,7 @@ interface ILayout {
 const Layout = ({ children }: ILayout): JSX.Element => {
    const router = useRouter()
    const { user } = useUser()
-   const [isCollapsed, setIsCollapsed] = React.useState(false)
+   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
 
    const routes = React.useMemo(
       () => [
@@ -37,11 +37,6 @@ const Layout = ({ children }: ILayout): JSX.Element => {
             isActive: router.asPath.endsWith('groups'),
          },
          {
-            id: 'settings',
-            type: 'divider',
-            title: 'Settings',
-         },
-         {
             title: 'Categories',
             href: `/settings/categories`,
             icon: <Icon.Tag tw="stroke-current" />,
@@ -58,30 +53,26 @@ const Layout = ({ children }: ILayout): JSX.Element => {
    )
    return (
       <Styles.Layout>
-         <Styles.Sidebar is_collapsed={isCollapsed}>
-            <Styles.Items is_collapsed={isCollapsed}>
-               {routes.map(route =>
-                  route.type === 'divider' ? (
-                     <Styles.Divider key={route.id} is_collapsed={isCollapsed}>
-                        <span>{route.title}</span>
-                     </Styles.Divider>
-                  ) : (
-                     <Styles.Item
-                        key={route.href}
-                        is_collapsed={isCollapsed}
-                        is_active={route.isActive}
-                     >
-                        <Link href={route.href || ''}>
-                           <a title={route.title}>
-                              <span>{route.icon}</span> <h4>{route.title}</h4>
-                           </a>
-                        </Link>
-                     </Styles.Item>
-                  )
-               )}
+         <Styles.Menu
+            isMenuOpen={isMenuOpen}
+            onClick={() => setIsMenuOpen(v => !v)}
+         >
+            <Icon.Menu tw="stroke-current text-white" />
+         </Styles.Menu>
+         <Styles.Navbar isMenuOpen={isMenuOpen}>
+            <Styles.Items>
+               {routes.map(route => (
+                  <Styles.Item key={route.href} is_active={route.isActive}>
+                     <Link href={route.href || ''}>
+                        <a title={route.title}>
+                           <span>{route.icon}</span> <h4>{route.title}</h4>
+                        </a>
+                     </Link>
+                  </Styles.Item>
+               ))}
             </Styles.Items>
             <Styles.Logout onClick={auth.signout}>Log Out</Styles.Logout>
-         </Styles.Sidebar>
+         </Styles.Navbar>
          <Styles.Main>{children}</Styles.Main>
       </Styles.Layout>
    )
@@ -91,85 +82,47 @@ export default Layout
 
 const Styles = {
    Layout: styled.div({
-      ...tw`flex h-screen`,
+      ...tw`h-screen flex flex-col overflow-hidden relative`,
    }),
-   Sidebar: styled.aside({
-      ...tw`z-10 flex flex-col bg-dark-300 border-r border-dark-200`,
-      width: '240px',
+   Navbar: styled.nav({
+      ...tw`z-10 flex items-center justify-between bg-dark-300 border-r border-dark-200`,
+      '@tablet': {
+         ...tw`hidden flex-col w-full fixed top-[40px]`,
+      },
       variants: {
-         is_collapsed: {
+         isMenuOpen: {
             true: {
-               ...tw`w-14`,
                '@tablet': {
-                  ...tw`w-full h-auto max-h-[240px]`,
+                  ...tw`flex`,
                },
             },
          },
-      },
-      '@tablet': {
-         ...tw`w-full fixed bottom-0 flex h-10`,
       },
    }),
    Items: styled.ul({
-      ...tw`px-2 flex flex-col gap-1 pt-2 overflow-y-auto`,
-      variants: {
-         is_collapsed: {
-            true: {
-               '@tablet': {
-                  ...tw`px-2 py-2`,
-               },
-            },
-         },
-      },
+      ...tw`h-10 flex items-center`,
       '@tablet': {
-         ...tw`p-0`,
+         ...tw`w-full h-auto flex-col grid grid-cols-2`,
       },
    }),
    Item: styled.li({
+      '@tablet': {
+         ...tw`w-full`,
+         a: {
+            ...tw`justify-center`,
+         },
+      },
       a: {
-         ...tw`flex items-center rounded h-10 text-gray-400 hover:(text-white bg-dark-200)`,
+         ...tw`text-sm pr-3 flex items-center h-10 text-gray-400 border-b-2 border-transparent hover:(text-white bg-black/10 border-indigo-400)`,
          span: {
             ...tw`h-full w-10 flex items-center justify-center`,
          },
       },
       variants: {
-         is_collapsed: {
-            true: {
-               a: {
-                  h4: {
-                     ...tw`hidden`,
-                     '@tablet': {
-                        ...tw`block`,
-                     },
-                  },
-               },
-            },
-         },
          is_active: {
             true: {
                a: {
-                  ...tw`font-medium border-gray-600 border-b-2 text-indigo-400 bg-gray-700 hover:(text-indigo-400 bg-gray-700)`,
-               },
-            },
-         },
-      },
-   }),
-   Collapse: styled.span({
-      ...tw`flex-shrink-0 mt-auto w-full h-10 px-1 pb-1`,
-      button: {
-         ...tw`rounded w-full h-full flex items-center justify-center text-white hover:bg-dark-200`,
-         '@tablet': {
-            ...tw`rounded-none`,
-         },
-      },
-      '@tablet': {
-         ...tw`p-0 mt-[unset]`,
-      },
-      variants: {
-         is_collapsed: {
-            true: {
-               '@tablet': {
-                  ...tw`mt-auto`,
+                  ...tw`text-white border-b-2 border-indigo-400 bg-black/10 hover:(border-indigo-400 bg-black/10)`,
                },
             },
          },
@@ -179,18 +132,23 @@ const Styles = {
       ...tw`bg-dark-400 flex-1 overflow-y-auto`,
       '@tablet': { ...tw`h-[calc(100vh - 40px)]` },
    }),
-   Divider: styled('li', {
-      ...tw`pl-3 text-gray-400 mt-4`,
+   Logout: styled.button({
+      ...tw`mr-1 px-2 py-1 rounded text-red-400 border border-transparent hover:(border-red-400)`,
+      '@tablet': {
+         ...tw`mt-2 w-[calc(100% - 24px)] mb-2 mr-0`,
+      },
+   }),
+   Menu: styled('button', {
+      ...tw`hidden h-10 w-full bg-dark-300 items-center justify-center`,
+      '@tablet': {
+         ...tw`flex`,
+      },
       variants: {
-         is_collapsed: {
+         isMenuOpen: {
             true: {
-               ...tw`border-b border-gray-500 mb-2`,
-               span: { ...tw`hidden` },
+               ...tw`bg-dark-400`,
             },
          },
       },
-   }),
-   Logout: styled.button({
-      ...tw`mt-auto mx-2 mb-2 px-2 py-1 rounded text-red-400 border border-transparent hover:(border-red-400)`,
    }),
 }
