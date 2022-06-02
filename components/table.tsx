@@ -64,7 +64,7 @@ const Styles = {
    Cell: styled('td', {
       wordBreak: 'keep-all',
       whiteSpace: 'nowrap',
-      ...tw`px-3 h-8 text-gray-300`,
+      ...tw`px-2 h-7 text-sm text-gray-300`,
       '&:nth-child(1)': { ...tw`truncate` },
       variants: {
          is_right: { true: { ...tw`text-right` } },
@@ -73,7 +73,7 @@ const Styles = {
       },
    }),
    HCell: styled('th', {
-      ...tw`sticky top-0 h-8 px-3 text-left text-xs text-gray-400 uppercase font-medium tracking-wider whitespace-nowrap`,
+      ...tw`sticky top-0 h-6 px-2 text-left text-xs text-gray-400 uppercase font-medium tracking-wider whitespace-nowrap`,
       variants: {
          is_right: { true: { ...tw`text-right` } },
          is_center: { true: { ...tw`text-center` } },

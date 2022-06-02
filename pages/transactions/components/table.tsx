@@ -119,7 +119,7 @@ const Table = ({
                         }
                         tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
                      >
-                        <Icon.Edit size={16} tw="fill-current text-gray-400" />
+                        <Icon.Edit size={14} tw="fill-current text-gray-400" />
                      </button>
                      <button
                         onClick={() =>
@@ -130,7 +130,7 @@ const Table = ({
                         tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
                      >
                         <Icon.Delete
-                           size={16}
+                           size={14}
                            tw="stroke-current text-gray-400"
                         />
                      </button>

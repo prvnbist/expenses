@@ -207,7 +207,7 @@ const CreateCategory = ({ closeModal }: { closeModal: () => void }) => {
 export default CreateCategory
 
 const Styles = {
-   Label: tw.label`mb-1 block uppercase tracking-wide text-sm text-gray-400`,
+   Label: tw.label`mb-1 block uppercase tracking-wide text-xs text-gray-400`,
    Text: styled.input({
       ...tw`px-2 bg-transparent focus:outline-none w-full flex items-center border text-gray-300 h-10 border-dark-200 focus-within:border-indigo-500`,
    }),
