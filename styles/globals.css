@@ -42,3 +42,27 @@
 .select__option--is-selected:hover {
    background-color: #2684ff !important;
 }
+
+.ReactModal__Overlay {
+   z-index: 1500;
+   background: rgba(0, 0, 0, 0.4) !important;
+}
+
+.ReactModal__Content {
+   width: 100%;
+   max-width: 340px;
+   top: 20px !important;
+   padding: 0 !important;
+   right: 20px !important;
+   left: unset !important;
+   bottom: 20px !important;
+   border: none !important;
+   background: #21201e !important;
+}
+
+@media screen and (max-width: 567px) {
+   .ReactModal__Content {
+      max-width: 100%;
+      inset: 0 !important;
+   }
+}

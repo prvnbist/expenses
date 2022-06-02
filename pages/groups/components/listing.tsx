@@ -58,9 +58,7 @@ const Listing = () => {
                         title="Edit Group"
                         data-test="edit-button"
                         onClick={() =>
-                           router.push(
-                              `/groups/create?id=${cell.row.original.id}`
-                           )
+                           router.push(`/groups?id=${cell.row.original.id}`)
                         }
                         tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
                      >

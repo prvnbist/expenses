@@ -64,7 +64,7 @@ const Listing = () => {
                         title="Edit Payment Method"
                         onClick={() =>
                            router.push(
-                              `/settings/payment-methods/create?id=${cell.row.original.id}`
+                              `/settings/payment-methods?id=${cell.row.original.id}`
                            )
                         }
                         tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"

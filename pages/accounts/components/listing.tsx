@@ -65,9 +65,7 @@ const Listing = () => {
                      <button
                         title="Edit Account"
                         onClick={() =>
-                           router.push(
-                              `/accounts/create?id=${cell.row.original.id}`
-                           )
+                           router.push(`/accounts?id=${cell.row.original.id}`)
                         }
                         tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
                      >

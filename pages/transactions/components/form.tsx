@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 import Select from 'react-select'
 import tw, { styled } from 'twin.macro'
 import { useRouter } from 'next/router'
@@ -6,11 +7,11 @@ import { useToasts } from 'react-toast-notifications'
 import { useMutation, useQuery } from '@apollo/client'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
+import * as Icon from 'icons'
 import { useUser } from 'lib/user'
-import Layout from 'sections/layout'
 import QUERIES from 'graphql/queries'
 import { MUTATIONS } from 'graphql/mutations'
-import { Loader } from '../../components'
+import { Loader } from '../../../components'
 
 type Inputs = {
    title: string
@@ -55,7 +56,7 @@ interface ISelectedTypeAccountGroupPaymentMethodState {
    label: string
 }
 
-const CreateTransaction = () => {
+const CreateTransaction = ({ closeModal }: { closeModal: () => void }) => {
    const { user } = useUser()
    const router = useRouter()
    const { addToast } = useToasts()
@@ -139,12 +140,21 @@ const CreateTransaction = () => {
          },
       },
       onCompleted: ({ transactions_view = [] }) => {
-         if (transactions_view.length === 0) router.push(`/transactions`)
+         if (transactions_view.length === 0) {
+            closeModal()
+            router.push(`/transactions`)
+         }
 
          const [transaction] = transactions_view
 
-         if (!transaction.id) router.push(`/transactions`)
-         if (transaction.user_id !== user.id) router.push(`/transactions`)
+         if (!transaction.id) {
+            closeModal()
+            router.push(`/transactions`)
+         }
+         if (transaction.user_id !== user.id) {
+            closeModal()
+            router.push(`/transactions`)
+         }
 
          setValue('title', transaction.title, { shouldValidate: true })
          setValue('amount', `${transaction.amount / 100}`, {
@@ -184,6 +194,7 @@ const CreateTransaction = () => {
    const [create_transaction, { loading: creating_transaction }] = useMutation(
       MUTATIONS.TRANSACTIONS.CREATE,
       {
+         refetchQueries: ['transactions'],
          onCompleted: () => {
             reset()
             setType('expense')
@@ -192,6 +203,7 @@ const CreateTransaction = () => {
             addToast('Successfully added the transaction', {
                appearance: 'success',
             })
+            closeModal()
             router.push(`/transactions`)
          },
          onError: () =>
@@ -203,6 +215,7 @@ const CreateTransaction = () => {
    const [update_transaction, { loading: updating_transaction }] = useMutation(
       MUTATIONS.TRANSACTIONS.UPDATE,
       {
+         refetchQueries: ['transactions'],
          onCompleted: () =>
             addToast('Successfully updated the transaction', {
                appearance: 'success',
@@ -243,11 +256,23 @@ const CreateTransaction = () => {
    }
 
    return (
-      <Layout>
-         <header tw="px-4 pt-4">
-            <h1 tw="font-heading text-3xl font-medium text-gray-400">
+      <>
+         <Head>
+            <title>{`${
+               FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'
+            } Transaction`}</title>
+         </Head>
+         <header tw="px-4 pt-4 flex items-center justify-between">
+            <h1 tw="font-heading text-xl font-medium text-gray-400">
                {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Transaction
             </h1>
+            <button
+               title="Close Modal"
+               onClick={closeModal}
+               tw="cursor-pointer h-8 w-8 border border-dark-200 flex items-center justify-center hover:bg-dark-300"
+            >
+               <Icon.Cross tw="stroke-current text-white" />
+            </button>
          </header>
          {status === 'LOADING' ? (
             <Loader />
@@ -260,7 +285,7 @@ const CreateTransaction = () => {
                ) : (
                   <form
                      onSubmit={handleSubmit(onSubmit)}
-                     tw="w-full max-w-[380px] mt-4 px-4 space-y-3"
+                     tw="w-full max-w-[380px] mt-4 px-4 space-y-3 pb-4"
                   >
                      <fieldset>
                         <Styles.Label htmlFor="title">Title</Styles.Label>
@@ -433,14 +458,14 @@ const CreateTransaction = () => {
                )}
             </>
          )}
-      </Layout>
+      </>
    )
 }
 
 export default CreateTransaction
 
 const Styles = {
-   Label: tw.label`mb-1 block uppercase tracking-wide text-sm text-gray-400`,
+   Label: tw.label`mb-1 block uppercase tracking-wide text-xs text-gray-400`,
    Text: styled.input({
       ...tw`px-2 bg-transparent focus:outline-none w-full flex items-center border text-gray-300 h-10 border-dark-200 focus-within:border-indigo-500`,
    }),

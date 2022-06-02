@@ -206,7 +206,7 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
    return (
       <button
          title="Edit Category"
-         onClick={() => goto(`/settings/categories/create?id=${id}`)}
+         onClick={() => goto(`/settings/categories?id=${id}`)}
          tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
       >
          <Icon.Edit size={16} tw="fill-current text-gray-400" />

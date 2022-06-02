@@ -1,22 +1,23 @@
 import React from 'react'
+import Head from 'next/head'
 import tw, { styled } from 'twin.macro'
 import { useRouter } from 'next/router'
 import { useToasts } from 'react-toast-notifications'
 import { useMutation, useQuery } from '@apollo/client'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
+import * as Icon from 'icons'
 import { useUser } from 'lib/user'
-import Layout from 'sections/layout'
 import QUERIES from 'graphql/queries'
-import { Loader } from '../../components'
+import { Loader } from '../../../components'
 import { MUTATIONS } from 'graphql/mutations'
 
 type Inputs = {
    title: string
-   amount: string
+   description: string
 }
 
-const CreateAccount = () => {
+const CreateGroup = ({ closeModal }: { closeModal: () => void }) => {
    const { user } = useUser()
    const router = useRouter()
    const { addToast } = useToasts()
@@ -33,48 +34,55 @@ const CreateAccount = () => {
       handleSubmit,
       formState: { errors },
    } = useForm<Inputs>()
-   const [create_account, { loading: creating_account }] = useMutation(
-      MUTATIONS.ACCOUNTS.CREATE,
+   const [create_group, { loading: creating_group }] = useMutation(
+      MUTATIONS.GROUPS.CREATE,
       {
-         refetchQueries: ['accounts'],
+         refetchQueries: ['groups'],
          onCompleted: () => {
             reset()
-            addToast('Successfully added the account', {
+            addToast('Successfully added the group', {
                appearance: 'success',
             })
-            router.push(`/accounts`)
+            closeModal()
+            router.push(`/groups`)
          },
          onError: () =>
-            addToast('Failed to add the account', {
+            addToast('Failed to add the group', {
                appearance: 'error',
             }),
       }
    )
-   const [update_account, { loading: updating_account }] = useMutation(
-      MUTATIONS.ACCOUNTS.UPDATE,
+   const [update_group, { loading: updating_group }] = useMutation(
+      MUTATIONS.GROUPS.UPDATE,
       {
-         refetchQueries: ['accounts'],
+         refetchQueries: ['groups'],
          onCompleted: () =>
-            addToast('Successfully updated the account', {
+            addToast('Successfully updated the group', {
                appearance: 'success',
             }),
          onError: () =>
-            addToast('Failed to update the account', {
+            addToast('Failed to update the group', {
                appearance: 'error',
             }),
       }
    )
 
-   useQuery(QUERIES.ACCOUNTS.ONE, {
+   useQuery(QUERIES.GROUPS.ONE, {
       fetchPolicy: 'network-only',
       variables: { id: router.query.id },
       skip: !router.isReady || FORM_TYPE === 'CREATE',
-      onCompleted: ({ account = {} }) => {
-         if (!account?.id) return
-         if (account.user_id !== user.id) router.push(`/accounts`)
+      onCompleted: ({ group = {} }) => {
+         if (!group?.id) {
+            closeModal()
+            router.push(`/groups`)
+         }
+         if (group.user_id !== user.id) {
+            closeModal()
+            router.push(`/groups`)
+         }
 
-         setValue('title', account.title, { shouldValidate: true })
-         setValue('amount', `${account.amount / 100}`, { shouldValidate: true })
+         setValue('title', group.title, { shouldValidate: true })
+         setValue('description', group.description, { shouldValidate: true })
          setStatus('SUCCESS')
       },
       onError: () => {
@@ -82,27 +90,27 @@ const CreateAccount = () => {
       },
    })
 
-   const isFormValid = [...watch(['title', 'amount'])].every(node => node)
+   const isFormValid = [...watch(['title'])].every(node => node)
 
    const onSubmit: SubmitHandler<Inputs> = data => {
       if (isFormValid) {
          if (FORM_TYPE === 'CREATE') {
-            create_account({
+            create_group({
                variables: {
                   object: {
                      user_id: user.id,
                      title: data.title,
-                     amount: Math.round(parseFloat(data.amount) * 100),
+                     description: data.description,
                   },
                },
             })
          } else if (FORM_TYPE === 'EDIT') {
-            update_account({
+            update_group({
                variables: {
                   id: router.query.id,
                   _set: {
                      title: data.title,
-                     amount: Math.round(parseFloat(data.amount) * 100),
+                     description: data.description,
                   },
                },
             })
@@ -111,11 +119,26 @@ const CreateAccount = () => {
    }
 
    return (
-      <Layout>
-         <header tw="px-4 pt-4">
-            <h1 tw="font-heading text-3xl font-medium text-gray-400">
-               {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Account
+      <>
+         <Head>
+            <title>{`${
+               FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'
+            } Group`}</title>
+         </Head>
+         <header tw="px-4 pt-4 flex items-center justify-between">
+            <h1
+               data-test="page-title"
+               tw="font-heading text-3xl font-medium text-gray-400"
+            >
+               {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Group
             </h1>
+            <button
+               title="Close Modal"
+               onClick={closeModal}
+               tw="cursor-pointer h-8 w-8 border border-dark-200 flex items-center justify-center hover:bg-dark-300"
+            >
+               <Icon.Cross tw="stroke-current text-white" />
+            </button>
          </header>
          {status === 'LOADING' ? (
             <Loader />
@@ -138,66 +161,77 @@ const CreateAccount = () => {
                            })}
                            id="title"
                            name="title"
+                           data-test="title"
                            placeholder="Enter the title"
                         />
                         {errors.title?.type === 'required' && (
-                           <Styles.Error>Please fill the title</Styles.Error>
+                           <Styles.Error data-test="title-required">
+                              Please fill the title
+                           </Styles.Error>
                         )}
                         {errors.title?.type === 'minLength' && (
-                           <Styles.Error>Title is too short</Styles.Error>
+                           <Styles.Error data-test="title-too-short">
+                              Title is too short
+                           </Styles.Error>
                         )}
                         {errors.title?.type === 'maxLength' && (
-                           <Styles.Error>Title is too long</Styles.Error>
+                           <Styles.Error data-test="title-too-long">
+                              Title is too long
+                           </Styles.Error>
                         )}
                      </fieldset>
                      <fieldset>
-                        <Styles.Label htmlFor="amount">
-                           Amount{' '}
-                           <span tw="text-[12px] float-right normal-case">
-                              (Upto two decimals)
-                           </span>
+                        <Styles.Label htmlFor="description">
+                           Description
                         </Styles.Label>
-                        <Styles.Text
-                           {...register('amount', {
-                              required: true,
-                              pattern: /^[\d]{1,}(\.[\d]{1,2})?$/,
+                        <Styles.TextArea
+                           {...register('description', {
+                              minLength: 2,
+                              maxLength: 320,
                            })}
-                           id="amount"
-                           name="amount"
-                           placeholder="Enter the amount"
+                           rows="5"
+                           id="description"
+                           name="description"
+                           data-test="description"
+                           placeholder="Enter the description"
                         />
-                        {errors.amount?.type === 'required' && (
-                           <Styles.Error>Please fill the amount</Styles.Error>
-                        )}
-                        {errors.amount?.type === 'pattern' && (
+                        {errors.description?.type === 'required' && (
                            <Styles.Error>
-                              Please enter numbers only
+                              Please fill the description
                            </Styles.Error>
+                        )}
+                        {errors.description?.type === 'minLength' && (
+                           <Styles.Error>Description is too short</Styles.Error>
+                        )}
+                        {errors.description?.type === 'maxLength' && (
+                           <Styles.Error>Description is too long</Styles.Error>
                         )}
                      </fieldset>
                      <button
                         type="submit"
-                        disabled={creating_account || updating_account}
+                        data-test="submit"
+                        disabled={creating_group || updating_group}
                         tw="border border-dark-200 h-10 px-3 text-white hover:bg-dark-300 disabled:(cursor-not-allowed opacity-50 hover:bg-transparent)"
                      >
-                        {creating_account || updating_account
-                           ? 'Saving'
-                           : 'Save'}
+                        {creating_group || updating_group ? 'Saving' : 'Save'}
                      </button>
                   </form>
                )}
             </>
          )}
-      </Layout>
+      </>
    )
 }
 
-export default CreateAccount
+export default CreateGroup
 
 const Styles = {
    Label: tw.label`mb-1 block uppercase tracking-wide text-sm text-gray-400`,
    Text: styled.input({
       ...tw`px-2 bg-transparent focus:outline-none w-full flex items-center border text-gray-300 h-10 border-dark-200 focus-within:border-indigo-500`,
+   }),
+   TextArea: styled.textarea({
+      ...tw`pt-1 px-2 bg-transparent focus:outline-none w-full flex items-center border text-gray-300 border-dark-200 focus-within:border-indigo-500`,
    }),
    Error: tw.span`inline-block mt-1 text-red-400`,
 }
