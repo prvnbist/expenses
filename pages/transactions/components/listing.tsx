@@ -68,7 +68,13 @@ const Listing = (): JSX.Element => {
          offset: pagination.page * pagination.size,
          where: {
             user_id: { _eq: user?.id },
-            _or: [{ title: { _ilike: `%${debouncedSearch.trim()}%` } }],
+            _or: [
+               { title: { _ilike: `%${debouncedSearch.trim()}%` } },
+               { category: { _ilike: `%${debouncedSearch.trim()}%` } },
+               { account: { _ilike: `%${debouncedSearch.trim()}%` } },
+               { payment_method: { _ilike: `%${debouncedSearch.trim()}%` } },
+               { group: { _ilike: `%${debouncedSearch.trim()}%` } },
+            ],
          },
          where2: {
             user_id: { _eq: user?.id },
@@ -77,7 +83,13 @@ const Listing = (): JSX.Element => {
                   node => node.title
                ),
             },
-            _or: [{ title: { _ilike: `%${debouncedSearch.trim()}%` } }],
+            _or: [
+               { title: { _ilike: `%${debouncedSearch.trim()}%` } },
+               { category: { _ilike: `%${debouncedSearch.trim()}%` } },
+               { account: { _ilike: `%${debouncedSearch.trim()}%` } },
+               { payment_method: { _ilike: `%${debouncedSearch.trim()}%` } },
+               { group: { _ilike: `%${debouncedSearch.trim()}%` } },
+            ],
          },
       },
       onCompleted: ({ transactions = {}, transactions_aggregate = {} }) => {

@@ -1,5 +1,6 @@
 import React from 'react'
 import tw from 'twin.macro'
+import Head from 'next/head'
 import Modal from 'react-modal'
 import { useRouter } from 'next/router'
 
@@ -19,6 +20,9 @@ export default function Categories() {
 
    return (
       <Layout>
+         <Head>
+            <title>Accounts</title>
+         </Head>
          <header tw="px-4 pt-4 flex items-center space-x-3">
             <h1 tw="font-heading text-3xl font-medium text-gray-400">
                Accounts
