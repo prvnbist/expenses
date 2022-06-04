@@ -1,4 +1,5 @@
+import SortBy from './sort_by'
 import Listing from './listing'
 import CreateTransaction from './form'
 
-export { Listing, CreateTransaction }
+export { SortBy, Listing, CreateTransaction }

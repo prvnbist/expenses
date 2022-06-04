@@ -40,12 +40,14 @@ const SortBy = ({ sortBy, setSortBy }: ISortByProps) => {
                <span>Title</span>
                <aside>
                   <Styles.AscButton
+                     title="Ascending"
                      is_active={sortBy?.title === 'asc'}
                      onClick={() => sort('title', 'asc')}
                   >
                      <Icon.Ascending />
                   </Styles.AscButton>
                   <Styles.DescButton
+                     title="Descending"
                      is_active={sortBy?.title === 'desc'}
                      onClick={() => sort('title', 'desc')}
                   >
@@ -57,12 +59,14 @@ const SortBy = ({ sortBy, setSortBy }: ISortByProps) => {
                <span>Date</span>
                <aside>
                   <Styles.AscButton
+                     title="Ascending"
                      is_active={sortBy?.raw_date === 'asc'}
                      onClick={() => sort('raw_date', 'asc')}
                   >
                      <Icon.Ascending />
                   </Styles.AscButton>
                   <Styles.DescButton
+                     title="Descending"
                      is_active={sortBy?.raw_date === 'desc'}
                      onClick={() => sort('raw_date', 'desc')}
                   >
@@ -74,12 +78,14 @@ const SortBy = ({ sortBy, setSortBy }: ISortByProps) => {
                <span>Category</span>
                <aside>
                   <Styles.AscButton
+                     title="Ascending"
                      is_active={sortBy?.category === 'asc'}
                      onClick={() => sort('category', 'asc')}
                   >
                      <Icon.Ascending />
                   </Styles.AscButton>
                   <Styles.DescButton
+                     title="Descending"
                      is_active={sortBy?.category === 'desc'}
                      onClick={() => sort('category', 'desc')}
                   >
@@ -104,10 +110,7 @@ const Styles = {
    },
    Dropdown: {
       Container: styled('ul', {
-         ...tw`hidden border border-dark-200 bg-dark-300 shadow-lg fixed translate-y-[4px] z-10 py-1 space-y-1`,
-         '@media (max-width:768px)': {
-            ...tw`translate-x-[calc(-100% + 40px)]`,
-         },
+         ...tw`right-[16px] hidden border border-dark-200 bg-dark-300 shadow-lg fixed translate-y-[4px] z-10 py-1 space-y-1`,
          variants: {
             is_active: { true: { ...tw`block` } },
          },
@@ -116,7 +119,7 @@ const Styles = {
          ...tw`w-[180px] pl-3 pr-1 flex items-center justify-between`,
          svg: { ...tw`stroke-current text-gray-500` },
          span: {
-            ...tw`text-gray-300`,
+            ...tw`text-sm text-gray-300`,
          },
          aside: {
             ...tw`gap-1 flex items-center`,
