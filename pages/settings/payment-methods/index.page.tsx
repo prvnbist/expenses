@@ -24,7 +24,7 @@ export default function PaymentMethods() {
             <title>Payment Methods</title>
          </Head>
          <header tw="px-4 pt-4 flex items-center space-x-3">
-            <h1 tw="font-heading text-3xl font-medium text-gray-400">
+            <h1 tw="font-heading text-2xl font-medium text-gray-400">
                Payment Methods
             </h1>
             <button

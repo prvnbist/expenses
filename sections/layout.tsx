@@ -19,6 +19,12 @@ const Layout = ({ children }: ILayout): JSX.Element => {
    const routes = React.useMemo(
       () => [
          {
+            icon: <Icon.Dashboard tw="stroke-current" />,
+            title: 'Dashboard',
+            href: `/dashboard`,
+            isActive: router.asPath.endsWith('dashboard'),
+         },
+         {
             icon: <Icon.File tw="stroke-current" />,
             title: 'Transactions',
             href: `/transactions`,

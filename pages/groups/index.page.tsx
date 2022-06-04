@@ -26,7 +26,7 @@ export default function Groups() {
          <header tw="px-4 pt-4 flex items-center space-x-3">
             <h1
                data-test="page-title"
-               tw="font-heading text-3xl font-medium text-gray-400"
+               tw="font-heading text-2xl font-medium text-gray-400"
             >
                Groups
             </h1>

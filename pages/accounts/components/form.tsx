@@ -126,7 +126,7 @@ const CreateAccount = ({ closeModal }: { closeModal: () => void }) => {
             } Account`}</title>
          </Head>
          <header tw="px-4 pt-4 flex items-center justify-between">
-            <h1 tw="font-heading text-3xl font-medium text-gray-400">
+            <h1 tw="font-heading text-2xl font-medium text-gray-400">
                {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Account
             </h1>
             <button

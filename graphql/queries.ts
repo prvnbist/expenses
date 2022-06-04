@@ -67,6 +67,14 @@ const QUERIES = {
             }
          }
       `,
+      ANALYTICS: gql`
+         query transactions_analytics($userid: uuid!) {
+            transactions_analytics {
+               title
+               data(args: { userid: $userid })
+            }
+         }
+      `,
    },
    CATEGORIES: {
       LIST: gql`

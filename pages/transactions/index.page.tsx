@@ -39,7 +39,7 @@ export default function Dashboard() {
          </Head>
          <header tw="px-4 pt-4 flex flex-col space-y-3 justify-between md:(flex-row items-center space-y-0)">
             <aside tw="flex items-center space-x-3">
-               <h1 tw="font-heading text-3xl font-medium text-gray-400">
+               <h1 tw="font-heading text-2xl font-medium text-gray-400">
                   Transactions
                </h1>
                <button

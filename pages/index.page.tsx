@@ -5,7 +5,6 @@ import * as Icon from 'icons'
 import { Loader } from 'components'
 import { auth } from 'lib/supabase'
 import { useUser } from 'lib/user'
-import styles from 'styles/globalStyles'
 
 export default function Home() {
    const { user } = useUser()
@@ -13,8 +12,8 @@ export default function Home() {
 
    const signInUser = async () => {
       setIsSigningIn(true)
-      const { error = null } = await auth.signin()
-      if (error) {
+      const result = await auth.signin()
+      if (result?.error) {
          setIsSigningIn(false)
       }
    }

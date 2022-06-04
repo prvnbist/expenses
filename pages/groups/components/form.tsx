@@ -128,7 +128,7 @@ const CreateGroup = ({ closeModal }: { closeModal: () => void }) => {
          <header tw="px-4 pt-4 flex items-center justify-between">
             <h1
                data-test="page-title"
-               tw="font-heading text-3xl font-medium text-gray-400"
+               tw="font-heading text-2xl font-medium text-gray-400"
             >
                {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Group
             </h1>

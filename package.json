@@ -10,6 +10,8 @@
    },
    "dependencies": {
       "@apollo/client": "^3.5.6",
+      "@nivo/core": "^0.79.0",
+      "@nivo/pie": "^0.79.1",
       "@stitches/react": "^1.2.6",
       "@supabase/supabase-js": "^1.31.1",
       "@types/cookie": "^0.4.1",

@@ -43,7 +43,7 @@ export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
    const [upsert_user] = useMutation(MUTATIONS.USER.UPSERT, {
       onCompleted: ({ insert_user = {} }) => {
          setUser(insert_user)
-         router.push(`/transactions`)
+         router.push(`/dashboard`)
       },
       onError: () => {
          setUser({})
