@@ -17,7 +17,7 @@ interface ITotalIncomeOrExpense {
    amount: number
 }
 
-interface IExpenseIncomeCategory {
+interface IData {
    title: string
    count: number
    sum: number
@@ -26,8 +26,10 @@ interface IExpenseIncomeCategory {
 interface IAnalyticsState {
    total_income?: ITotalIncomeOrExpense
    total_expense?: ITotalIncomeOrExpense
-   top_five_expense_categories?: Array<IExpenseIncomeCategory>
-   top_five_income_categories?: Array<IExpenseIncomeCategory>
+   top_five_expense_categories?: Array<IData>
+   top_five_income_categories?: Array<IData>
+   expenses_by_payment_methods?: Array<IData>
+   expenses_by_accounts?: Array<IData>
 }
 
 const Dashboard: NextPage = (): JSX.Element => {
@@ -45,7 +47,7 @@ const Dashboard: NextPage = (): JSX.Element => {
                result = {},
                current:
                   | { title: string; data: ITotalIncomeOrExpense }
-                  | { title: string; data: Array<IExpenseIncomeCategory> }
+                  | { title: string; data: Array<IData> }
             ) => {
                result[current.title] = current.data
                return result
@@ -76,7 +78,7 @@ const Dashboard: NextPage = (): JSX.Element => {
          {loading ? (
             <Loader />
          ) : (
-            <main tw="mt-4 px-4">
+            <main tw="mt-4 px-4 pb-4">
                <ul tw="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   <li>
                      <h3 tw="text-lg mb-2 text-gray-400">Overview</h3>
@@ -89,7 +91,7 @@ const Dashboard: NextPage = (): JSX.Element => {
                      <h3 tw="text-lg mb-2 text-gray-400">
                         Expense by Categories
                      </h3>
-                     <TopFiveExpenseCategories
+                     <CommonChart
                         data={analytics?.top_five_expense_categories || []}
                      />
                   </li>
@@ -97,8 +99,24 @@ const Dashboard: NextPage = (): JSX.Element => {
                      <h3 tw="text-lg mb-2 text-gray-400">
                         Income by Categories
                      </h3>
-                     <TopFiveIncomeCategories
+                     <CommonChart
                         data={analytics?.top_five_income_categories || []}
+                     />
+                  </li>
+                  <li>
+                     <h3 tw="text-lg mb-2 text-gray-400">
+                        Expenses by Payment Methods
+                     </h3>
+                     <CommonChart
+                        data={analytics?.expenses_by_payment_methods || []}
+                     />
+                  </li>
+                  <li>
+                     <h3 tw="text-lg mb-2 text-gray-400">
+                        Expenses by Accounts
+                     </h3>
+                     <CommonChart
+                        data={analytics?.expenses_by_accounts || []}
                      />
                   </li>
                </ul>
@@ -111,10 +129,10 @@ const Dashboard: NextPage = (): JSX.Element => {
 export default Dashboard
 
 const pieChartOptions = {
-   margin: { top: 40, right: 80, bottom: 20, left: 80 },
-   innerRadius: 0.5,
+   margin: { top: 55, right: 55, bottom: 55, left: 55 },
+   innerRadius: 0.6,
    padAngle: 0.7,
-   cornerRadius: 3,
+   cornerRadius: 4,
    activeOuterRadiusOffset: 8,
    borderWidth: 1,
    borderColor: {
@@ -132,8 +150,8 @@ const TotalIncomeExpense = ({
    total_income,
    total_expense,
 }: {
-   total_income: { count: number; amount: number }
-   total_expense: { count: number; amount: number }
+   total_income?: { count: number; amount: number }
+   total_expense?: { count: number; amount: number }
 }): JSX.Element => {
    const [tab, setTab] = React.useState('chart')
 
@@ -234,105 +252,7 @@ const TotalIncomeExpense = ({
    )
 }
 
-const TopFiveExpenseCategories = ({
-   data,
-}: {
-   data: Array<IExpenseIncomeCategory>
-}): JSX.Element => {
-   const [tab, setTab] = React.useState('chart')
-
-   return (
-      <div>
-         <Styles.Tabs>
-            <Styles.Tab
-               is_active={tab === 'chart'}
-               onClick={() => setTab('chart')}
-            >
-               Chart
-            </Styles.Tab>
-            <Styles.Tab
-               is_active={tab === 'table'}
-               onClick={() => setTab('table')}
-            >
-               Table
-            </Styles.Tab>
-         </Styles.Tabs>
-         <Styles.Panel is_active={tab === 'chart'}>
-            <ResponsivePie
-               data={data.map(row => ({
-                  id: row.title,
-                  label: row.title,
-                  value: row.sum,
-               }))}
-               valueFormat={value =>
-                  Dinero({
-                     amount: value,
-                     currency: 'INR',
-                  }).toFormat()
-               }
-               {...pieChartOptions}
-            />
-         </Styles.Panel>
-         <Styles.Panel is_active={tab === 'table'}>
-            <Table>
-               <Table.Head>
-                  <Table.Row>
-                     <Table.HCell>Title</Table.HCell>
-                     <Table.HCell is_right>Count</Table.HCell>
-                     <Table.HCell is_right>Total</Table.HCell>
-                  </Table.Row>
-               </Table.Head>
-               <Table.Body>
-                  {data.map(row => (
-                     <Table.Row key={row.title}>
-                        <Table.Cell>{row.title}</Table.Cell>
-                        <Table.Cell is_right>
-                           <span tw="font-mono">{row.count}</span>
-                        </Table.Cell>
-                        <Table.Cell is_right>
-                           <span tw="font-mono">
-                              {Dinero({
-                                 amount: row.sum,
-                                 currency: 'INR',
-                              }).toFormat()}
-                           </span>
-                        </Table.Cell>
-                     </Table.Row>
-                  ))}
-                  <Table.Row>
-                     <Table.Cell>Total</Table.Cell>
-                     <Table.Cell is_right>
-                        <span tw="font-mono">
-                           {data.reduce(
-                              (total, current) => total + current.count,
-                              0
-                           )}
-                        </span>
-                     </Table.Cell>
-                     <Table.Cell is_right>
-                        <span tw="font-mono">
-                           {Dinero({
-                              amount: data.reduce(
-                                 (total, current) => total + current.sum,
-                                 0
-                              ),
-                              currency: 'INR',
-                           }).toFormat()}
-                        </span>
-                     </Table.Cell>
-                  </Table.Row>
-               </Table.Body>
-            </Table>
-         </Styles.Panel>
-      </div>
-   )
-}
-
-const TopFiveIncomeCategories = ({
-   data,
-}: {
-   data: Array<IExpenseIncomeCategory>
-}): JSX.Element => {
+const CommonChart = ({ data }: { data: Array<IData> }): JSX.Element => {
    const [tab, setTab] = React.useState('chart')
 
    return (
