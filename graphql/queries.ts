@@ -16,6 +16,9 @@ const QUERIES = {
                offset: $offset
                limit: $limit
             ) {
+               aggregate {
+                  count
+               }
                nodes {
                   id
                   title
@@ -38,10 +41,6 @@ const QUERIES = {
             ) {
                aggregate {
                   count
-                  sum {
-                     debit
-                     credit
-                  }
                }
             }
          }

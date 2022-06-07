@@ -18,6 +18,17 @@ interface ISortByState {
    raw_date: 'asc' | 'desc'
 }
 
+interface ISelectedNode {
+   value: string
+   label: string
+}
+
+interface IFilterState {
+   categories: ISelectedNode[]
+   accounts: ISelectedNode[]
+   payment_methods: ISelectedNode[]
+}
+
 interface IListingProps {
    search: {
       current: string
@@ -25,9 +36,10 @@ interface IListingProps {
       previous: string
    }
    sortBy: ISortByState
+   filters: IFilterState
 }
 
-const Listing = ({ search, sortBy }: IListingProps): JSX.Element => {
+const Listing = ({ search, sortBy, filters }: IListingProps): JSX.Element => {
    const { user } = useUser()
    const { settings } = useSetting()
    const childRef = React.useRef<IChildRef>(null)
@@ -60,28 +72,81 @@ const Listing = ({ search, sortBy }: IListingProps): JSX.Element => {
          offset: pagination.page * pagination.size,
          where: {
             user_id: { _eq: user?.id },
-            _or: [
-               { title: { _ilike: `%${search.debounced.trim()}%` } },
-               { category: { _ilike: `%${search.debounced.trim()}%` } },
-               { account: { _ilike: `%${search.debounced.trim()}%` } },
-               { payment_method: { _ilike: `%${search.debounced.trim()}%` } },
-               { group: { _ilike: `%${search.debounced.trim()}%` } },
+            _and: [
+               {
+                  ...(filters.categories.length > 0 && {
+                     category_id: {
+                        _in: filters.categories.map(category => category.value),
+                     },
+                  }),
+               },
+               {
+                  ...(filters.accounts.length > 0 && {
+                     account_id: {
+                        _in: filters.accounts.map(account => account.value),
+                     },
+                  }),
+               },
+               {
+                  ...(filters.payment_methods.length > 0 && {
+                     payment_method_id: {
+                        _in: filters.payment_methods.map(
+                           payment_method => payment_method.value
+                        ),
+                     },
+                  }),
+               },
             ],
+            ...(search.debounced.trim() && {
+               _or: [
+                  { title: { _ilike: `%${search.debounced.trim()}%` } },
+                  { category: { _ilike: `%${search.debounced.trim()}%` } },
+                  { account: { _ilike: `%${search.debounced.trim()}%` } },
+                  {
+                     payment_method: { _ilike: `%${search.debounced.trim()}%` },
+                  },
+                  { group: { _ilike: `%${search.debounced.trim()}%` } },
+               ],
+            }),
          },
          where2: {
             user_id: { _eq: user?.id },
-            category: {
-               _nin: (settings?.excludeCategoriesFromTotalIncome || []).map(
-                  (node: { id: string; title: string }) => node.title
-               ),
-            },
-            _or: [
-               { title: { _ilike: `%${search.debounced.trim()}%` } },
-               { category: { _ilike: `%${search.debounced.trim()}%` } },
-               { account: { _ilike: `%${search.debounced.trim()}%` } },
-               { payment_method: { _ilike: `%${search.debounced.trim()}%` } },
-               { group: { _ilike: `%${search.debounced.trim()}%` } },
+            _and: [
+               {
+                  ...(filters.categories.length > 0 && {
+                     category_id: {
+                        _in: filters.categories.map(category => category.value),
+                     },
+                  }),
+               },
+               {
+                  ...(filters.accounts.length > 0 && {
+                     account_id: {
+                        _in: filters.accounts.map(account => account.value),
+                     },
+                  }),
+               },
+               {
+                  ...(filters.payment_methods.length > 0 && {
+                     payment_method_id: {
+                        _in: filters.payment_methods.map(
+                           payment_method => payment_method.value
+                        ),
+                     },
+                  }),
+               },
             ],
+            ...(search.debounced.trim() && {
+               _or: [
+                  { title: { _ilike: `%${search.debounced.trim()}%` } },
+                  { category: { _ilike: `%${search.debounced.trim()}%` } },
+                  { account: { _ilike: `%${search.debounced.trim()}%` } },
+                  {
+                     payment_method: { _ilike: `%${search.debounced.trim()}%` },
+                  },
+                  { group: { _ilike: `%${search.debounced.trim()}%` } },
+               ],
+            }),
          },
       },
       onCompleted: ({ transactions = {}, transactions_aggregate = {} }) => {

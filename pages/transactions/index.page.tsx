@@ -8,11 +8,22 @@ import { styled } from '@stitches/react'
 import * as Icon from 'icons'
 import Layout from 'sections/layout'
 import { useDebounce, usePrevious } from 'hooks'
-import { SortBy, CreateTransaction, Listing } from './components'
+import { Filters, SortBy, CreateTransaction, Listing } from './components'
 
 interface ISortByState {
    title: 'asc' | 'desc'
    raw_date: 'asc' | 'desc'
+}
+
+interface ISelectedNode {
+   value: string
+   label: string
+}
+
+interface IFilterState {
+   categories: ISelectedNode[]
+   accounts: ISelectedNode[]
+   payment_methods: ISelectedNode[]
 }
 
 export default function Dashboard() {
@@ -20,6 +31,11 @@ export default function Dashboard() {
    const [search, setSearch] = React.useState('')
    const previousSearch = usePrevious(search)
    const debouncedSearch = useDebounce(search, 500)
+   const [filters, setFilters] = React.useState<IFilterState>({
+      categories: [],
+      accounts: [],
+      payment_methods: [],
+   })
    const [sortBy, setSortBy] = React.useState<ISortByState>({
       title: 'asc',
       raw_date: 'desc',
@@ -62,11 +78,13 @@ export default function Dashboard() {
                      onChange={e => setSearch(e.target.value)}
                   />
                </Styles.Search>
+               <Filters filters={{ ...filters }} setFilters={setFilters} />
                <SortBy sortBy={{ ...sortBy }} setSortBy={setSortBy} />
             </Styles.Filters>
          </header>
          <Listing
             sortBy={sortBy}
+            filters={filters}
             search={{
                current: search,
                debounced: debouncedSearch,
