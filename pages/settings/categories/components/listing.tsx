@@ -93,11 +93,11 @@ const Listing = () => {
                                  variables: { id: cell.row.original.id },
                               })
                            }
-                           tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+                           tw="w-6 flex items-center justify-center rounded hover:bg-red-500"
                         >
                            <Icon.Delete
                               size={14}
-                              tw="stroke-current text-gray-400"
+                              tw="stroke-current text-white"
                            />
                         </button>
                      </div>
@@ -207,9 +207,9 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
       <button
          title="Edit Category"
          onClick={() => goto(`/settings/categories?id=${id}`)}
-         tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+         tw="w-6 flex items-center justify-center rounded hover:bg-blue-500"
       >
-         <Icon.Edit size={14} tw="fill-current text-gray-400" />
+         <Icon.Edit size={14} tw="fill-current text-white" />
       </button>
    )
 }

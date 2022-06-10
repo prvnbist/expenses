@@ -45,6 +45,7 @@
 
 .ReactModal__Overlay {
    z-index: 1500;
+   backdrop-filter: saturate(180%) blur(3px);
    background: rgba(0, 0, 0, 0.4) !important;
 }
 
