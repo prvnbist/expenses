@@ -7,7 +7,7 @@ const supabase = createClient(
 
 export const auth = {
    signin: async () => {
-      await supabase.auth.signIn({ provider: 'google' })
+      return await supabase.auth.signIn({ provider: 'google' })
    },
    signout: async () => {
       await supabase.auth.signOut()

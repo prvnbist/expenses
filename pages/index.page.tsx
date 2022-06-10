@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import tw, { styled } from 'twin.macro'
 
 import * as Icon from 'icons'
@@ -7,23 +8,20 @@ import { auth } from 'lib/supabase'
 import { useUser } from 'lib/user'
 
 export default function Home() {
-   const { user } = useUser()
-   const [isSigningIn, setIsSigningIn] = React.useState(false)
+   const [hasLoginError, setHasLoginError] = React.useState(false)
+   const { user, isLoggingIn, setIsLoggingIn } = useUser()
 
    const signInUser = async () => {
-      setIsSigningIn(true)
+      setIsLoggingIn(true)
+      setHasLoginError(false)
       const result = await auth.signin()
       if (result?.error) {
-         setIsSigningIn(false)
+         setIsLoggingIn(false)
+         setHasLoginError(true)
       }
    }
    return (
       <Styles.Fold>
-         <Styles.Nav>
-            <Styles.Brand>
-               <span>Kharcha</span>
-            </Styles.Brand>
-         </Styles.Nav>
          <Styles.Header>
             <section>
                <Styles.PageHeading>
@@ -34,8 +32,8 @@ export default function Home() {
                   interface and informative analytics.
                </Styles.PageSubHeading>
                {!user?.id && (
-                  <Styles.Google onClick={signInUser} disabled={isSigningIn}>
-                     {isSigningIn ? (
+                  <Styles.Google onClick={signInUser} disabled={isLoggingIn}>
+                     {isLoggingIn ? (
                         <Loader />
                      ) : (
                         <>
@@ -47,38 +45,35 @@ export default function Home() {
                      )}
                   </Styles.Google>
                )}
+               {user?.id && (
+                  <Link href="/dashboard" passHref>
+                     <a tw="bg-[#4285F4] flex flex-shrink-0 items-center h-12 w-auto px-6 rounded-md text-white">
+                        Go to Dashboard
+                     </a>
+                  </Link>
+               )}
+               {hasLoginError && (
+                  <span tw="mt-3 text-red-400">
+                     Something went wrong, please login again!
+                  </span>
+               )}
             </section>
          </Styles.Header>
-         <Styles.Illo />
       </Styles.Fold>
    )
 }
 
 const Styles = {
    Fold: styled.section({
-      ...tw`h-screen flex flex-col relative overflow-hidden`,
-   }),
-   Nav: styled.nav({
-      maxWidth: '1180px',
-      ...tw`w-full mx-auto h-12 flex items-center`,
-      '@tablet': {
-         ...tw`px-4`,
-      },
-   }),
-   Brand: styled.section({
-      ...tw`font-heading font-extrabold text-2xl`,
-      background: 'linear-gradient(92.79deg, #CE6D4E 1.39%, #82E931 74.71%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
-      textFillColor: 'transparent',
+      ...tw`bg-dark-400 h-screen flex flex-col relative overflow-hidden`,
    }),
    Header: styled.header({
       maxWidth: '1180px',
-      ...tw`flex pb-4 w-full flex-1 mx-auto flex-col items-start justify-center`,
+      width: 'calc(100% - 32px)',
+      ...tw`text-center flex pb-4 flex-1 mx-auto flex-col items-start justify-center`,
       section: {
          maxWidth: '540px',
-         ...tw`w-full`,
+         ...tw`mx-auto w-full flex flex-col items-center`,
       },
       '@tablet': {
          ...tw`px-4`,
@@ -96,8 +91,7 @@ const Styles = {
       },
    }),
    PageSubHeading: styled.p({
-      color: '#5A6872',
-      ...tw`text-xl mb-5`,
+      ...tw`text-gray-500 text-xl mb-5`,
    }),
    Google: styled.button({
       backgroundColor: '#4285F4',
@@ -109,21 +103,6 @@ const Styles = {
       '&[disabled]': {
          backgroundColor: '#3e7ee4',
          ...tw`cursor-not-allowed`,
-      },
-   }),
-   Illo: styled.span({
-      position: 'absolute',
-      top: '0',
-      right: '-60%',
-      border: '0',
-      width: '100%',
-      height: '100%',
-      background: '#FFD075',
-      transform: 'skew(332deg)',
-      zIndex: -1,
-      '@tablet': {
-         right: '-132%',
-         transform: 'skew(306deg)',
       },
    }),
 }

@@ -18,6 +18,8 @@ export interface IUser {
 
 export interface IUserContext {
    user: IUser
+   isLoggingIn: boolean
+   setIsLoggingIn: (isLoggingIn: boolean) => void
 }
 
 const Context = React.createContext<IUserContext | null>(null)
@@ -29,6 +31,7 @@ interface IUserProviderProps {
 export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
    const router = useRouter()
    const [user, setUser] = React.useState({})
+   const [isLoggingIn, setIsLoggingIn] = React.useState(false)
    const [getUser] = useLazyQuery(QUERIES.USERS.LIST, {
       onCompleted: ({ users = [] }) => {
          if (users.length > 0) {
@@ -44,6 +47,7 @@ export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
       onCompleted: ({ insert_user = {} }) => {
          setUser(insert_user)
          router.push(`/dashboard`)
+         setIsLoggingIn(false)
       },
       onError: () => {
          setUser({})
@@ -70,6 +74,7 @@ export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
          } else if (event === 'SIGNED_OUT') {
             setUser({})
             router.push('/')
+            setIsLoggingIn(false)
          }
       })
    }, [])
@@ -86,7 +91,11 @@ export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
       }
    }, [])
 
-   return <Context.Provider value={{ user }}>{children}</Context.Provider>
+   return (
+      <Context.Provider value={{ user, isLoggingIn, setIsLoggingIn }}>
+         {children}
+      </Context.Provider>
+   )
 }
 
 export const useUser = () => React.useContext(Context)
