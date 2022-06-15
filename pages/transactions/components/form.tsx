@@ -32,6 +32,7 @@ interface IPaymentMethod {
 interface ICategory {
    id: string
    title: string
+   type: 'income' | 'expense'
 }
 
 interface IAccount {
@@ -381,12 +382,12 @@ const CreateTransaction = ({ closeModal }: { closeModal: () => void }) => {
                            onChange={(option: any) =>
                               setSelectedCategory(option)
                            }
-                           options={categories?.nodes?.map(
-                              (category: ICategory) => ({
+                           options={categories?.nodes
+                              ?.filter((node: ICategory) => node.type === type)
+                              ?.map((category: ICategory) => ({
                                  label: category.title,
                                  value: category.id,
-                              })
-                           )}
+                              }))}
                         />
                      </fieldset>
                      <fieldset>
