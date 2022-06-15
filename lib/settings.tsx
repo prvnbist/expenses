@@ -29,12 +29,16 @@ export const SettingProvider = ({
       skip: !user?.id,
       variables: { where: { user_id: { _eq: user?.id } } },
       onCompleted: ({ settings = [] }) => {
-         setSettings(
-            settings.reduce((result: any, current: { [key: string]: any }) => {
-               result[current.title] = current.value
-               return result
-            }, {})
-         )
+         setSettings(_settings => ({
+            ..._settings,
+            ...settings.reduce(
+               (result: any, current: { [key: string]: any }) => {
+                  result[current.title] = current.value
+                  return result
+               },
+               {}
+            ),
+         }))
       },
       onError: () => {},
    })
