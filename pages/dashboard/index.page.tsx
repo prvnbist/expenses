@@ -49,7 +49,7 @@ const Dashboard: NextPage = (): JSX.Element => {
                   | { title: string; data: ITotalIncomeOrExpense }
                   | { title: string; data: Array<IData> }
             ) => {
-               result[current.title] = current.data
+               result[current.title] = current.data || []
                return result
             },
             {}
@@ -171,83 +171,92 @@ const TotalIncomeExpense = ({
                Table
             </Styles.Tab>
          </Styles.Tabs>
-         <Styles.Panel is_active={tab === 'chart'}>
-            <ResponsivePie
-               data={[
-                  {
-                     id: 'Total Income',
-                     label: 'Total Income',
-                     value: total_income.amount,
-                  },
-                  {
-                     id: 'Total Expense',
-                     label: 'Total Expense',
-                     value: total_expense.amount,
-                  },
-               ]}
-               valueFormat={value =>
-                  Dinero({
-                     amount: value,
-                     currency: 'INR',
-                  }).toFormat()
-               }
-               {...pieChartOptions}
-            />
-         </Styles.Panel>
-         <Styles.Panel is_active={tab === 'table'}>
-            <Table>
-               <Table.Head>
-                  <Table.Row>
-                     <Table.HCell>Title</Table.HCell>
-                     <Table.HCell is_right>Count</Table.HCell>
-                     <Table.HCell is_right>Total</Table.HCell>
-                  </Table.Row>
-               </Table.Head>
-               <Table.Body>
-                  <Table.Row>
-                     <Table.Cell>Total Income</Table.Cell>
-                     <Table.Cell is_right>
-                        <span tw="font-mono">{total_income.count}</span>
-                     </Table.Cell>
-                     <Table.Cell is_right>
-                        <span tw="font-mono">
-                           {Dinero({
-                              amount: total_income.amount,
-                              currency: 'INR',
-                           }).toFormat()}
-                        </span>
-                     </Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                     <Table.Cell>Total Expense</Table.Cell>
-                     <Table.Cell is_right>
-                        <span tw="font-mono">{total_expense.count}</span>
-                     </Table.Cell>
-                     <Table.Cell is_right>
-                        <span tw="font-mono">
-                           {Dinero({
-                              amount: total_expense.amount,
-                              currency: 'INR',
-                           }).toFormat()}
-                        </span>
-                     </Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                     <Table.Cell>Balance</Table.Cell>
-                     <Table.Cell is_right />
-                     <Table.Cell is_right>
-                        <span tw="font-mono">
-                           {Dinero({
-                              amount:
-                                 total_income.amount - total_expense.amount,
-                              currency: 'INR',
-                           }).toFormat()}
-                        </span>
-                     </Table.Cell>
-                  </Table.Row>
-               </Table.Body>
-            </Table>
-         </Styles.Panel>
+         {total_expense.count === 0 && total_income.count === 0 ? (
+            <div tw="text-white flex items-center justify-center">
+               - No Data -
+            </div>
+         ) : (
+            <>
+               <Styles.Panel is_active={tab === 'chart'}>
+                  <ResponsivePie
+                     data={[
+                        {
+                           id: 'Total Income',
+                           label: 'Total Income',
+                           value: total_income.amount,
+                        },
+                        {
+                           id: 'Total Expense',
+                           label: 'Total Expense',
+                           value: total_expense.amount,
+                        },
+                     ]}
+                     valueFormat={value =>
+                        Dinero({
+                           amount: value,
+                           currency: 'INR',
+                        }).toFormat()
+                     }
+                     {...pieChartOptions}
+                  />
+               </Styles.Panel>
+               <Styles.Panel is_active={tab === 'table'}>
+                  <Table>
+                     <Table.Head>
+                        <Table.Row>
+                           <Table.HCell>Title</Table.HCell>
+                           <Table.HCell is_right>Count</Table.HCell>
+                           <Table.HCell is_right>Total</Table.HCell>
+                        </Table.Row>
+                     </Table.Head>
+                     <Table.Body>
+                        <Table.Row>
+                           <Table.Cell>Total Income</Table.Cell>
+                           <Table.Cell is_right>
+                              <span tw="font-mono">{total_income.count}</span>
+                           </Table.Cell>
+                           <Table.Cell is_right>
+                              <span tw="font-mono">
+                                 {Dinero({
+                                    amount: total_income.amount,
+                                    currency: 'INR',
+                                 }).toFormat()}
+                              </span>
+                           </Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                           <Table.Cell>Total Expense</Table.Cell>
+                           <Table.Cell is_right>
+                              <span tw="font-mono">{total_expense.count}</span>
+                           </Table.Cell>
+                           <Table.Cell is_right>
+                              <span tw="font-mono">
+                                 {Dinero({
+                                    amount: total_expense.amount,
+                                    currency: 'INR',
+                                 }).toFormat()}
+                              </span>
+                           </Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                           <Table.Cell>Balance</Table.Cell>
+                           <Table.Cell is_right />
+                           <Table.Cell is_right>
+                              <span tw="font-mono">
+                                 {Dinero({
+                                    amount:
+                                       total_income.amount -
+                                       total_expense.amount,
+                                    currency: 'INR',
+                                 }).toFormat()}
+                              </span>
+                           </Table.Cell>
+                        </Table.Row>
+                     </Table.Body>
+                  </Table>
+               </Styles.Panel>
+            </>
+         )}
       </div>
    )
 }
@@ -256,7 +265,7 @@ const CommonChart = ({ data }: { data: Array<IData> }): JSX.Element => {
    const [tab, setTab] = React.useState('chart')
 
    return (
-      <div>
+      <div tw="min-h-[240px]">
          <Styles.Tabs>
             <Styles.Tab
                is_active={tab === 'chart'}
@@ -271,73 +280,81 @@ const CommonChart = ({ data }: { data: Array<IData> }): JSX.Element => {
                Table
             </Styles.Tab>
          </Styles.Tabs>
-         <Styles.Panel is_active={tab === 'chart'}>
-            <ResponsivePie
-               data={data.map(row => ({
-                  id: row.title,
-                  label: row.title,
-                  value: row.sum,
-               }))}
-               valueFormat={value =>
-                  Dinero({
-                     amount: value,
-                     currency: 'INR',
-                  }).toFormat()
-               }
-               {...pieChartOptions}
-            />
-         </Styles.Panel>
-         <Styles.Panel is_active={tab === 'table'}>
-            <Table>
-               <Table.Head>
-                  <Table.Row>
-                     <Table.HCell>Title</Table.HCell>
-                     <Table.HCell is_right>Count</Table.HCell>
-                     <Table.HCell is_right>Total</Table.HCell>
-                  </Table.Row>
-               </Table.Head>
-               <Table.Body>
-                  {data.map(row => (
-                     <Table.Row key={row.title}>
-                        <Table.Cell>{row.title}</Table.Cell>
-                        <Table.Cell is_right>
-                           <span tw="font-mono">{row.count}</span>
-                        </Table.Cell>
-                        <Table.Cell is_right>
-                           <span tw="font-mono">
-                              {Dinero({
-                                 amount: row.sum,
-                                 currency: 'INR',
-                              }).toFormat()}
-                           </span>
-                        </Table.Cell>
-                     </Table.Row>
-                  ))}
-                  <Table.Row>
-                     <Table.Cell>Total</Table.Cell>
-                     <Table.Cell is_right>
-                        <span tw="font-mono">
-                           {data.reduce(
-                              (total, current) => total + current.count,
-                              0
-                           )}
-                        </span>
-                     </Table.Cell>
-                     <Table.Cell is_right>
-                        <span tw="font-mono">
-                           {Dinero({
-                              amount: data.reduce(
-                                 (total, current) => total + current.sum,
-                                 0
-                              ),
-                              currency: 'INR',
-                           }).toFormat()}
-                        </span>
-                     </Table.Cell>
-                  </Table.Row>
-               </Table.Body>
-            </Table>
-         </Styles.Panel>
+         {data.length === 0 ? (
+            <div tw="text-white flex items-center justify-center">
+               - No Data -
+            </div>
+         ) : (
+            <>
+               <Styles.Panel is_active={tab === 'chart'}>
+                  <ResponsivePie
+                     data={data.map(row => ({
+                        id: row.title,
+                        label: row.title,
+                        value: row.sum,
+                     }))}
+                     valueFormat={value =>
+                        Dinero({
+                           amount: value,
+                           currency: 'INR',
+                        }).toFormat()
+                     }
+                     {...pieChartOptions}
+                  />
+               </Styles.Panel>
+               <Styles.Panel is_active={tab === 'table'}>
+                  <Table>
+                     <Table.Head>
+                        <Table.Row>
+                           <Table.HCell>Title</Table.HCell>
+                           <Table.HCell is_right>Count</Table.HCell>
+                           <Table.HCell is_right>Total</Table.HCell>
+                        </Table.Row>
+                     </Table.Head>
+                     <Table.Body>
+                        {data.map(row => (
+                           <Table.Row key={row.title}>
+                              <Table.Cell>{row.title}</Table.Cell>
+                              <Table.Cell is_right>
+                                 <span tw="font-mono">{row.count}</span>
+                              </Table.Cell>
+                              <Table.Cell is_right>
+                                 <span tw="font-mono">
+                                    {Dinero({
+                                       amount: row.sum,
+                                       currency: 'INR',
+                                    }).toFormat()}
+                                 </span>
+                              </Table.Cell>
+                           </Table.Row>
+                        ))}
+                        <Table.Row>
+                           <Table.Cell>Total</Table.Cell>
+                           <Table.Cell is_right>
+                              <span tw="font-mono">
+                                 {data.reduce(
+                                    (total, current) => total + current.count,
+                                    0
+                                 )}
+                              </span>
+                           </Table.Cell>
+                           <Table.Cell is_right>
+                              <span tw="font-mono">
+                                 {Dinero({
+                                    amount: data.reduce(
+                                       (total, current) => total + current.sum,
+                                       0
+                                    ),
+                                    currency: 'INR',
+                                 }).toFormat()}
+                              </span>
+                           </Table.Cell>
+                        </Table.Row>
+                     </Table.Body>
+                  </Table>
+               </Styles.Panel>
+            </>
+         )}
       </div>
    )
 }
