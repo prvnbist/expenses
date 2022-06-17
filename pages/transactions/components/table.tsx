@@ -112,6 +112,7 @@ const Table = ({
                return (
                   <div tw="flex lg:hidden group-hover:flex w-full h-full justify-center p-1 gap-2">
                      <button
+                        title="Edit Transaction"
                         onClick={() =>
                            router.push(
                               `/transactions?id=${cell.row.original.id}`
@@ -122,6 +123,8 @@ const Table = ({
                         <Icon.Edit size={14} tw="fill-current text-white" />
                      </button>
                      <button
+                        title="Delete Transaction"
+                        data-test="delete-transaction"
                         onClick={() =>
                            delete_transaction({
                               variables: { id: cell.row.original.id },

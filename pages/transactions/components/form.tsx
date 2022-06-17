@@ -264,7 +264,10 @@ const CreateTransaction = ({ closeModal }: { closeModal: () => void }) => {
             } Transaction`}</title>
          </Head>
          <header tw="px-4 pt-4 flex items-center justify-between">
-            <h1 tw="font-heading text-xl font-medium text-gray-400">
+            <h1
+               data-test="modal-title"
+               tw="font-heading text-xl font-medium text-gray-400"
+            >
                {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Transaction
             </h1>
             <button
@@ -298,6 +301,7 @@ const CreateTransaction = ({ closeModal }: { closeModal: () => void }) => {
                            })}
                            id="title"
                            name="title"
+                           data-test="form-title"
                            placeholder="Enter the title"
                         />
                         {errors.title?.type === 'required' && (
@@ -324,6 +328,7 @@ const CreateTransaction = ({ closeModal }: { closeModal: () => void }) => {
                            })}
                            id="amount"
                            name="amount"
+                           data-test="form-amount"
                            placeholder="Enter the amount"
                         />
                         {errors.amount?.type === 'required' && (
@@ -344,6 +349,7 @@ const CreateTransaction = ({ closeModal }: { closeModal: () => void }) => {
                            id="date"
                            name="date"
                            type="date"
+                           data-test="form-date"
                            placeholder="Enter the date"
                         />
                         {errors.date?.type === 'required' && (
@@ -352,6 +358,7 @@ const CreateTransaction = ({ closeModal }: { closeModal: () => void }) => {
                      </fieldset>
                      <div tw="flex items-center bg-dark-300 p-1 rounded-lg">
                         <Styles.GroupButton
+                           data-test="form-type__expense"
                            is_selected={type === 'expense'}
                            onClick={(e: React.FormEvent<HTMLInputElement>) => {
                               e.preventDefault()
@@ -361,6 +368,7 @@ const CreateTransaction = ({ closeModal }: { closeModal: () => void }) => {
                            Expense
                         </Styles.GroupButton>
                         <Styles.GroupButton
+                           data-test="form-type__income"
                            is_selected={type === 'income'}
                            onClick={(e: React.FormEvent<HTMLInputElement>) => {
                               e.preventDefault()
@@ -449,6 +457,7 @@ const CreateTransaction = ({ closeModal }: { closeModal: () => void }) => {
                      <button
                         title="Save"
                         type="submit"
+                        data-test="form-submit"
                         disabled={
                            !isFormValid ||
                            creating_transaction ||

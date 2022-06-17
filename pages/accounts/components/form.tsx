@@ -126,7 +126,10 @@ const CreateAccount = ({ closeModal }: { closeModal: () => void }) => {
             } Account`}</title>
          </Head>
          <header tw="px-4 pt-4 flex items-center justify-between">
-            <h1 tw="font-heading text-2xl font-medium text-gray-400">
+            <h1
+               data-test="modal-title"
+               tw="font-heading text-2xl font-medium text-gray-400"
+            >
                {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Account
             </h1>
             <button
@@ -158,6 +161,7 @@ const CreateAccount = ({ closeModal }: { closeModal: () => void }) => {
                            })}
                            id="title"
                            name="title"
+                           data-test="form-title"
                            placeholder="Enter the title"
                         />
                         {errors.title?.type === 'required' && (
@@ -184,6 +188,7 @@ const CreateAccount = ({ closeModal }: { closeModal: () => void }) => {
                            })}
                            id="amount"
                            name="amount"
+                           data-test="form-amount"
                            placeholder="Enter the amount"
                         />
                         {errors.amount?.type === 'required' && (
@@ -198,6 +203,7 @@ const CreateAccount = ({ closeModal }: { closeModal: () => void }) => {
                      <button
                         title="Save"
                         type="submit"
+                        data-test="form-submit"
                         disabled={creating_account || updating_account}
                         tw="bg-green-500 h-10 px-6 text-white hover:bg-green-600 disabled:(cursor-not-allowed opacity-50 hover:bg-green-500)"
                      >

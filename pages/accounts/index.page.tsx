@@ -24,10 +24,14 @@ export default function Categories() {
             <title>Accounts</title>
          </Head>
          <header tw="px-4 pt-4 flex items-center space-x-3">
-            <h1 tw="font-heading text-2xl font-medium text-gray-400">
+            <h1
+               data-test="page-title"
+               tw="font-heading text-2xl font-medium text-gray-400"
+            >
                Accounts
             </h1>
             <button
+               data-test="create-account"
                title="Create Account"
                onClick={() => setIsModalOpen(true)}
                tw="cursor-pointer h-10 w-10 border border-dark-200 flex items-center justify-center hover:bg-dark-300"

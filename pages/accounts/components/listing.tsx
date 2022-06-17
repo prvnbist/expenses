@@ -73,6 +73,7 @@ const Listing = () => {
                      </button>
                      <button
                         title="Delete Account"
+                        data-test="delete-account"
                         onClick={() =>
                            delete_account({
                               variables: { id: cell.row.original.id },

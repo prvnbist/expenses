@@ -73,6 +73,7 @@ const Listing = () => {
                      </button>
                      <button
                         title="Delete Payment Method"
+                        data-test="delete-payment-method"
                         onClick={() =>
                            delete_payment_method({
                               variables: { id: cell.row.original.id },

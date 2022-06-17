@@ -118,7 +118,10 @@ const CreatePaymentMethod = ({ closeModal }: { closeModal: () => void }) => {
             } Payment Method`}</title>
          </Head>
          <header tw="px-4 pt-4 flex items-center justify-between">
-            <h1 tw="font-heading text-xl font-medium text-gray-400">
+            <h1
+               data-test="modal-title"
+               tw="font-heading text-xl font-medium text-gray-400"
+            >
                {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Payment Method
             </h1>
             <button
@@ -150,6 +153,7 @@ const CreatePaymentMethod = ({ closeModal }: { closeModal: () => void }) => {
                            })}
                            id="title"
                            name="title"
+                           data-test="form-title"
                            placeholder="Enter the title"
                         />
                         {errors.title?.type === 'required' && (
@@ -165,6 +169,7 @@ const CreatePaymentMethod = ({ closeModal }: { closeModal: () => void }) => {
                      <button
                         title="Save"
                         type="submit"
+                        data-test="form-submit"
                         disabled={
                            !isFormValid ||
                            creating_payment_method ||

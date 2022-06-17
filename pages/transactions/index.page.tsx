@@ -55,11 +55,15 @@ export default function Dashboard() {
          </Head>
          <header tw="px-4 pt-4 flex flex-col space-y-3 justify-between md:(flex-row items-center space-y-0)">
             <aside tw="flex items-center space-x-3">
-               <h1 tw="font-heading text-2xl font-medium text-gray-400">
+               <h1
+                  data-test="page-title"
+                  tw="font-heading text-2xl font-medium text-gray-400"
+               >
                   Transactions
                </h1>
                <button
                   title="Create Transaction"
+                  data-test="create-transaction"
                   onClick={() => setIsModalOpen(true)}
                   tw="cursor-pointer h-10 w-10 border border-dark-200 flex items-center justify-center hover:bg-dark-300"
                >
