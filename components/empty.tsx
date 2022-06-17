@@ -9,9 +9,7 @@ export const Empty = ({ icon = null, message = '', dataTest = '' }) => {
          data-test={dataTest}
          tw="flex flex-col items-center justify-center w-full h-[180px]"
       >
-         {icon ?? (
-            <Icon.CircleAdd size={64} tw="stroke-current text-gray-400" />
-         )}
+         {icon ?? <Icon.Info size={64} tw="stroke-current text-gray-400" />}
          <p tw="mt-3 text-gray-300">{message ?? 'No data found!'}</p>
       </div>
    )

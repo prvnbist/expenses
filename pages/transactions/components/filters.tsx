@@ -153,7 +153,10 @@ const Filters = ({
 
    return (
       <Styles.Container>
-         <Styles.Button.Icon title="Sort By" onClick={() => setIsOpen(v => !v)}>
+         <Styles.Button.Icon
+            title="Filter By"
+            onClick={() => setIsOpen(v => !v)}
+         >
             <Icon.Filter size={16} />
          </Styles.Button.Icon>
          <Styles.Dropdown.Container is_active={isOpen}>

@@ -208,10 +208,11 @@ const CreateGroup = ({ closeModal }: { closeModal: () => void }) => {
                         )}
                      </fieldset>
                      <button
+                        title="Save"
                         type="submit"
                         data-test="submit"
                         disabled={creating_group || updating_group}
-                        tw="border border-dark-200 h-10 px-3 text-white hover:bg-dark-300 disabled:(cursor-not-allowed opacity-50 hover:bg-transparent)"
+                        tw="bg-green-500 h-10 px-6 text-white hover:bg-green-600 disabled:(cursor-not-allowed opacity-50 hover:bg-green-500)"
                      >
                         {creating_group || updating_group ? 'Saving' : 'Save'}
                      </button>

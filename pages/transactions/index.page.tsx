@@ -74,6 +74,7 @@ export default function Dashboard() {
                   <input
                      type="text"
                      value={search}
+                     title="Search Transactions"
                      placeholder="search by title..."
                      onChange={e => setSearch(e.target.value)}
                   />

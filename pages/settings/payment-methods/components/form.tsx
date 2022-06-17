@@ -163,11 +163,14 @@ const CreatePaymentMethod = ({ closeModal }: { closeModal: () => void }) => {
                         )}
                      </fieldset>
                      <button
+                        title="Save"
                         type="submit"
                         disabled={
-                           creating_payment_method || updating_payment_method
+                           !isFormValid ||
+                           creating_payment_method ||
+                           updating_payment_method
                         }
-                        tw="border border-dark-200 h-10 px-3 text-white hover:bg-dark-300 disabled:(cursor-not-allowed opacity-50 hover:bg-transparent)"
+                        tw="bg-green-500 h-10 px-6 text-white hover:bg-green-600 disabled:(cursor-not-allowed opacity-50 hover:bg-green-500)"
                      >
                         {creating_payment_method || updating_payment_method
                            ? 'Saving'

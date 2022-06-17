@@ -77,7 +77,9 @@ const Layout = ({ children }: ILayout): JSX.Element => {
                   </Styles.Item>
                ))}
             </Styles.Items>
-            <Styles.Logout onClick={auth.signout}>Log Out</Styles.Logout>
+            <Styles.Logout title="Logout" onClick={auth.signout}>
+               Log Out
+            </Styles.Logout>
          </Styles.Navbar>
          <Styles.Main>{children}</Styles.Main>
       </Styles.Layout>
@@ -139,7 +141,7 @@ const Styles = {
       '@tablet': { ...tw`h-[calc(100vh - 40px)]` },
    }),
    Logout: styled.button({
-      ...tw`mr-1 px-2 py-1 rounded text-red-400 border border-transparent hover:(border-red-400)`,
+      ...tw`text-sm mr-1 px-2 py-1 rounded text-red-400 border border-transparent hover:(border-red-400)`,
       '@tablet': {
          ...tw`mt-2 w-[calc(100% - 24px)] mb-2 mr-0`,
       },
