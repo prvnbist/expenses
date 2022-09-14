@@ -8,7 +8,13 @@ import { styled } from '@stitches/react'
 import * as Icon from 'icons'
 import Layout from 'sections/layout'
 import { useDebounce, usePrevious } from 'hooks'
-import { Filters, SortBy, CreateTransaction, Listing } from './components'
+import {
+   Filters,
+   SortBy,
+   CreateTransaction,
+   Listing,
+   ViewBreakdown,
+} from './components'
 
 interface ISortByState {
    title: 'asc' | 'desc'
@@ -41,9 +47,12 @@ export default function Dashboard() {
       raw_date: 'desc',
    })
    const [isModalOpen, setIsModalOpen] = React.useState(false)
+   const [isBreakdownModalOpen, setIsBreakdownModalOpen] = React.useState(false)
 
    React.useEffect(() => {
-      if (router.query.id) {
+      if (router.query.id && router.query.view) {
+         setIsBreakdownModalOpen(true)
+      } else if (router.query.id) {
          setIsModalOpen(true)
       }
    }, [router.query])
@@ -104,6 +113,19 @@ export default function Dashboard() {
             <CreateTransaction
                closeModal={() => {
                   setIsModalOpen(false)
+                  router.push('/transactions')
+               }}
+            />
+         </Modal>
+         <Modal
+            contentLabel="Breakdown"
+            isOpen={isBreakdownModalOpen}
+            style={{ content: { maxWidth: '75%' } }}
+            onRequestClose={() => setIsBreakdownModalOpen(false)}
+         >
+            <ViewBreakdown
+               closeModal={() => {
+                  setIsBreakdownModalOpen(false)
                   router.push('/transactions')
                }}
             />

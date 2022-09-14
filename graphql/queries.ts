@@ -10,12 +10,7 @@ const QUERIES = {
             $where2: transactions_view_bool_exp = {}
             $order_by: [transactions_view_order_by!] = {}
          ) {
-            transactions: transactions_view_aggregate(
-               where: $where
-               order_by: $order_by
-               offset: $offset
-               limit: $limit
-            ) {
+            transactions: transactions_view_aggregate(where: $where, order_by: $order_by, offset: $offset, limit: $limit) {
                aggregate {
                   count
                }
@@ -34,11 +29,10 @@ const QUERIES = {
                   group_id
                   payment_method
                   payment_method_id
+                  has_breakdown
                }
             }
-            transactions_aggregate: transactions_view_aggregate(
-               where: $where2
-            ) {
+            transactions_aggregate: transactions_view_aggregate(where: $where2) {
                aggregate {
                   count
                }
@@ -78,10 +72,7 @@ const QUERIES = {
    CATEGORIES: {
       LIST: gql`
          query categories($where: categories_bool_exp = {}) {
-            categories: categories_aggregate(
-               order_by: { title: asc }
-               where: $where
-            ) {
+            categories: categories_aggregate(order_by: { title: asc }, where: $where) {
                aggregate {
                   count
                }
@@ -108,10 +99,7 @@ const QUERIES = {
    ACCOUNTS: {
       LIST: gql`
          query accounts($userid: uuid = "", $where: accounts_bool_exp = {}) {
-            accounts: accounts_aggregate(
-               where: $where
-               order_by: { title: asc }
-            ) {
+            accounts: accounts_aggregate(where: $where, order_by: { title: asc }) {
                aggregate {
                   count
                }
@@ -166,14 +154,8 @@ const QUERIES = {
    },
    PAYMENT_METHODS: {
       LIST: gql`
-         query payment_methods(
-            $userid: uuid = ""
-            $where: settings_payment_method_bool_exp = {}
-         ) {
-            payment_methods: payment_methods_aggregate(
-               order_by: { title: asc }
-               where: $where
-            ) {
+         query payment_methods($userid: uuid = "", $where: settings_payment_method_bool_exp = {}) {
+            payment_methods: payment_methods_aggregate(order_by: { title: asc }, where: $where) {
                aggregate {
                   count
                }
@@ -215,6 +197,33 @@ const QUERIES = {
             settings(order_by: { title: asc }, where: $where) {
                title
                value
+            }
+         }
+      `,
+   },
+   BREAKDOWN: {
+      LIST: gql`
+         query transaction_breakdown($where: transactions_breakdown_view_bool_exp = {}) {
+            transaction_breakdown: transactions_breakdown_view_aggregate(where: $where, order_by: { raw_date: desc }) {
+               aggregate {
+                  count
+                  sum {
+                     amount
+                  }
+               }
+               nodes {
+                  id
+                  date
+                  payee
+                  amount
+                  account
+                  status
+                  user_id
+                  raw_date
+                  account_id
+                  payment_method
+                  payment_method_id
+               }
             }
          }
       `,

@@ -53,6 +53,39 @@ const Table = ({
    const columns = React.useMemo(
       () => [
          {
+            Header: ' ',
+            width: 48,
+            alignment: 'center',
+            no_padding: true,
+            Cell: ({ cell }: any) => {
+               return (
+                  <div tw="flex w-full h-full justify-center p-1 gap-2">
+                     <button
+                        title="View Breakdown"
+                        onClick={() =>
+                           router.push(
+                              `/transactions?view=breakdown&id=${cell.row.original.id}`
+                           )
+                        }
+                        tw="w-6 flex items-center justify-center rounded hover:bg-dark-300"
+                     >
+                        {cell.row.original.has_breakdown ? (
+                           <Icon.Breakdown
+                              size={16}
+                              tw="fill-current text-gray-500"
+                           />
+                        ) : (
+                           <Icon.Add
+                              size={14}
+                              tw="stroke-current text-gray-500"
+                           />
+                        )}
+                     </button>
+                  </div>
+               )
+            },
+         },
+         {
             Header: 'Title',
             accessor: 'title',
             type: 'text',

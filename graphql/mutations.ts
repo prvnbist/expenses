@@ -10,10 +10,7 @@ export const MUTATIONS = {
          }
       `,
       UPDATE: gql`
-         mutation update_transaction(
-            $id: uuid = ""
-            $_set: transactions_set_input = {}
-         ) {
+         mutation update_transaction($id: uuid = "", $_set: transactions_set_input = {}) {
             update_transaction(pk_columns: { id: $id }, _set: $_set) {
                id
             }
@@ -36,10 +33,7 @@ export const MUTATIONS = {
          }
       `,
       UPDATE: gql`
-         mutation update_category(
-            $id: uuid = ""
-            $_set: categories_set_input = {}
-         ) {
+         mutation update_category($id: uuid = "", $_set: categories_set_input = {}) {
             update_category(pk_columns: { id: $id }, _set: $_set) {
                id
             }
@@ -62,10 +56,7 @@ export const MUTATIONS = {
          }
       `,
       UPDATE: gql`
-         mutation update_account(
-            $id: uuid = ""
-            $_set: accounts_set_input = {}
-         ) {
+         mutation update_account($id: uuid = "", $_set: accounts_set_input = {}) {
             update_account(pk_columns: { id: $id }, _set: $_set) {
                id
             }
@@ -106,13 +97,7 @@ export const MUTATIONS = {
    USER: {
       UPSERT: gql`
          mutation insert_user($object: user_insert_input = {}) {
-            insert_user(
-               object: $object
-               on_conflict: {
-                  constraint: user_email_key
-                  update_columns: [email]
-               }
-            ) {
+            insert_user(object: $object, on_conflict: { constraint: user_email_key, update_columns: [email] }) {
                id
                name
                email
@@ -124,26 +109,16 @@ export const MUTATIONS = {
    },
    PAYMENT_METHODS: {
       CREATE: gql`
-         mutation insert_payment_method(
-            $object: settings_payment_method_insert_input = {}
-         ) {
-            insert_payment_method: insert_settings_payment_method_one(
-               object: $object
-            ) {
+         mutation insert_payment_method($object: settings_payment_method_insert_input = {}) {
+            insert_payment_method: insert_settings_payment_method_one(object: $object) {
                id
                title
             }
          }
       `,
       UPDATE: gql`
-         mutation update_payment_method(
-            $id: uuid = ""
-            $_set: settings_payment_method_set_input = {}
-         ) {
-            update_payment_method: update_settings_payment_method_by_pk(
-               pk_columns: { id: $id }
-               _set: $_set
-            ) {
+         mutation update_payment_method($id: uuid = "", $_set: settings_payment_method_set_input = {}) {
+            update_payment_method: update_settings_payment_method_by_pk(pk_columns: { id: $id }, _set: $_set) {
                id
                title
             }
@@ -151,11 +126,18 @@ export const MUTATIONS = {
       `,
       DELETE: gql`
          mutation delete_payment_method($id: uuid = "") {
-            delete_payment_method: delete_settings_payment_method_by_pk(
-               id: $id
-            ) {
+            delete_payment_method: delete_settings_payment_method_by_pk(id: $id) {
                id
                title
+            }
+         }
+      `,
+   },
+   BREAKDOWN: {
+      CREATE: gql`
+         mutation insert_breakdown($object: transactions_breakdown_insert_input = {}) {
+            insert_breakdown: insert_transactions_breakdown_one(object: $object) {
+               id
             }
          }
       `,

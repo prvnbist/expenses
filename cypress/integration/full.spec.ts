@@ -65,7 +65,9 @@ describe('Test new user flow', () => {
       cy.title().should('include', 'Transactions')
       cy.get('h1[data-test=page-title]').should('contain', 'Transactions')
 
-      cy.get('[data-test=delete-transaction]').each(el => el.click())
+      cy.get('[data-test=delete-transaction]').each(el =>
+         cy.wrap(el).click({ force: true })
+      )
    })
 
    it('Delete Accounts', () => {

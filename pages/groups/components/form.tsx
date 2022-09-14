@@ -22,9 +22,7 @@ const CreateGroup = ({ closeModal }: { closeModal: () => void }) => {
    const router = useRouter()
    const { addToast } = useToasts()
    const FORM_TYPE = router.query.id ? 'EDIT' : 'CREATE'
-   const [status, setStatus] = React.useState(
-      FORM_TYPE === 'EDIT' ? 'LOADING' : 'SUCCESS'
-   )
+   const [status, setStatus] = React.useState(FORM_TYPE === 'EDIT' ? 'LOADING' : 'SUCCESS')
 
    const {
       watch,
@@ -34,38 +32,32 @@ const CreateGroup = ({ closeModal }: { closeModal: () => void }) => {
       handleSubmit,
       formState: { errors },
    } = useForm<Inputs>()
-   const [create_group, { loading: creating_group }] = useMutation(
-      MUTATIONS.GROUPS.CREATE,
-      {
-         refetchQueries: ['groups'],
-         onCompleted: () => {
-            reset()
-            addToast('Successfully added the group', {
-               appearance: 'success',
-            })
-            closeModal()
-            router.push(`/groups`)
-         },
-         onError: () =>
-            addToast('Failed to add the group', {
-               appearance: 'error',
-            }),
-      }
-   )
-   const [update_group, { loading: updating_group }] = useMutation(
-      MUTATIONS.GROUPS.UPDATE,
-      {
-         refetchQueries: ['groups'],
-         onCompleted: () =>
-            addToast('Successfully updated the group', {
-               appearance: 'success',
-            }),
-         onError: () =>
-            addToast('Failed to update the group', {
-               appearance: 'error',
-            }),
-      }
-   )
+   const [create_group, { loading: creating_group }] = useMutation(MUTATIONS.GROUPS.CREATE, {
+      refetchQueries: ['groups'],
+      onCompleted: () => {
+         reset()
+         addToast('Successfully added the group', {
+            appearance: 'success',
+         })
+         closeModal()
+         router.push(`/groups`)
+      },
+      onError: () =>
+         addToast('Failed to add the group', {
+            appearance: 'error',
+         }),
+   })
+   const [update_group, { loading: updating_group }] = useMutation(MUTATIONS.GROUPS.UPDATE, {
+      refetchQueries: ['groups'],
+      onCompleted: () =>
+         addToast('Successfully updated the group', {
+            appearance: 'success',
+         }),
+      onError: () =>
+         addToast('Failed to update the group', {
+            appearance: 'error',
+         }),
+   })
 
    useQuery(QUERIES.GROUPS.ONE, {
       fetchPolicy: 'network-only',
@@ -121,15 +113,10 @@ const CreateGroup = ({ closeModal }: { closeModal: () => void }) => {
    return (
       <>
          <Head>
-            <title>{`${
-               FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'
-            } Group`}</title>
+            <title>{`${FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Group`}</title>
          </Head>
          <header tw="px-4 pt-4 flex items-center justify-between">
-            <h1
-               data-test="page-title"
-               tw="font-heading text-2xl font-medium text-gray-400"
-            >
+            <h1 data-test="page-title" tw="font-heading text-2xl font-medium text-gray-400">
                {FORM_TYPE === 'CREATE' ? 'Create' : 'Edit'} Group
             </h1>
             <button
@@ -147,10 +134,7 @@ const CreateGroup = ({ closeModal }: { closeModal: () => void }) => {
                {status === 'ERROR' ? (
                   <p>Something went wrong, please try again!</p>
                ) : (
-                  <form
-                     onSubmit={handleSubmit(onSubmit)}
-                     tw="w-full max-w-[380px] mt-4 px-4 space-y-3"
-                  >
+                  <form onSubmit={handleSubmit(onSubmit)} tw="w-full max-w-[380px] mt-4 px-4 space-y-3">
                      <fieldset>
                         <Styles.Label htmlFor="title">Title</Styles.Label>
                         <Styles.Text
@@ -164,26 +148,12 @@ const CreateGroup = ({ closeModal }: { closeModal: () => void }) => {
                            data-test="title"
                            placeholder="Enter the title"
                         />
-                        {errors.title?.type === 'required' && (
-                           <Styles.Error data-test="title-required">
-                              Please fill the title
-                           </Styles.Error>
-                        )}
-                        {errors.title?.type === 'minLength' && (
-                           <Styles.Error data-test="title-too-short">
-                              Title is too short
-                           </Styles.Error>
-                        )}
-                        {errors.title?.type === 'maxLength' && (
-                           <Styles.Error data-test="title-too-long">
-                              Title is too long
-                           </Styles.Error>
-                        )}
+                        {errors.title?.type === 'required' && <Styles.Error data-test="title-required">Please fill the title</Styles.Error>}
+                        {errors.title?.type === 'minLength' && <Styles.Error data-test="title-too-short">Title is too short</Styles.Error>}
+                        {errors.title?.type === 'maxLength' && <Styles.Error data-test="title-too-long">Title is too long</Styles.Error>}
                      </fieldset>
                      <fieldset>
-                        <Styles.Label htmlFor="description">
-                           Description
-                        </Styles.Label>
+                        <Styles.Label htmlFor="description">Description</Styles.Label>
                         <Styles.TextArea
                            {...register('description', {
                               minLength: 2,
@@ -195,17 +165,9 @@ const CreateGroup = ({ closeModal }: { closeModal: () => void }) => {
                            data-test="description"
                            placeholder="Enter the description"
                         />
-                        {errors.description?.type === 'required' && (
-                           <Styles.Error>
-                              Please fill the description
-                           </Styles.Error>
-                        )}
-                        {errors.description?.type === 'minLength' && (
-                           <Styles.Error>Description is too short</Styles.Error>
-                        )}
-                        {errors.description?.type === 'maxLength' && (
-                           <Styles.Error>Description is too long</Styles.Error>
-                        )}
+                        {errors.description?.type === 'required' && <Styles.Error>Please fill the description</Styles.Error>}
+                        {errors.description?.type === 'minLength' && <Styles.Error>Description is too short</Styles.Error>}
+                        {errors.description?.type === 'maxLength' && <Styles.Error>Description is too long</Styles.Error>}
                      </fieldset>
                      <button
                         title="Save"
