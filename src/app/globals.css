@@ -21,3 +21,7 @@ body {
    border: none;
    block-size: unset;
 }
+
+fieldset {
+   border: none;
+}

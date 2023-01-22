@@ -1,7 +1,7 @@
 'use client'
 import { useQuery } from '@/hooks'
-import { Renderer } from '@/components'
 import DataGrid from 'react-data-grid'
+import { CreateTransactionForm, Renderer } from '@/components'
 
 const columns = [
    { key: 'title', name: 'Title' },
@@ -18,12 +18,19 @@ export default function Home() {
    const { status, error, data } = useQuery({
       table: 'transactions',
       columns: `*`,
+      order: [
+         { key: 'date', direction: 'desc' },
+         { key: 'title', direction: 'asc' },
+      ],
    })
    return (
-      <Renderer status={status} error={error}>
-         <main>
-            <DataGrid columns={columns} rows={data} rowHeight={28} />
-         </main>
-      </Renderer>
+      <>
+         <Renderer status={status} error={error}>
+            <main>
+               <DataGrid columns={columns} rows={data} rowHeight={28} />
+            </main>
+         </Renderer>
+         <CreateTransactionForm />
+      </>
    )
 }
