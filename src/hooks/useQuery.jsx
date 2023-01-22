@@ -1,39 +1,40 @@
 'use client'
-import supabase from '@/lib/supabase'
+import { get } from '@/utils'
 import { useState, useEffect } from 'react'
 
-export const useQuery = ({ table = '', columns = '*', limit = 10, offset = 0 }) => {
+export const useQuery = ({ table = '', columns = '*', limit = 10, offset = 0, order = [] }) => {
    const [data, setData] = useState([])
    const [error, setError] = useState(null)
    const [status, setStatus] = useState('IDLE')
+   const [_limit, setLimit] = useState(limit)
+   const [_offset, setOffset] = useState(offset)
+   const [_order, setOrder] = useState(order)
    useEffect(() => {
-      if (!table) return
       ;(async () => {
          setStatus('LOADING')
-         const query = supabase.from(table).select(columns)
 
-         if (limit) {
-            query.range(offset || 0, limit - 1)
-         }
-
-         let { data, error } = await query
+         const { error = null, data = [] } = await get({
+            table,
+            columns,
+            limit: _limit,
+            offset: _offset,
+            order: _order,
+         })
 
          if (error) {
             setError(error)
             setStatus('ERROR')
-            return
-         }
+         } else {
+            if (data.length === 0) {
+               setData([])
+               setStatus('EMPTY')
+            }
 
-         if (data.length === 0) {
-            setData([])
-            setStatus('EMPTY')
-            return
+            setData(data)
+            setStatus('SUCCESS')
          }
-
-         setData(data)
-         setStatus('SUCCESS')
       })()
-   }, [table, columns, limit, offset])
+   }, [_limit, _offset, _order])
 
    return { status, error, data }
 }
