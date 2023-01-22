@@ -8,4 +8,15 @@ html,
 body {
    max-width: 100vw;
    overflow-x: hidden;
+   background: #212121;
+}
+
+.rdg-cell {
+   font-size: 13px;
+   padding: 0 8px;
+}
+
+.rdg {
+   border: none;
+   block-size: unset;
 }
