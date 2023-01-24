@@ -1,11 +1,8 @@
 'use client'
 import Link from 'next/link'
-import { Inter } from '@next/font/google'
 import { useCallback, useEffect, useState } from 'react'
 
 import 'react-data-grid/lib/styles.css'
-
-const inter = Inter({ subsets: ['latin'] })
 
 import './globals.css'
 
@@ -53,7 +50,7 @@ export default function RootLayout({ children }) {
    return (
       <html lang="en">
          <head />
-         <body className={inter.className}>
+         <body>
             {status === 'LOADING' ? (
                <span>Loading...</span>
             ) : (

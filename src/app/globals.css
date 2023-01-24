@@ -1,7 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+   --dark-300: #2d2d2d;
+   --dark-200: #403f3f;
+   --dark-100: #505050;
+   --dark-50: #838383;
+}
+
 * {
-   box-sizing: border-box;
-   padding: 0;
    margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   font-family: 'Inter', sans-serif;
 }
 
 html,
@@ -18,10 +28,27 @@ body {
 }
 
 .rdg {
-   border: none;
+   width: 100%;
    block-size: unset;
+   border: 1px solid var(--dark-300);
+}
+
+.rdg-cell {
+   outline: 1px solid var(--dark-300);
 }
 
 fieldset {
    border: none;
+   display: flex;
+   flex-direction: column;
+}
+
+.form-body {
+   max-height: calc(100vh - 138px);
+}
+
+@media (min-width: 640px) {
+   .form-body {
+      max-height: 55vh;
+   }
 }
