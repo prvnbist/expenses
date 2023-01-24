@@ -171,11 +171,11 @@ const Modal = ({ title, children, isModalOpen, setIsModalOpen }) => {
    if (!isModalOpen) return null
    return (
       <div
-         tabindex="-1"
+         tabIndex="-1"
          class="flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 z-50 w-full h-full sm:p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full"
       >
          <div class="relative w-full h-full sm:max-w-[400px]">
-            <div class="relative rounded-lg shadow bg-[var(--dark-300)]">
+            <div class="relative rounded-lg shadow-xl border border-[var(--dark-200)] bg-[var(--dark-300)]">
                <header class="flex items-center justify-between p-4 border-b rounded-t border-[var(--dark-200)]">
                   <h3 class="text-xl font-medium text-white">{title}</h3>
                   <button
