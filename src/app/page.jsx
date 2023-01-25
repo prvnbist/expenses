@@ -1,7 +1,8 @@
 'use client'
-import { useState } from 'react'
 import { useQuery } from '@/hooks'
+import supabase from '@/lib/supabase'
 import DataGrid from 'react-data-grid'
+import { useEffect, useState } from 'react'
 import { CreateTransactionForm, Renderer } from '@/components'
 
 const columns = [
@@ -17,6 +18,14 @@ const columns = [
 
 export default function Home() {
    const [isModalOpen, setIsModalOpen] = useState(false)
+   const [selectedRow, setSelectedRow] = useState(null)
+
+   useEffect(() => {
+      if (!isModalOpen) {
+         setSelectedRow(null)
+      }
+   }, [isModalOpen])
+
    const { status, error, data } = useQuery({
       table: 'transactions',
       columns: `*`,
@@ -25,19 +34,30 @@ export default function Home() {
          { key: 'title', direction: 'asc' },
       ],
    })
+
+   const handleEdit = row => {
+      setSelectedRow(row)
+      setIsModalOpen(true)
+   }
+
+   const handleDelete = async row => {
+      await supabase.from('transaction').delete().match({ id: row.id })
+   }
+
    return (
-      <div className="p-6">
+      <>
          <header className="flex item-center gap-3 mt-4 mb-3">
             <h2 className="text-2xl font-medium text-white">Transactions</h2>
             <button
                type="button"
+               title="Create Transaction"
                onClick={() => setIsModalOpen(true)}
-               class="bg-blue-600 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm p-1.5 text-center inline-flex items-center mr-2 hover:bg-blue-700 focus:ring-blue-800"
+               className="bg-blue-600 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm p-1.5 text-center inline-flex items-center mr-2 hover:bg-blue-700 focus:ring-blue-800"
             >
                <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
+                  width="20"
+                  height="20"
                   viewBox="0 0 24 24"
                   stroke="#fff"
                   strokeWidth="2"
@@ -51,10 +71,27 @@ export default function Home() {
          </header>
          <Renderer status={status} error={error}>
             <main>
-               <DataGrid columns={columns} rows={data} rowHeight={28} />
+               <DataGrid
+                  columns={[
+                     ...columns,
+                     {
+                        key: 'actions',
+                        name: 'Actions',
+                        width: 120,
+                        formatter: ({ row }) => (
+                           <div>
+                              <button onClick={() => handleEdit(row)}>Edit</button>
+                              <button onClick={() => handleDelete(row)}>delete</button>
+                           </div>
+                        ),
+                     },
+                  ]}
+                  rows={data}
+                  rowHeight={28}
+               />
             </main>
          </Renderer>
-         <CreateTransactionForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-      </div>
+         <CreateTransactionForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} data={selectedRow} />
+      </>
    )
 }
