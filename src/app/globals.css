@@ -14,17 +14,16 @@
    font-family: 'Inter', sans-serif;
 }
 
+*:focus-visible {
+   outline: none;
+}
+
 html,
 body {
    color: #fff;
    max-width: 100vw;
    overflow-x: hidden;
    background: #212121;
-}
-
-.rdg-cell {
-   font-size: 13px;
-   padding: 0 8px;
 }
 
 .rdg {
@@ -34,6 +33,8 @@ body {
 }
 
 .rdg-cell {
+   padding: 0 8px;
+   font-size: 13px;
    outline: 1px solid var(--dark-300);
 }
 

@@ -1,25 +1,15 @@
 'use client'
 import supabase from '@/lib/supabase'
 import { useForm } from 'react-hook-form'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useToasts } from 'react-toast-notifications'
 
 const inputCSS = `w-full max-w-[320px] bg-[var(--dark-300)] border border-[var(--dark-200)] text-sm rounded-lg p-2 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500`
 
 export const CreateTransactionForm = ({ data, isModalOpen, setIsModalOpen }) => {
-   const { reset, setValue, register, handleSubmit } = useForm({
-      defaultValues: {
-         ...(data?.id && {
-            type: data?.type,
-            date: data?.date,
-            title: data?.title,
-            group_id: data?.group_id,
-            amount: data?.amount / 100,
-            account_id: data?.account_id,
-            category_id: data?.category_id,
-            payment_method_id: data?.payment_method_id,
-         }),
-      },
-   })
+   const { addToast } = useToasts()
+   const titleInputRef = useRef()
+   const { reset, setValue, register, handleSubmit } = useForm()
    const [entities, setEntities] = useState({
       groups: [],
       accounts: [],
@@ -27,6 +17,12 @@ export const CreateTransactionForm = ({ data, isModalOpen, setIsModalOpen }) => 
       payment_methods: [],
    })
    const [status, setStatus] = useState('IDLE')
+
+   useEffect(() => {
+      if (titleInputRef.current) {
+         titleInputRef.current.focus()
+      }
+   }, [titleInputRef])
 
    useEffect(() => {
       if (data?.id) {
@@ -85,7 +81,18 @@ export const CreateTransactionForm = ({ data, isModalOpen, setIsModalOpen }) => 
          transaction.id = data.id
       }
 
-      await supabase.from('transaction').upsert(transaction)
+      const { error } = await supabase.from('transaction').upsert(transaction)
+
+      if (error) {
+         addToast(`Failed to ${data?.id ? 'update' : 'create'} transaction.`, {
+            appearance: 'error',
+         })
+         return
+      }
+
+      addToast(`Successfully ${data?.id ? 'updated' : 'created'} the transaction.`, {
+         appearance: 'success',
+      })
 
       closePanel()
    }
@@ -98,6 +105,7 @@ export const CreateTransactionForm = ({ data, isModalOpen, setIsModalOpen }) => 
                <Fieldset id="title" title="Title">
                   <input
                      type="text"
+                     ref={titleInputRef}
                      className={inputCSS}
                      placeholder="Enter the title"
                      {...register('title', { required: true, maxLength: 240, minLength: 1 })}
@@ -230,7 +238,7 @@ const Modal = ({ title, children, isModalOpen, closeModal }) => {
                   <button
                      type="button"
                      onClick={closeModal}
-                     className="text-[var(--dark-50)] bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-[var(--dark-200)] hover:text-white"
+                     className="text-[var(--dark-50)] bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-[var(--dark-200)] hover:text-white focus:ring-2"
                   >
                      <svg
                         aria-hidden="true"

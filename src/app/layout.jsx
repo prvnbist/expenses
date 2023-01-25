@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { ToastProvider } from 'react-toast-notifications'
 import { useCallback, useEffect, useState } from 'react'
 
 import 'react-data-grid/lib/styles.css'
@@ -54,34 +55,36 @@ export default function RootLayout({ children }) {
       <html lang="en">
          <head />
          <body>
-            {status === 'LOADING' ? (
-               <span>Loading...</span>
-            ) : (
-               <>
-                  {isAuthorized ? (
-                     <>
-                        <Navbar />
-                        <main className="p-6">{children}</main>
-                     </>
-                  ) : (
-                     <div>
-                        <fieldset>
-                           <label htmlFor="password">Password</label>
-                           <input
-                              id="password"
-                              type="password"
-                              name="password"
-                              value={password}
-                              placeholder="Enter the password"
-                              onChange={e => setPassword(e.target.value)}
-                           />
-                        </fieldset>
-                        <button onClick={logIn}>Log In</button>
-                        {error && <span>{error}</span>}
-                     </div>
-                  )}
-               </>
-            )}
+            <ToastProvider autoDismiss placement="top-center" autoDismissTimeout={3000}>
+               {status === 'LOADING' ? (
+                  <span>Loading...</span>
+               ) : (
+                  <>
+                     {isAuthorized ? (
+                        <>
+                           <Navbar />
+                           <main className="p-6">{children}</main>
+                        </>
+                     ) : (
+                        <div>
+                           <fieldset>
+                              <label htmlFor="password">Password</label>
+                              <input
+                                 id="password"
+                                 type="password"
+                                 name="password"
+                                 value={password}
+                                 placeholder="Enter the password"
+                                 onChange={e => setPassword(e.target.value)}
+                              />
+                           </fieldset>
+                           <button onClick={logIn}>Log In</button>
+                           {error && <span>{error}</span>}
+                        </div>
+                     )}
+                  </>
+               )}
+            </ToastProvider>
          </body>
       </html>
    )

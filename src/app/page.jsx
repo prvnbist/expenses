@@ -3,6 +3,7 @@ import { useQuery } from '@/hooks'
 import supabase from '@/lib/supabase'
 import DataGrid from 'react-data-grid'
 import { useEffect, useState } from 'react'
+import { useToasts } from 'react-toast-notifications'
 import { CreateTransactionForm, Renderer } from '@/components'
 
 const columns = [
@@ -17,6 +18,7 @@ const columns = [
 ]
 
 export default function Home() {
+   const { addToast } = useToasts()
    const [isModalOpen, setIsModalOpen] = useState(false)
    const [selectedRow, setSelectedRow] = useState(null)
 
@@ -41,7 +43,18 @@ export default function Home() {
    }
 
    const handleDelete = async row => {
-      await supabase.from('transaction').delete().match({ id: row.id })
+      const { error } = await supabase.from('transaction').delete().match({ id: row.id })
+
+      if (error) {
+         addToast(`Failed to delete the transaction.`, {
+            appearance: 'error',
+         })
+         return
+      }
+
+      addToast(`Successfully deleted the transaction.`, {
+         appearance: 'success',
+      })
    }
 
    return (
@@ -79,9 +92,21 @@ export default function Home() {
                         name: 'Actions',
                         width: 120,
                         formatter: ({ row }) => (
-                           <div>
-                              <button onClick={() => handleEdit(row)}>Edit</button>
-                              <button onClick={() => handleDelete(row)}>delete</button>
+                           <div className="h-full flex items-center justify-center gap-2 mx-[-8px]">
+                              <button
+                                 title="Edit"
+                                 onClick={() => handleEdit(row)}
+                                 className="h-5 inline-flex w-5 items-center justify-center rounded hover:bg-[var(--dark-300)]"
+                              >
+                                 <EditIcon size={14} />
+                              </button>
+                              <button
+                                 title="Delete"
+                                 onClick={() => handleDelete(row)}
+                                 className="h-5 inline-flex w-5 items-center justify-center rounded hover:bg-red-600"
+                              >
+                                 <TrashIcon size={14} />
+                              </button>
                            </div>
                         ),
                      },
@@ -95,3 +120,38 @@ export default function Home() {
       </>
    )
 }
+
+const EditIcon = ({ size = 18, color = '#fff' }) => (
+   <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+   >
+      <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
+   </svg>
+)
+
+const TrashIcon = ({ size = 18, color = '#fff' }) => (
+   <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+   >
+      <polyline points="3 6 5 6 21 6"></polyline>
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+      <line x1="10" y1="11" x2="10" y2="17"></line>
+      <line x1="14" y1="11" x2="14" y2="17"></line>
+   </svg>
+)
