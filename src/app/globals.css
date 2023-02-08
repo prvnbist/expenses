@@ -26,6 +26,10 @@ body {
    background: #212121;
 }
 
+.page-content {
+   height: calc(100vh - 49px);
+}
+
 .rdg {
    width: 100%;
    block-size: unset;
@@ -36,6 +40,10 @@ body {
    padding: 0 8px;
    font-size: 13px;
    outline: 1px solid var(--dark-300);
+}
+
+.rdg-cell[aria-selected='true'] {
+   outline-color: #f2e55b;
 }
 
 fieldset {
@@ -52,4 +60,14 @@ fieldset {
    .form-body {
       max-height: 55vh;
    }
+}
+
+select {
+   -moz-appearance: none;
+   -webkit-appearance: none;
+   appearance: none;
+   background-repeat: no-repeat;
+   background-position-x: 97%;
+   background-position-y: 6px;
+   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
 }

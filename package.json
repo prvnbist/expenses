@@ -1,25 +1,26 @@
 {
-  "name": "expenses",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.4.1",
-    "eslint": "8.32.0",
-    "eslint-config-next": "13.1.4",
-    "next": "13.1.4",
-    "react": "18.2.0",
-    "react-data-grid": "^7.0.0-beta.22",
-    "react-dom": "18.2.0",
-    "react-hook-form": "^7.42.1",
-    "react-toast-notifications": "^2.5.1"
-  },
-  "devDependencies": {
-    "encoding": "^0.1.13"
-  }
+   "name": "expenses",
+   "version": "0.1.0",
+   "private": true,
+   "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "start": "next start",
+      "lint": "next lint"
+   },
+   "dependencies": {
+      "@supabase/supabase-js": "^2.4.1",
+      "dinero.js": "^1.9.1",
+      "eslint": "8.32.0",
+      "eslint-config-next": "13.1.4",
+      "next": "13.1.4",
+      "react": "18.2.0",
+      "react-data-grid": "^7.0.0-beta.22",
+      "react-dom": "18.2.0",
+      "react-hook-form": "^7.42.1",
+      "react-toast-notifications": "^2.5.1"
+   },
+   "devDependencies": {
+      "encoding": "^0.1.13"
+   }
 }

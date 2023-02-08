@@ -63,7 +63,7 @@ export default function RootLayout({ children }) {
                      {isAuthorized ? (
                         <>
                            <Navbar />
-                           <main className="p-6">{children}</main>
+                           <main className="p-6 page-content">{children}</main>
                         </>
                      ) : (
                         <div>

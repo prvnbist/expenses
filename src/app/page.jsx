@@ -1,15 +1,28 @@
 'use client'
+import Dinero from 'dinero.js'
 import { useQuery } from '@/hooks'
 import supabase from '@/lib/supabase'
 import DataGrid from 'react-data-grid'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import { CreateTransactionForm, Renderer } from '@/components'
 
 const columns = [
-   { key: 'title', name: 'Title' },
-   { key: 'amount', name: 'Amount' },
-   { key: 'date', name: 'Date' },
+   { key: 'title', name: 'Title', resizable: true },
+   {
+      key: 'amount',
+      name: 'Amount',
+      cellClass: 'text-right',
+      headerCellClass: 'text-right',
+      formatter: ({ row }) => {
+         return (
+            <span className={`${row.type === 'expense' ? 'text-red-500' : 'text-blue-400'}`}>
+               {(row.type === 'expense' ? '- ' : '+ ') + Dinero({ amount: row.amount, currency: 'INR' }).toFormat()}
+            </span>
+         )
+      },
+   },
+   { key: 'date', name: 'Date', cellClass: 'text-right', headerCellClass: 'text-right' },
    { key: 'payment_method', name: 'Payment Method' },
    { key: 'account', name: 'Account' },
    { key: 'category', name: 'Category' },
@@ -19,6 +32,10 @@ const columns = [
 
 export default function Home() {
    const { addToast } = useToasts()
+   const [order] = useState([
+      { key: 'date', direction: 'desc' },
+      { key: 'title', direction: 'asc' },
+   ])
    const [isModalOpen, setIsModalOpen] = useState(false)
    const [selectedRow, setSelectedRow] = useState(null)
 
@@ -31,10 +48,7 @@ export default function Home() {
    const { status, error, data } = useQuery({
       table: 'transactions',
       columns: `*`,
-      order: [
-         { key: 'date', direction: 'desc' },
-         { key: 'title', direction: 'asc' },
-      ],
+      order,
    })
 
    const handleEdit = row => {
