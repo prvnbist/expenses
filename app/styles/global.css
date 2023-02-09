@@ -162,11 +162,12 @@ button {
 }
 
 nav {
-   width: 720px;
    height: 60px;
    display: flex;
+   max-width: 720px;
    border-radius: 30px;
    align-items: center;
+   width: calc(100vw - 40px);
    padding: 0 var(--size-md);
    margin: var(--size-xs) auto;
    background: var(--dark-400);
@@ -197,4 +198,10 @@ nav a {
 
 .text-right {
    text-align: right;
+}
+
+@media screen and (max-width: 567px) {
+   .page__content {
+      padding: 0 20px;
+   }
 }
