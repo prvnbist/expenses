@@ -10,8 +10,9 @@ import {
    ScrollRestoration,
 } from '@remix-run/react'
 
+import { Navbar } from '~/components'
 import styles from '~/styles/global.css'
-import { GlobalProvider, useGlobalState } from './state'
+import { GlobalProvider } from '~/state'
 
 export const meta = () => ({
    charset: 'utf-8',
@@ -42,6 +43,7 @@ export default function App() {
          </head>
          <body>
             <GlobalProvider {...data}>
+               <Navbar />
                <Outlet />
                <ScrollRestoration />
                <Scripts />

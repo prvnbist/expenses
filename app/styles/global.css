@@ -155,3 +155,19 @@ button {
       transform: rotate(359deg);
    }
 }
+
+nav {
+   width: 720px;
+   height: 60px;
+   display: flex;
+   border-radius: 30px;
+   align-items: center;
+   padding: 0 var(--size-md);
+   margin: var(--size-md) auto;
+   background: var(--dark-400);
+}
+
+nav a {
+   color: #fff;
+   text-decoration: none;
+}
