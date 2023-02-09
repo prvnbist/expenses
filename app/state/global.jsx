@@ -18,7 +18,7 @@ export const GlobalProvider = ({ ENV, children }) => {
 
    useEffect(() => {
       if (state.isAuthenticated) {
-         navigate('/')
+         navigate('/' + window.location.search)
       }
    }, [state.isAuthenticated])
 

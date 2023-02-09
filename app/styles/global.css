@@ -46,6 +46,11 @@ body {
    background-color: var(--dark-900);
 }
 
+.page__content {
+   padding: 0 40px;
+   margin-bottom: 40px;
+}
+
 button {
    cursor: pointer;
    display: flex;
@@ -163,11 +168,33 @@ nav {
    border-radius: 30px;
    align-items: center;
    padding: 0 var(--size-md);
-   margin: var(--size-md) auto;
+   margin: var(--size-xs) auto;
    background: var(--dark-400);
 }
 
 nav a {
    color: #fff;
    text-decoration: none;
+}
+
+.rdg {
+   width: 100%;
+   block-size: unset;
+   border: 1px solid var(--dark-500);
+}
+
+.rdg-cell {
+   padding: 0 8px;
+   font-size: 13px;
+   border-block-end: unset;
+   border-inline-end: unset;
+   outline: 1px solid var(--dark-500);
+}
+
+.rdg-cell[aria-selected='true'] {
+   outline-color: #f2e55b;
+}
+
+.text-right {
+   text-align: right;
 }

@@ -13,6 +13,7 @@ import {
 import { Navbar } from '~/components'
 import styles from '~/styles/global.css'
 import { GlobalProvider } from '~/state'
+import reactDataGridStyles from 'react-data-grid/lib/styles.css'
 
 export const meta = () => ({
    charset: 'utf-8',
@@ -29,7 +30,10 @@ export async function loader() {
 }
 
 export function links() {
-   return [{ rel: 'stylesheet', href: styles }]
+   return [
+      { rel: 'stylesheet', href: styles },
+      { rel: 'stylesheet', href: reactDataGridStyles },
+   ]
 }
 
 export default function App() {
@@ -44,7 +48,9 @@ export default function App() {
          <body>
             <GlobalProvider {...data}>
                <Navbar />
-               <Outlet />
+               <main className="page__content">
+                  <Outlet />
+               </main>
                <ScrollRestoration />
                <Scripts />
                <LiveReload />
