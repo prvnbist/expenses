@@ -71,3 +71,39 @@ select {
    background-position-y: 6px;
    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
 }
+
+.table-column_type {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+button.pill {
+   height: 20px;
+   display: flex;
+   padding: 0 8px;
+   align-items: center;
+   border-radius: 20px;
+   background: var(--dark-200);
+}
+
+li.filters_list {
+   margin-bottom: 16px;
+}
+
+li.filters_item {
+   gap: 2px;
+   padding: 2px;
+   border-radius: 3px;
+   display: inline-flex;
+   border: 1px solid var(--dark-200);
+}
+
+li.filters_item :is(.filter__column, .filter__operator, .filter__value) {
+   padding: 0 4px;
+   font-size: 14px;
+   border-radius: 3px;
+   background: var(--dark-300);
+}

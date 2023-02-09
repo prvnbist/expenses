@@ -6,19 +6,16 @@ export const useQuery = ({ table = '', columns = '*', limit = 10, offset = 0, or
    const [data, setData] = useState([])
    const [error, setError] = useState(null)
    const [status, setStatus] = useState('IDLE')
-   const [_limit] = useState(limit)
-   const [_offset] = useState(offset)
-   const [_order] = useState(order)
 
-   const fetch = useCallback(async (__limit, __offset, __order) => {
+   const fetch = useCallback(async (_limit, _offset, _order) => {
       setStatus('LOADING')
 
       const { error = null, data = [] } = await get({
          table,
          columns,
-         limit: __limit,
-         offset: __offset,
-         order: __order,
+         limit: _limit,
+         offset: _offset,
+         order: _order,
       })
 
       if (error) {
@@ -37,9 +34,9 @@ export const useQuery = ({ table = '', columns = '*', limit = 10, offset = 0, or
 
    useEffect(() => {
       ;(async () => {
-         await fetch(_limit, _offset, _order)
+         await fetch(limit, offset, order)
       })()
-   }, [_limit, _offset, _order])
+   }, [])
 
    return { status, error, data }
 }

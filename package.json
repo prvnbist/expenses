@@ -18,7 +18,8 @@
       "react-data-grid": "^7.0.0-beta.22",
       "react-dom": "18.2.0",
       "react-hook-form": "^7.42.1",
-      "react-toast-notifications": "^2.5.1"
+      "react-toast-notifications": "^2.5.1",
+      "zustand": "^4.3.2"
    },
    "devDependencies": {
       "encoding": "^0.1.13"
