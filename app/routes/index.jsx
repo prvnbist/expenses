@@ -1,35 +1,47 @@
 import Dinero from 'dinero.js'
 import { useMemo } from 'react'
+import { Order } from '~/components'
 import supabase from '~/lib/supabase'
 import { json } from '@remix-run/node'
 import DataGrid from 'react-data-grid'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useSearchParams } from '@remix-run/react'
 
 export async function loader({ request }) {
    try {
-      const params = new URL(request.url).searchParams
+      const params = [...new URL(request.url).searchParams.entries()]
+      const queryParams = {
+         sort: [],
+      }
+      for (let [key, value] of params) {
+         if (key === 'sort') {
+            const items = value.split(',')
+            items.forEach(item => {
+               if (item.includes('.')) {
+                  const [column, direction] = item.split('.')
+                  queryParams[key].push({ column, direction })
+               }
+            })
+         }
+      }
 
       const query = supabase.from('transactions').select('*').range(0, 9)
 
-      if (params.get('sort')) {
-         const items = params.get('sort').split(',')
-
-         items.forEach(item => {
-            if (item.includes('.')) {
-               const [column, direction] = item.split('.')
-               query.order(column, { ascending: direction === 'asc' })
-            }
+      if (queryParams.sort.length > 0) {
+         queryParams.sort.forEach(item => {
+            const { column, direction } = item
+            query.order(column, { ascending: direction === 'asc' })
          })
       }
       const { status, data = [] } = await query
-      return json({ status, data })
+      return json({ status: 200, data, query: queryParams })
    } catch (error) {
+      console.log(error)
       return json({ status: 500 })
    }
 }
 
 export default function Home() {
-   const { status, data } = useLoaderData()
+   const { status, query, data } = useLoaderData()
    const columns = useMemo(
       () => [
          { key: 'title', name: 'Title', resizable: true },
@@ -62,6 +74,8 @@ export default function Home() {
       <div>
          <h2 className="heading2">Transactions</h2>
          <div className="spacer-md" />
+         <Order data={query?.sort || []} columns={columns.map(({ key, name }) => ({ key, name }))} />
+         <div className="spacer-sm" />
          <DataGrid rows={data} rowHeight={28} columns={columns} />
       </div>
    )

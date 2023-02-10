@@ -18,6 +18,7 @@
    --accent-red: #ef4444;
 
    --size-base: 4;
+   --size-3xs: 2px;
    --size-2xs: calc(var(--size-base) * 1px);
    --size-xs: calc(var(--size-base) * 2px);
    --size-sm: calc(var(--size-base) * 4px);
@@ -27,6 +28,7 @@
    --size-2xl: calc(var(--size-base) * 8px);
    --size-3xl: calc(var(--size-base) * 9px);
    --size-4xl: calc(var(--size-base) * 10px);
+   --size-5xl: calc(var(--size-base) * 12px);
 }
 
 * {
@@ -56,6 +58,11 @@ button {
    display: flex;
    align-items: center;
    justify-content: center;
+}
+
+.spacer-3xs {
+   height: var(--size-3xs);
+   width: var(--size-3xs);
 }
 
 .spacer-2xs {
@@ -198,6 +205,201 @@ nav a {
 
 .text-right {
    text-align: right;
+}
+
+.btn {
+   color: #fff;
+   height: var(--size-2xl);
+   padding: 0 var(--size-xs);
+   border-radius: var(--size-3xs);
+}
+
+.btn-outline {
+   border: none;
+   background: transparent;
+   border: 1px solid var(--dark-400);
+}
+
+.btn-outline:hover {
+   background: var(--dark-400);
+}
+
+.btn-default {
+   border: none;
+   background: var(--dark-400);
+   border: 1px solid var(--dark-300);
+}
+
+.btn-default:hover {
+   background: var(--dark-300);
+}
+
+.btn.btn-ghost {
+   border: none;
+   background: transparent;
+}
+
+.btn.btn-ghost:hover {
+   background: var(--dark-400);
+}
+
+#option__sort {
+   position: relative;
+}
+
+#option__sort__panel {
+   z-index: 9999;
+   max-width: 380px;
+   position: absolute;
+   width: calc(100vw - 40px);
+   background: var(--dark-500);
+   border-radius: var(--size-2xs);
+   top: calc(100% + var(--size-xs));
+   border: 1px solid var(--dark-300);
+}
+
+#option__sort__panel--empty {
+   display: flex;
+   flex-direction: column;
+   padding: var(--size-xs);
+}
+
+#option__sort__panel--empty span:first-child {
+   font-weight: 500;
+   color: var(--dark-50);
+}
+#option__sort__panel--empty span:last-child {
+   font-weight: 500;
+   font-size: 13px;
+   color: var(--dark-100);
+}
+
+#option__sort__panel footer {
+   display: flex;
+   align-items: center;
+   height: var(--size-5xl);
+   padding: 0 var(--size-xs);
+   justify-content: space-between;
+   border-top: 1px solid var(--dark-300);
+}
+
+#option__sort__panel ul li {
+   color: #fff;
+   display: flex;
+   font-size: 14px;
+   list-style: none;
+   align-items: center;
+   padding: var(--size-xs);
+   justify-content: space-between;
+}
+
+#option__sort__panel ul li aside > span {
+   display: flex;
+   align-items: center;
+   color: var(--dark-50);
+}
+
+#option__sort__panel ul li aside {
+   display: flex;
+   align-items: center;
+}
+
+#option__sort__panel ul li aside span span {
+   cursor: pointer;
+}
+
+select {
+   color: #fff;
+   height: var(--size-2xl);
+   padding: 0 var(--size-xs);
+   background: var(--dark-400);
+   border-radius: var(--size-3xs);
+   border: 1px solid var(--dark-300);
+}
+
+.rs-container {
+   width: 240px;
+}
+
+.rs-container .rs__control {
+   height: var(--size-2xl);
+   min-height: var(--size-2xl);
+   background: var(--dark-400);
+   border-radius: var(--size-3xs);
+   border: 1px solid var(--dark-300);
+}
+
+.rs-container .rs__control:hover {
+   background: var(--dark-300);
+   border-color: var(--dark-300);
+}
+
+.rs-container .rs__indicator {
+   padding: 0;
+   display: flex;
+   align-items: center;
+   width: var(--size-2xl);
+   height: var(--size-2xl);
+   justify-content: center;
+}
+
+.rs-container .rs__indicators {
+   height: inherit;
+}
+
+.rs-container .rs__placeholder {
+   font-size: 14px;
+}
+
+.rs-container .rs__single-value {
+   color: #fff;
+   font-size: 14px;
+}
+
+.rs-container .rs__menu {
+   background: var(--dark-400);
+}
+
+.rs-container .rs__option {
+   color: #fff;
+   font-size: 14px;
+}
+
+.rs-container .rs__option.rs__option--is-focused {
+   background: var(--dark-300);
+}
+
+.rs-container .rs__option.rs__option--is-selected {
+   background-color: #2684ff;
+}
+
+.switch {
+   width: 32px;
+   height: 18px;
+   position: relative;
+   display: inline-flex;
+   border-radius: 16px;
+   background: var(--dark-400);
+}
+
+.switch.active {
+   background: var(--accent-green);
+}
+
+.switch:after {
+   top: 3px;
+   left: 3px;
+   width: 12px;
+   content: '';
+   height: 12px;
+   position: absolute;
+   border-radius: 12px;
+   background: var(--dark-100);
+}
+
+.switch.active:after {
+   left: 17px;
+   background: var(--dark-green);
 }
 
 @media screen and (max-width: 567px) {
