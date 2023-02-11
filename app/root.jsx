@@ -6,6 +6,7 @@ import {
    Scripts,
    LiveReload,
    useNavigate,
+   useLocation,
    useLoaderData,
    ScrollRestoration,
 } from '@remix-run/react'
@@ -38,6 +39,7 @@ export function links() {
 
 export default function App() {
    const data = useLoaderData()
+   const location = useLocation()
 
    return (
       <html lang="en">
@@ -47,7 +49,7 @@ export default function App() {
          </head>
          <body>
             <GlobalProvider {...data}>
-               <Navbar />
+               {location.pathname !== '/login' && <Navbar />}
                <main className="page__content">
                   <Outlet />
                </main>

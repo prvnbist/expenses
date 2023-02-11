@@ -1,4 +1,4 @@
-import { useNavigate } from '@remix-run/react'
+import { useLocation, useNavigate } from '@remix-run/react'
 import { createContext, useContext, useEffect, useReducer } from 'react'
 
 const Context = createContext()
@@ -14,23 +14,21 @@ const reducers = (state, { type, payload }) => {
 
 export const GlobalProvider = ({ ENV, children }) => {
    const navigate = useNavigate()
+   const location = useLocation()
    const [state, dispatch] = useReducer(reducers, { isAuthenticated: false })
-
-   useEffect(() => {
-      if (state.isAuthenticated) {
-         navigate('/' + window.location.search)
-      }
-   }, [state.isAuthenticated])
 
    useEffect(() => {
       const password = localStorage.getItem('password')
       if (password === ENV?.PASSWORD) {
          dispatch({ type: 'SET_IS_AUTHENTICATED', payload: true })
+         navigate('/' + window.location.search)
       } else {
          dispatch({ type: 'SET_IS_AUTHENTICATED', payload: false })
-         navigate('/login')
+         if (location.pathname !== '/login') {
+            navigate('/login')
+         }
       }
-   }, [ENV])
+   }, [])
    return <Context.Provider value={{ ...state, dispatch }}>{children}</Context.Provider>
 }
 

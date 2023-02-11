@@ -33,7 +33,7 @@ export default function Login() {
    useEffect(() => {
       if (data?.status === 'SUCCESS') {
          localStorage.setItem('password', data?.password)
-         navigate('/')
+         navigate('/?sort=date.desc,title.asc')
       }
    }, [data])
 
