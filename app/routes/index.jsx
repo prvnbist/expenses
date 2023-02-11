@@ -1,9 +1,9 @@
 import Dinero from 'dinero.js'
 import { useMemo } from 'react'
-import { Order } from '~/components'
 import supabase from '~/lib/supabase'
 import { json } from '@remix-run/node'
 import DataGrid from 'react-data-grid'
+import { Order, Search } from '~/components'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 
 export async function loader({ request }) {
@@ -11,6 +11,7 @@ export async function loader({ request }) {
       const params = [...new URL(request.url).searchParams.entries()]
       const queryParams = {
          sort: [],
+         search: '',
       }
       for (let [key, value] of params) {
          if (key === 'sort') {
@@ -21,10 +22,16 @@ export async function loader({ request }) {
                   queryParams[key].push({ column, direction })
                }
             })
+         } else if (key === 'search') {
+            queryParams[key] = value.trim()
          }
       }
 
       const query = supabase.from('transactions').select('*').range(0, 9)
+
+      if (queryParams.search.trim()) {
+         query.ilike('title', `%${queryParams.search.trim()}%`)
+      }
 
       if (queryParams.sort.length > 0) {
          queryParams.sort.forEach(item => {
@@ -32,6 +39,7 @@ export async function loader({ request }) {
             query.order(column, { ascending: direction === 'asc' })
          })
       }
+
       const { status, data = [] } = await query
       return json({ status: 200, data, query: queryParams })
    } catch (error) {
@@ -74,7 +82,10 @@ export default function Home() {
       <div>
          <h2 className="heading2">Transactions</h2>
          <div className="spacer-md" />
-         <Order data={query?.sort || []} columns={columns.map(({ key, name }) => ({ key, name }))} />
+         <div className="h-stack">
+            <Order data={query?.sort || []} columns={columns.map(({ key, name }) => ({ key, name }))} />
+            <Search />
+         </div>
          <div className="spacer-sm" />
          <DataGrid rows={data} rowHeight={28} columns={columns} />
       </div>

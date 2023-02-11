@@ -123,7 +123,11 @@ button {
    padding: 0 var(--size-xs);
    background: var(--dark-400);
    border-radius: var(--size-2xs);
-   border: 1px solid var(--dark-200);
+   border: 1px solid var(--dark-400);
+}
+
+.form__input.ghost {
+   background-color: transparent;
 }
 
 .form__button {
@@ -397,9 +401,37 @@ select {
    background: var(--dark-100);
 }
 
+.h-stack {
+   display: flex;
+   gap: var(--size-sm);
+}
+
 .switch.active:after {
    left: 17px;
    background: var(--dark-green);
+}
+
+.search_loader {
+   top: 8px;
+   right: 8px;
+   position: absolute;
+}
+
+input[type='search']::-ms-clear {
+   display: none;
+   width: 0;
+   height: 0;
+}
+input[type='search']::-ms-reveal {
+   display: none;
+   width: 0;
+   height: 0;
+}
+input[type='search']::-webkit-search-decoration,
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-results-button,
+input[type='search']::-webkit-search-results-decoration {
+   display: none;
 }
 
 @media screen and (max-width: 567px) {
