@@ -530,6 +530,10 @@ input[type='search']::-webkit-search-results-decoration {
    justify-content: center;
 }
 
+fieldset {
+   border: none;
+}
+
 @media screen and (max-width: 567px) {
    .page__content {
       padding: 0 20px;
