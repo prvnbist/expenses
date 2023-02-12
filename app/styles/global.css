@@ -49,7 +49,7 @@ body {
 }
 
 .page__content {
-   padding: 0 40px;
+   padding: 0 20px;
    margin-bottom: 40px;
 }
 
@@ -175,13 +175,14 @@ button {
 nav {
    height: 60px;
    display: flex;
-   max-width: 720px;
-   border-radius: 30px;
+   margin: 0 auto;
    align-items: center;
    width: calc(100vw - 40px);
    padding: 0 var(--size-md);
-   margin: var(--size-xs) auto;
    background: var(--dark-400);
+   margin-bottom: var(--size-2xl);
+   border-bottom-left-radius: 8px;
+   border-bottom-right-radius: 8px;
 }
 
 nav a {
@@ -217,9 +218,15 @@ nav a {
 
 .btn {
    color: #fff;
+   flex-shrink: 0;
    height: var(--size-2xl);
    padding: 0 var(--size-sm);
-   border-radius: var(--size-3xs);
+   border-radius: var(--size-2xs);
+}
+
+.btn:disabled {
+   opacity: 0.7;
+   cursor: not-allowed;
 }
 
 .btn-outline {
@@ -230,6 +237,10 @@ nav a {
 
 .btn-outline:hover {
    background: var(--dark-400);
+}
+
+.btn-outline:disabled:hover {
+   background: transparent;
 }
 
 .btn-default {
@@ -534,6 +545,27 @@ fieldset {
    border: none;
 }
 
+.pagination {
+   color: #fff;
+   flex-shrink: 0;
+   flex-wrap: wrap;
+   margin-left: auto;
+   align-items: center;
+}
+
+.pagination > span {
+   font-size: 13px;
+}
+
+input,
+select {
+   min-width: 180px;
+}
+
+.search {
+   position: relative;
+}
+
 @media screen and (max-width: 567px) {
    .page__content {
       padding: 0 20px;
@@ -542,5 +574,23 @@ fieldset {
    .ReactModal__Content {
       max-height: 100%;
       border-radius: 0 !important;
+   }
+
+   .pagination {
+      width: 100%;
+      margin-left: unset;
+      justify-content: space-between;
+   }
+
+   .tools {
+      flex-direction: column;
+   }
+
+   .tools > div {
+      justify-content: space-between;
+   }
+
+   .search {
+      width: 100%;
    }
 }

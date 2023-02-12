@@ -22,7 +22,7 @@ export const Search = () => {
    }, [debouncedQuery])
 
    return (
-      <div style={{ position: 'relative' }}>
+      <div className="search">
          <input
             type="search"
             value={query || ''}

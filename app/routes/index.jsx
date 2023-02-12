@@ -4,19 +4,21 @@ import supabase from '~/lib/supabase'
 import DataGrid from 'react-data-grid'
 import { json, redirect } from '@remix-run/node'
 import { IconEdit, IconPlus } from '@tabler/icons-react'
-import { Order, Search, CreateTransaction } from '~/components'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
+import { Order, Search, CreateTransaction, Pagination } from '~/components'
 
 export async function loader({ request }) {
    try {
       // Parse Params
-      const params = [...new URL(request.url).searchParams.entries()]
+      const rawParams = new URL(request.url).searchParams
+      const paramsList = [...rawParams.entries()]
       const queryParams = {
+         page: 1,
          sort: [],
          search: '',
          transactionId: null,
       }
-      for (let [key, value] of params) {
+      for (let [key, value] of paramsList) {
          if (key === 'sort') {
             const items = value.split(',')
             items.forEach(item => {
@@ -29,15 +31,45 @@ export async function loader({ request }) {
             queryParams[key] = value.trim()
          } else if (key === 'id') {
             queryParams['transactionId'] = value
+         } else if (key === 'page') {
+            let _value = isNaN(Number(value)) ? 0 : Number(value) || 1
+            if (_value < 1) {
+               _value = 1
+            }
+            queryParams['page'] = _value
          }
       }
 
+      const { count = 0 } = await supabase.from('transactions').select('id', { count: 'exact', head: true })
+      const totalPages = Math.ceil(count / 10)
+      let page = queryParams.page
+
+      if (page > totalPages) {
+         page = totalPages
+      }
+
+      const prevPage = page - 1
+      const nextPage = page + 1
+
+      const pagination = {
+         current: page,
+         total: totalPages,
+         previous: {
+            disabled: prevPage < 1,
+         },
+         next: {
+            disabled: nextPage > totalPages,
+         },
+      }
+
       // Fetch transactions
-      const query = supabase.from('transactions').select('*').range(0, 9)
+      const query = supabase.from('transactions').select('*')
 
       if (queryParams.search.trim()) {
          query.ilike('title', `%${queryParams.search.trim()}%`)
       }
+
+      query.range(page * 10 - 10, page * 10 - 1)
 
       if (queryParams.sort.length > 0) {
          queryParams.sort.forEach(item => {
@@ -46,12 +78,12 @@ export async function loader({ request }) {
          })
       }
 
-      const { status, data = [] } = await query
+      const { data = [] } = await query
 
       // Fetch categories, payment methods, accounts and groups
-      const response = await supabase.rpc('entities')
+      const response1 = await supabase.rpc('entities')
 
-      const entities = response.data.reduce((acc, curr) => {
+      const entities = response1.data.reduce((acc, curr) => {
          acc[curr.title] = curr.list
          return acc
       }, {})
@@ -65,7 +97,7 @@ export async function loader({ request }) {
          }
       }
 
-      return json({ status: 200, data, query: queryParams, entities, transaction: transaction })
+      return json({ status: 200, data, query: queryParams, entities, transaction, pagination })
    } catch (error) {
       console.log(error)
       return json({ status: 500 })
@@ -174,18 +206,21 @@ export default function Home() {
       <div>
          <h2 className="heading2">Transactions</h2>
          <div className="spacer-md" />
-         <div className="h-stack">
-            <button
-               className="btn btn-outline btn-icon"
-               onClick={() => {
-                  params.set('create', true)
-                  setParams(params)
-               }}
-            >
-               <IconPlus color="white" size={16} />
-            </button>
-            <Order data={query?.sort || []} columns={columns.map(({ key, name }) => ({ key, name }))} />
-            <Search />
+         <div className="h-stack tools">
+            <div className="h-stack">
+               <button
+                  className="btn btn-outline btn-icon"
+                  onClick={() => {
+                     params.set('create', true)
+                     setParams(params)
+                  }}
+               >
+                  <IconPlus color="white" size={16} />
+               </button>
+               <Order data={query?.sort || []} columns={columns.map(({ key, name }) => ({ key, name }))} />
+               <Search />
+            </div>
+            <Pagination />
          </div>
          <div className="spacer-sm" />
          <DataGrid rows={data} rowHeight={28} columns={columns} />
