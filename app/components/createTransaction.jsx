@@ -7,12 +7,12 @@ export const CreateTransaction = () => {
    const submit = useSubmit()
    const data = useActionData()
    const transition = useTransition()
-   const { entities = {} } = useLoaderData()
    const [params, setParams] = useSearchParams()
-
+   const { entities = {}, transaction = null } = useLoaderData()
    const close = () => {
       params.delete('index')
       params.delete('create')
+      params.delete('id')
       setParams(params)
    }
 
@@ -21,14 +21,13 @@ export const CreateTransaction = () => {
       return `/?index&${params.toString()}`
    }
 
-   console.log(data)
    return (
       <XModal
-         title="Create Transaction"
          close={close}
          submit={() => submit(formRef?.current)}
          isLoading={transition.state === 'submitting'}
          isDisabled={transition.state === 'submitting'}
+         title={`${transaction?.id ? 'Update' : 'Create'} Transaction`}
       >
          {data?.status === 'ERROR' && transition.state !== 'submitting' && (
             <>
@@ -37,6 +36,7 @@ export const CreateTransaction = () => {
             </>
          )}
          <Form method="post" action={actionRoute()} ref={formRef}>
+            <input name="id" value={transaction?.id} hidden readOnly />
             <label className="form__label">Title</label>
             <div className="spacer-2xs" />
             <input
@@ -45,7 +45,7 @@ export const CreateTransaction = () => {
                name="title"
                className="form__input"
                placeholder="Enter the title"
-               defaultValue={data?.title || ''}
+               defaultValue={data?.title || transaction?.title || ''}
             />
             {data?.errors?.['title'] ? (
                <>
@@ -64,7 +64,7 @@ export const CreateTransaction = () => {
                name="amount"
                className="form__input"
                placeholder="Enter the amount"
-               defaultValue={data?.amount || ''}
+               defaultValue={data?.amount || (transaction?.amount / 100 || '') + '' || ''}
             />
             {data?.errors?.['amount'] ? (
                <>
@@ -83,7 +83,7 @@ export const CreateTransaction = () => {
                name="date"
                className="form__input"
                placeholder="Select a date"
-               defaultValue={data?.date || ''}
+               defaultValue={data?.date || transaction?.date || ''}
             />
             {data?.errors?.['date'] ? (
                <>
@@ -99,19 +99,33 @@ export const CreateTransaction = () => {
             <div className="spacer-2xs" />
             <div className="h-stack">
                <span className="form__radio">
-                  <input required name="type" type="radio" id="expense" value="expense" defaultChecked />
+                  <input
+                     required
+                     name="type"
+                     type="radio"
+                     id="expense"
+                     value="expense"
+                     defaultChecked={[data?.type, transaction?.type].includes('expense') || true}
+                  />
                   <label htmlFor="expense">Expense</label>
                </span>
                <div className="spacer-sm" />
                <span className="form__radio">
-                  <input required name="type" type="radio" id="income" value="income" />
+                  <input
+                     required
+                     name="type"
+                     type="radio"
+                     id="income"
+                     value="income"
+                     defaultChecked={[data?.type, transaction?.type].includes('income') || false}
+                  />
                   <label htmlFor="income">Income</label>
                </span>
             </div>
             <div className="spacer-sm" />
             <label className="form__label">Category</label>
             <div className="spacer-2xs" />
-            <select name="category_id" id="category_id">
+            <select name="category_id" id="category_id" defaultValue={transaction?.category_id || ''}>
                <option value="">Select a category</option>
                {entities?.categories?.map(category => (
                   <option key={category.id} value={category.id}>
@@ -123,7 +137,7 @@ export const CreateTransaction = () => {
             <div className="spacer-sm" />
             <label className="form__label">Payment Method</label>
             <div className="spacer-2xs" />
-            <select name="payment_method_id" id="payment_method_id">
+            <select name="payment_method_id" id="payment_method_id" defaultValue={transaction?.payment_method_id || ''}>
                <option value="">Select a payment method</option>
                {entities?.payment_methods?.map(payment_method => (
                   <option key={payment_method.id} value={payment_method.id}>
@@ -134,7 +148,7 @@ export const CreateTransaction = () => {
             <div className="spacer-sm" />
             <label className="form__label">Account</label>
             <div className="spacer-2xs" />
-            <select name="account_id" id="account_id">
+            <select name="account_id" id="account_id" defaultValue={transaction?.account_id || ''}>
                <option value="">Select an account</option>
                {entities?.accounts?.map(account => (
                   <option key={account.id} value={account.id}>
@@ -145,7 +159,7 @@ export const CreateTransaction = () => {
             <div className="spacer-sm" />
             <label className="form__label">Group</label>
             <div className="spacer-2xs" />
-            <select name="group_id" id="group_id">
+            <select name="group_id" id="group_id" defaultValue={transaction?.group_id || ''}>
                <option value="">Select a group</option>
                {entities?.groups?.map(group => (
                   <option key={group.id} value={group.id}>
