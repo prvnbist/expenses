@@ -57,6 +57,7 @@ export default function App() {
                <Scripts />
                <LiveReload />
             </GlobalProvider>
+            <div id="modal" />
          </body>
       </html>
    )

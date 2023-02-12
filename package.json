@@ -17,6 +17,7 @@
       "react": "^18.2.0",
       "react-data-grid": "^7.0.0-beta.25",
       "react-dom": "^18.2.0",
+      "react-modal": "^3.16.1",
       "react-select": "^5.7.0"
    },
    "devDependencies": {

@@ -24,8 +24,8 @@ export const Search = () => {
    return (
       <div style={{ position: 'relative' }}>
          <input
-            value={query}
             type="search"
+            value={query || ''}
             className="form__input ghost"
             placeholder="Search by title..."
             onChange={e => setQuery(e.target.value)}

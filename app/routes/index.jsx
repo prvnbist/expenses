@@ -1,9 +1,10 @@
 import Dinero from 'dinero.js'
 import { useMemo } from 'react'
 import supabase from '~/lib/supabase'
-import { json } from '@remix-run/node'
 import DataGrid from 'react-data-grid'
-import { Order, Search } from '~/components'
+import { IconPlus } from '@tabler/icons-react'
+import { json, redirect } from '@remix-run/node'
+import { Order, Search, CreateTransaction } from '~/components'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 
 export async function loader({ request }) {
@@ -41,14 +42,69 @@ export async function loader({ request }) {
       }
 
       const { status, data = [] } = await query
-      return json({ status: 200, data, query: queryParams })
+
+      const response = await supabase.rpc('entities')
+
+      const entities = response.data.reduce((acc, curr) => {
+         acc[curr.title] = curr.list
+         return acc
+      }, {})
+      return json({ status: 200, data, query: queryParams, entities })
    } catch (error) {
       console.log(error)
       return json({ status: 500 })
    }
 }
 
+export async function action({ request }) {
+   const raw = await request.formData()
+   const parsed = Object.fromEntries(raw)
+
+   const errors = {}
+
+   if (!parsed.title.trim()) {
+      errors['title'] = 'Please enter a title'
+   }
+   if (!parsed.amount.trim()) {
+      errors['amount'] = 'Please enter a amount'
+   } else if (isNaN(Number(parsed.amount))) {
+      errors['amount'] = 'Please enter a valid amount'
+   }
+   if (!parsed.date.trim()) {
+      errors['date'] = 'Please select a date'
+   }
+
+   parsed.amount = Number(parsed.amount).toFixed(2) * 100
+
+   if (!parsed.payment_method_id) {
+      parsed.payment_method_id = null
+   }
+   if (!parsed.category_id) {
+      parsed.category_id = null
+   }
+   if (!parsed.account_id) {
+      parsed.account_id = null
+   }
+   if (!parsed.group_id) {
+      parsed.group_id = null
+   }
+
+   if (Object.keys(errors).length > 0) {
+      return json({ status: 'INCOMPLETE', data: parsed, errors })
+   }
+
+   const { error } = await supabase.from('transaction').upsert(parsed)
+   if (error) {
+      return json({ status: 'ERROR', data: parsed })
+   }
+
+   const params = new URL(request.url).searchParams
+   params.delete('create')
+   return redirect(`/?${params.toString()}`)
+}
+
 export default function Home() {
+   const [params, setParams] = useSearchParams()
    const { status, query, data } = useLoaderData()
    const columns = useMemo(
       () => [
@@ -83,11 +139,21 @@ export default function Home() {
          <h2 className="heading2">Transactions</h2>
          <div className="spacer-md" />
          <div className="h-stack">
+            <button
+               className="btn btn-outline btn-icon"
+               onClick={() => {
+                  params.set('create', true)
+                  setParams(params)
+               }}
+            >
+               <IconPlus color="white" size={16} />
+            </button>
             <Order data={query?.sort || []} columns={columns.map(({ key, name }) => ({ key, name }))} />
             <Search />
          </div>
          <div className="spacer-sm" />
          <DataGrid rows={data} rowHeight={28} columns={columns} />
+         {params.get('create') === 'true' && <CreateTransaction />}
       </div>
    )
 }

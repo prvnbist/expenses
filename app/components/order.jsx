@@ -46,7 +46,7 @@ export const Order = ({ data = [], columns }) => {
 
    return (
       <div id="option__sort">
-         <button className="btn btn-outline" onClick={() => setIsOpen(v => !v)}>
+         <button className="btn btn-outline btn-combo" onClick={() => setIsOpen(v => !v)}>
             <IconList size={16} />
             <div className="spacer-xs" />
             Sort
@@ -78,7 +78,7 @@ export const Order = ({ data = [], columns }) => {
                                  />
                               </span>
                               <div className="spacer-sm" />
-                              <button className="btn btn-ghost" onClick={() => onRemove(column.key)}>
+                              <button className="btn btn-ghost btn-icon" onClick={() => onRemove(column.key)}>
                                  <IconX size={16} />
                               </button>
                            </aside>

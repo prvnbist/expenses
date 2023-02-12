@@ -214,7 +214,7 @@ nav a {
 .btn {
    color: #fff;
    height: var(--size-2xl);
-   padding: 0 var(--size-xs);
+   padding: 0 var(--size-sm);
    border-radius: var(--size-3xs);
 }
 
@@ -245,6 +245,25 @@ nav a {
 
 .btn.btn-ghost:hover {
    background: var(--dark-400);
+}
+
+.btn.btn-success {
+   border: none;
+   color: #fff;
+   background: var(--accent-green);
+}
+
+.btn.btn-success:hover {
+   background: #25b65a;
+}
+
+.btn-icon {
+   padding: 0;
+   width: var(--size-2xl);
+}
+
+.btn-combo {
+   padding: 0 10px;
 }
 
 #option__sort {
@@ -313,12 +332,13 @@ nav a {
 }
 
 select {
+   width: 100%;
    color: #fff;
    height: var(--size-2xl);
    padding: 0 var(--size-xs);
    background: var(--dark-400);
-   border-radius: var(--size-3xs);
-   border: 1px solid var(--dark-300);
+   border-radius: var(--size-2xs);
+   border: 1px solid var(--dark-400);
 }
 
 .rs-container {
@@ -403,7 +423,7 @@ select {
 
 .h-stack {
    display: flex;
-   gap: var(--size-sm);
+   gap: var(--size-xs);
 }
 
 .switch.active:after {
@@ -434,8 +454,71 @@ input[type='search']::-webkit-search-results-decoration {
    display: none;
 }
 
+.ReactModal__Overlay {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   backdrop-filter: blur(12px);
+   background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+.ReactModal__Content {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   max-width: 420px;
+   max-height: 580px;
+   padding: 0 !important;
+   flex-direction: column;
+   position: unset !important;
+   background: var(--dark-900) !important;
+   border: 1px solid var(--dark-400) !important;
+}
+
+.modal__header {
+   height: 48px;
+   display: flex;
+   align-items: center;
+   padding: 0 8px 0 16px;
+   justify-content: space-between;
+   border-bottom: 1px solid var(--dark-400);
+}
+
+.modal__header h3 {
+   color: #fff;
+   font-weight: 300;
+}
+
+.modal__footer {
+   height: 60px;
+   display: flex;
+   margin-top: auto;
+   gap: var(--size-sm);
+   align-items: center;
+   justify-content: center;
+   border-top: 1px solid var(--dark-400);
+}
+
+.modal__content {
+   overflow-y: auto;
+   padding: var(--size-sm);
+   height: calc(100% - 108px);
+}
+
+.form__radio {
+   color: #fff;
+   display: flex;
+   align-items: center;
+   gap: var(--size-xs);
+}
+
 @media screen and (max-width: 567px) {
    .page__content {
       padding: 0 20px;
+   }
+
+   .ReactModal__Content {
+      max-height: 100%;
+      border-radius: 0 !important;
    }
 }
