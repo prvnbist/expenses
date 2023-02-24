@@ -21,7 +21,6 @@ export const GlobalProvider = ({ ENV, children }) => {
       const password = localStorage.getItem('password')
       if (password === ENV?.PASSWORD) {
          dispatch({ type: 'SET_IS_AUTHENTICATED', payload: true })
-         navigate('/' + window.location.search)
       } else {
          dispatch({ type: 'SET_IS_AUTHENTICATED', payload: false })
          if (location.pathname !== '/login') {

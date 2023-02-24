@@ -557,13 +557,25 @@ fieldset {
    font-size: 13px;
 }
 
-input,
+input:not(input[type='radio']),
 select {
    min-width: 180px;
 }
 
 .search {
    position: relative;
+}
+
+#analytics {
+   margin: 0 auto;
+   max-width: 980px;
+   width: calc(100vw - 40px);
+}
+
+.analytic-cards {
+   display: flex;
+   gap: var(--size-sm);
+   flex-wrap: wrap;
 }
 
 @media screen and (max-width: 567px) {

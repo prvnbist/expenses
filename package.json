@@ -14,6 +14,8 @@
       "@tabler/icons-react": "^2.2.0",
       "@vercel/node": "^2.6.2",
       "dinero.js": "^1.9.1",
+      "echarts": "^5.4.1",
+      "lodash.merge": "^4.6.2",
       "react": "^18.2.0",
       "react-data-grid": "^7.0.0-beta.25",
       "react-dom": "^18.2.0",

@@ -11,15 +11,9 @@ export const CreateTransaction = () => {
    const { entities = {}, transaction = null } = useLoaderData()
 
    const close = () => {
-      params.delete('index')
       params.delete('create')
       params.delete('id')
       setParams(params)
-   }
-
-   const actionRoute = () => {
-      params.delete('index')
-      return `/?index&${params.toString()}`
    }
 
    return (
@@ -36,7 +30,7 @@ export const CreateTransaction = () => {
                <div className="spacer-sm" />
             </>
          )}
-         <Form method="post" action={actionRoute()} ref={formRef}>
+         <Form method="post" action={`/transactions/?${params.toString()}`} ref={formRef}>
             <input name="id" value={transaction?.id} hidden readOnly />
             <Fieldset title="Title" htmlFor="title">
                <div className="spacer-2xs" />
