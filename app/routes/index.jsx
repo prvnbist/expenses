@@ -3,134 +3,38 @@ import merge from 'lodash.merge'
 import * as echarts from 'echarts'
 import supabase from '~/lib/supabase'
 import { json } from '@remix-run/node'
+import { useWindowSize } from '~/hooks'
 import { useRef, useEffect } from 'react'
 import { useLoaderData } from '@remix-run/react'
 
 export async function loader() {
    try {
-      // let { data: top_categories = [], error } = await supabase.from('all_time_top_expense_categories').select('*')
-      // if (error) {
-      //    throw error
-      // }
+      let { data: top_categories = [], error } = await supabase.from('all_time_top_expense_categories').select('*')
+      if (error) {
+         throw error
+      }
 
-      // let { data: yearly_expenses = [], error1 } = await supabase.from('yearly_expense').select('*')
-      // if (error1) {
-      //    throw error1
-      // }
+      let { data: yearly_expenses = [], error1 } = await supabase.from('yearly_expense').select('*')
+      if (error1) {
+         throw error1
+      }
 
-      // let { data: yearly_incomes = [], error3 } = await supabase.from('yearly_income').select('*')
-      // if (error3) {
-      //    throw error3
-      // }
+      let { data: yearly_incomes = [], error3 } = await supabase.from('yearly_income').select('*')
+      if (error3) {
+         throw error3
+      }
 
-      // let { data: yearly_investments = [], error4 } = await supabase.from('yearly_investments').select('*')
-      // if (error4) {
-      //    throw error4
-      // }
+      let { data: yearly_investments = [], error4 } = await supabase.from('yearly_investments').select('*')
+      if (error4) {
+         throw error4
+      }
 
       return json({
          status: 200,
-         yearly_investments: [
-            {
-               year: 2023,
-               sum: 11100000,
-            },
-            {
-               year: 2022,
-               sum: 36000000,
-            },
-            {
-               year: 2021,
-               sum: 8565200,
-            },
-         ],
-         yearly_incomes: [
-            {
-               year: 2023,
-               sum: 11719400,
-            },
-            {
-               year: 2022,
-               sum: 112280975,
-            },
-            {
-               year: 2021,
-               sum: 74461200,
-            },
-            {
-               year: 2020,
-               sum: 65748500,
-            },
-            {
-               year: 2019,
-               sum: 30750000,
-            },
-            {
-               year: 2018,
-               sum: 5350000,
-            },
-            {
-               year: 2017,
-               sum: 3950000,
-            },
-         ],
-         yearly_expenses: [
-            {
-               year: 2023,
-               sum: 13272332,
-            },
-            {
-               year: 2022,
-               sum: 63471283,
-            },
-            {
-               year: 2021,
-               sum: 54842256,
-            },
-            {
-               year: 2020,
-               sum: 68460800,
-            },
-            {
-               year: 2019,
-               sum: 20062000,
-            },
-            {
-               year: 2018,
-               sum: 5614100,
-            },
-            {
-               year: 2017,
-               sum: 3268900,
-            },
-         ],
-         top_categories: [
-            {
-               id: 'ec0ca903-b62e-4eaa-9fe5-6185450f1c40',
-               total: 133867534,
-               title: 'Family',
-            },
-            {
-               id: '45c834aa-059e-46c0-a4d5-2a4a9a389835',
-               total: 22458766,
-               title: 'Food & Drinks',
-            },
-            {
-               id: 'f9f03508-4b42-44c2-9c3c-cae69faaa116',
-               total: 21139740,
-               title: 'Bills & Services',
-            },
-            {
-               id: 'ffcb506f-6c3f-4415-ac24-12c6142f2dad',
-               total: 16279500,
-               title: 'Electronics & Hardware',
-            },
-            {
-               id: '623ac109-d995-42f3-96ba-3cb930d51d56',
-               total: 7798800,
-               title: 'Apparel',
-            },
-         ],
+         yearly_investments,
+         yearly_incomes,
+         yearly_expenses,
+         top_categories,
       })
    } catch (error) {
       console.log(error)
@@ -144,17 +48,21 @@ export default function Home() {
          <h2 className="heading2">Analytics</h2>
          <div className="spacer-md" />
          <div className="analytic-cards">
-            <TopCategories />
-            <YearlyExpenses />
-            <YearlyIncomes />
-            <YearlyInvestments />
+            <article>
+               <TopCategories />
+            </article>
+            <article>
+               <YearlyIncomesExpenses />
+            </article>
+            <article>
+               <YearlyInvestments />
+            </article>
          </div>
       </div>
    )
 }
 
 const chart_size = {
-   width: 316,
    height: 316,
 }
 
@@ -213,14 +121,24 @@ const TopCategories = () => {
             chart_options
          )
       )
+
+      const resize = () => {
+         ref.current.resize()
+      }
+      window.addEventListener('resize', resize)
+
+      return () => {
+         window.removeEventListener('resize', resize)
+      }
    }, [top_categories])
 
    return <div id="top-categories" />
 }
 
-const YearlyExpenses = () => {
+const YearlyIncomesExpenses = () => {
    const ref = useRef()
-   const { yearly_expenses } = useLoaderData()
+   const size = useWindowSize()
+   const { yearly_expenses, yearly_incomes } = useLoaderData()
 
    useEffect(() => {
       if (!ref.current) {
@@ -228,64 +146,54 @@ const YearlyExpenses = () => {
          ref.current = chart
       }
 
-      const list = yearly_expenses.sort((a, b) => b.year - a.year)
+      const expenses = yearly_expenses.sort((a, b) => a.year - b.year)
+      const incomes = yearly_incomes.sort((a, b) => a.year - b.year)
 
       ref.current.setOption(
          merge(
             {
+               grid: {
+                  left: size.width > 570 ? '16%' : '24%',
+                  right: '5%',
+               },
                title: {
-                  text: 'Expenses by Year',
+                  text: 'Years breakdown (income v. expense)',
+               },
+               xAxis: {
+                  type: 'category',
+                  data: [...new Set([...expenses.map(item => item.year), ...incomes.map(item => item.year)])],
+               },
+               yAxis: {
+                  type: 'value',
                },
                series: [
                   {
-                     type: 'pie',
-                     radius: '50%',
-                     name: 'Years',
-                     data: list.map(item => ({ value: item.sum, name: item.year })),
+                     type: 'bar',
+                     name: 'Expenses',
+                     data: expenses.map(item => item.sum),
+                  },
+                  {
+                     type: 'bar',
+                     name: 'Incomes',
+                     data: incomes.map(item => item.sum),
                   },
                ],
             },
             chart_options
          )
       )
-   }, [yearly_expenses])
+
+      const resize = () => {
+         ref.current.resize()
+      }
+      window.addEventListener('resize', resize)
+
+      return () => {
+         window.removeEventListener('resize', resize)
+      }
+   }, [yearly_expenses, size])
 
    return <div id="yearly-expenses" />
-}
-
-const YearlyIncomes = () => {
-   const ref = useRef()
-   const { yearly_incomes } = useLoaderData()
-
-   useEffect(() => {
-      if (!ref.current) {
-         const chart = echarts.init(document.getElementById('yearly-incomes'), 'dark', chart_size)
-         ref.current = chart
-      }
-
-      const list = yearly_incomes.sort((a, b) => b.year - a.year)
-
-      ref.current.setOption(
-         merge(
-            {
-               title: {
-                  text: 'Incomes by Year',
-               },
-               series: [
-                  {
-                     type: 'pie',
-                     radius: '50%',
-                     name: 'Years',
-                     data: list.map(item => ({ value: item.sum, name: item.year })),
-                  },
-               ],
-            },
-            chart_options
-         )
-      )
-   }, [yearly_incomes])
-
-   return <div id="yearly-incomes" />
 }
 
 const YearlyInvestments = () => {
@@ -318,6 +226,15 @@ const YearlyInvestments = () => {
             chart_options
          )
       )
+
+      const resize = () => {
+         ref.current.resize()
+      }
+      window.addEventListener('resize', resize)
+
+      return () => {
+         window.removeEventListener('resize', resize)
+      }
    }, [yearly_investments])
 
    return <div id="yearly-investments" />
