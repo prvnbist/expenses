@@ -1,22 +1,32 @@
 {
-  "name": "expenses",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@types/node": "20.4.5",
-    "@types/react": "18.2.17",
-    "@types/react-dom": "18.2.7",
-    "eslint": "8.46.0",
-    "eslint-config-next": "13.4.12",
-    "next": "13.4.12",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "5.1.6"
-  }
+   "name": "expenses",
+   "version": "0.1.0",
+   "private": true,
+   "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "start": "next start",
+      "lint": "next lint"
+   },
+   "dependencies": {
+      "@emotion/react": "^11.11.1",
+      "@emotion/server": "^11.11.0",
+      "@mantine/core": "^6.0.17",
+      "@mantine/dates": "^6.0.17",
+      "@mantine/form": "^6.0.17",
+      "@mantine/hooks": "^6.0.17",
+      "@mantine/modals": "^6.0.17",
+      "@mantine/next": "^6.0.17",
+      "@mantine/notifications": "^6.0.17",
+      "@types/node": "20.4.5",
+      "@types/react": "18.2.17",
+      "@types/react-dom": "18.2.7",
+      "dayjs": "^1.11.9",
+      "eslint": "8.46.0",
+      "eslint-config-next": "13.4.12",
+      "next": "13.4.12",
+      "react": "18.2.0",
+      "react-dom": "18.2.0",
+      "typescript": "5.1.6"
+   }
 }
