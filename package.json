@@ -1,37 +1,22 @@
 {
-   "private": true,
-   "sideEffects": false,
-   "scripts": {
-      "build": "remix build",
-      "dev": "remix dev",
-      "typecheck": "tsc"
-   },
-   "dependencies": {
-      "@remix-run/node": "^1.12.0",
-      "@remix-run/react": "^1.12.0",
-      "@remix-run/vercel": "^1.12.0",
-      "@supabase/supabase-js": "^2.7.1",
-      "@tabler/icons-react": "^2.2.0",
-      "@vercel/node": "^2.6.2",
-      "dinero.js": "^1.9.1",
-      "echarts": "^5.4.1",
-      "lodash.merge": "^4.6.2",
-      "react": "^18.2.0",
-      "react-data-grid": "^7.0.0-beta.25",
-      "react-dom": "^18.2.0",
-      "react-modal": "^3.16.1",
-      "react-select": "^5.7.0"
-   },
-   "devDependencies": {
-      "@remix-run/dev": "^1.12.0",
-      "@remix-run/eslint-config": "^1.12.0",
-      "@remix-run/serve": "^1.12.0",
-      "@types/react": "^18.0.25",
-      "@types/react-dom": "^18.0.8",
-      "eslint": "^8.27.0",
-      "typescript": "^4.8.4"
-   },
-   "engines": {
-      "node": ">=14"
-   }
+  "name": "expenses",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@types/node": "20.4.5",
+    "@types/react": "18.2.17",
+    "@types/react-dom": "18.2.7",
+    "eslint": "8.46.0",
+    "eslint-config-next": "13.4.12",
+    "next": "13.4.12",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.1.6"
+  }
 }
