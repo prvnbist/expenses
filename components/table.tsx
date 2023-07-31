@@ -1,6 +1,7 @@
-import { ScrollArea, Table as UITable } from '@mantine/core'
+import { ScrollArea, Skeleton, Table as UITable } from '@mantine/core'
 
 import { Entity } from '@/types'
+import { useMemo } from 'react'
 
 type FormatterValueArg = string | number | null
 export interface IColumn<T> {
@@ -13,9 +14,36 @@ export interface IColumn<T> {
 interface TableProps<T> {
    columns: IColumn<T>[]
    data: T[]
+   loading: boolean
 }
 
-export const Table = <T extends Entity>({ columns = [], data = [] }: TableProps<T>) => {
+const Loader = () => (
+   <UITable striped withBorder>
+      <thead>
+         <tr>
+            {[1, 2, 3, 4, 5].map(item => (
+               <th key={item}>
+                  <Skeleton height={8} width={`${Math.floor(Math.random() * 80) + 20}%`} radius="xl" />
+               </th>
+            ))}
+         </tr>
+      </thead>
+      <tbody>
+         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => (
+            <tr key={i}>
+               {[1, 2, 3, 4, 5].map(j => (
+                  <td key={j}>
+                     <Skeleton height={8} width={`${Math.floor(Math.random() * 80) + 20}%`} radius="xl" />
+                  </td>
+               ))}
+            </tr>
+         ))}
+      </tbody>
+   </UITable>
+)
+
+export const Table = <T extends Entity>({ loading, columns = [], data = [] }: TableProps<T>) => {
+   if (loading) return <Loader />
    return (
       <ScrollArea.Autosize mah={390}>
          <UITable striped withBorder>

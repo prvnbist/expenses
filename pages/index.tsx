@@ -3,8 +3,21 @@ import { useState, useMemo, useCallback } from 'react'
 import { useListState, useDisclosure } from '@mantine/hooks'
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 import { notifications } from '@mantine/notifications'
+import { modals } from '@mantine/modals'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Modal, ActionIcon, Center, Container, Flex, Loader, Pagination, Space, Title, ScrollArea } from '@mantine/core'
+import {
+   Modal,
+   ActionIcon,
+   Center,
+   Container,
+   Flex,
+   Loader,
+   Pagination,
+   Space,
+   Title,
+   ScrollArea,
+   Text,
+} from '@mantine/core'
 
 import { Transaction } from '@/types'
 import { IColumn, SortButton, Table, TransactionModal } from '@/components'
@@ -69,12 +82,13 @@ export default function Home() {
       },
    })
 
-   const handleDelete = useCallback(
-      async (id: string) => {
-         deleteTransactionMutation.mutate(id)
-      },
-      [deleteTransactionMutation]
-   )
+   const confirmDeleteDialog = (id: string) =>
+      modals.openConfirmModal({
+         title: 'Delete Transaction',
+         children: <Text size="sm">Are you sure you want to delete this transaction</Text>,
+         labels: { confirm: 'Confirm', cancel: 'Cancel' },
+         onConfirm: () => deleteTransactionMutation.mutate(id),
+      })
 
    const actionColumn = useMemo(
       () =>
@@ -84,7 +98,7 @@ export default function Home() {
             className: 'text-center',
             formatter: (_, row) => (
                <Center>
-                  <ActionIcon color="red" size="sm" onClick={() => handleDelete(row.id)}>
+                  <ActionIcon color="red" size="sm" onClick={() => confirmDeleteDialog(row.id)}>
                      <IconTrash size={14} />
                   </ActionIcon>
                </Center>
@@ -104,13 +118,7 @@ export default function Home() {
          <Space h="md" />
          <SortButton {...{ sorts, handlers, columns: [...columns, actionColumn] }} />
          <Space h="sm" />
-         {isLoading ? (
-            <Center>
-               <Loader color="lime" size="sm" />
-            </Center>
-         ) : (
-            <Table<Transaction> columns={[...columns, actionColumn]} data={data?.data ?? []} />
-         )}
+         <Table<Transaction> loading={isLoading} columns={[...columns, actionColumn]} data={data?.data ?? []} />
          <Space h="sm" />
          <Center>
             <Pagination
