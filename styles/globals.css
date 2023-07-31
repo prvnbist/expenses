@@ -2,5 +2,22 @@
 
 *,
 body {
-   font-family: 'Inter', sans-serif;
+   font-family: 'Inter', sans-serif !important;
+}
+
+td,
+th {
+   height: 36px;
+   white-space: nowrap;
+   padding-top: 0 !important;
+   padding-bottom: 0 !important;
+}
+
+th {
+   height: 28px;
+   font-size: 13px !important;
+}
+
+.text-right {
+   text-align: right !important;
 }
