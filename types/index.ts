@@ -13,6 +13,7 @@ export type Transaction = {
    category_id: string | null
    payment_method: string | null
    payment_method_id: string | null
+   actions?: null
 }
 
 export type Entity = Transaction

@@ -1,14 +1,14 @@
 import dayjs from 'dayjs'
-import { useState } from 'react'
-import { modals } from '@mantine/modals'
+import { useState, useMemo, useCallback } from 'react'
 import { useListState, useDisclosure } from '@mantine/hooks'
-import { IconPlus } from '@tabler/icons-react'
-import { useQuery } from '@tanstack/react-query'
+import { IconPlus, IconTrash } from '@tabler/icons-react'
+import { notifications } from '@mantine/notifications'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Modal, ActionIcon, Center, Container, Flex, Loader, Pagination, Space, Title, ScrollArea } from '@mantine/core'
 
 import { Transaction } from '@/types'
 import { IColumn, SortButton, Table, TransactionModal } from '@/components'
-import { Sort, allEntities, transactions, transactionsTotal } from '@/queries'
+import { Sort, allEntities, deleteTransaction, transactions, transactionsTotal } from '@/queries'
 
 const columns = [
    { key: 'title', label: 'Title' },
@@ -31,11 +31,10 @@ const columns = [
    { key: 'category', label: 'Category' },
    { key: 'payment_method', label: 'Payment Method' },
    { key: 'account', label: 'Account' },
-   { key: 'group', label: 'Group' },
-   { key: 'note', label: 'Note' },
 ] as IColumn<Transaction>[]
 
 export default function Home() {
+   const queryClient = useQueryClient()
    const [opened, { open, close }] = useDisclosure(false)
 
    const [sorts, handlers] = useListState<Sort>([
@@ -60,6 +59,40 @@ export default function Home() {
       queryFn: allEntities,
    })
 
+   const deleteTransactionMutation = useMutation({
+      mutationFn: (id: string) => deleteTransaction(id),
+      onSettled: () => {
+         notifications.show({
+            message: 'Succesfully deleted the transaction',
+         })
+         queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      },
+   })
+
+   const handleDelete = useCallback(
+      async (id: string) => {
+         deleteTransactionMutation.mutate(id)
+      },
+      [deleteTransactionMutation]
+   )
+
+   const actionColumn = useMemo(
+      () =>
+         ({
+            key: 'actions',
+            label: 'Actions',
+            className: 'text-center',
+            formatter: (_, row) => (
+               <Center>
+                  <ActionIcon color="red" size="sm" onClick={() => handleDelete(row.id)}>
+                     <IconTrash size={14} />
+                  </ActionIcon>
+               </Center>
+            ),
+         } as IColumn<Transaction>),
+      []
+   )
+
    return (
       <Container fluid py="md">
          <Flex align="center" gap="md">
@@ -69,14 +102,14 @@ export default function Home() {
             </ActionIcon>
          </Flex>
          <Space h="md" />
-         <SortButton {...{ sorts, handlers, columns }} />
+         <SortButton {...{ sorts, handlers, columns: [...columns, actionColumn] }} />
          <Space h="sm" />
          {isLoading ? (
             <Center>
                <Loader color="lime" size="sm" />
             </Center>
          ) : (
-            <Table<Transaction> columns={columns} data={data?.data ?? []} />
+            <Table<Transaction> columns={[...columns, actionColumn]} data={data?.data ?? []} />
          )}
          <Space h="sm" />
          <Center>

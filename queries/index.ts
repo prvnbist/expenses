@@ -44,3 +44,8 @@ export const addTransaction = async (values: TransactionRow) => {
 
    return { data, error }
 }
+
+export const deleteTransaction = async (id: string) => {
+   const { error } = await supabase.from('transaction').delete().eq('id', id)
+   return { error }
+}

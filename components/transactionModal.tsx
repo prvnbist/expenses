@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { FC, useMemo } from 'react'
 import { useForm } from '@mantine/form'
 import { DatePickerInput } from '@mantine/dates'
+import { notifications } from '@mantine/notifications'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { TextInput, NumberInput, SegmentedControl, Select, Stack, Button } from '@mantine/core'
 
@@ -97,6 +98,10 @@ export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = 
    const addTransactionMutation = useMutation({
       mutationFn: (values: TransactionRow) => addTransaction(values),
       onSettled: () => {
+         notifications.show({
+            color: 'green',
+            message: 'Succesfully added the transaction',
+         })
          queryClient.invalidateQueries({ queryKey: ['transactions'] })
          close()
       },
