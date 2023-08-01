@@ -82,28 +82,28 @@ export default function Home() {
       },
    })
 
-   const confirmDeleteDialog = (id: string) =>
+   const confirmDeleteDialog = useCallback((id: string) =>
       modals.openConfirmModal({
          title: 'Delete Transaction',
          children: <Text size="sm">Are you sure you want to delete this transaction</Text>,
          labels: { confirm: 'Confirm', cancel: 'Cancel' },
          onConfirm: () => deleteTransactionMutation.mutate(id),
-      })
+      }), [])
 
    const actionColumn = useMemo(
       () =>
-         ({
-            key: 'actions',
-            label: 'Actions',
-            className: 'text-center',
-            formatter: (_, row) => (
-               <Center>
-                  <ActionIcon color="red" size="sm" onClick={() => confirmDeleteDialog(row.id)}>
-                     <IconTrash size={14} />
-                  </ActionIcon>
-               </Center>
-            ),
-         } as IColumn<Transaction>),
+      ({
+         key: 'actions',
+         label: 'Actions',
+         className: 'text-center',
+         formatter: (_, row) => (
+            <Center>
+               <ActionIcon color="red" size="sm" onClick={() => confirmDeleteDialog(row.id)}>
+                  <IconTrash size={14} />
+               </ActionIcon>
+            </Center>
+         ),
+      } as IColumn<Transaction>),
       []
    )
 
