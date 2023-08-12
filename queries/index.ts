@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 
 import supabase from '@/libs/supabase'
-import { TransactionRow } from '@/components'
+import type { TransactionRow } from '@/types'
 
 export type Sort = {
    value: string

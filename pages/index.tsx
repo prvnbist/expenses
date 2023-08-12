@@ -1,17 +1,17 @@
 import dayjs from 'dayjs'
 import { useState, useMemo, useCallback } from 'react'
-import { useListState, useDisclosure } from '@mantine/hooks'
 import { IconPlus, IconTrash } from '@tabler/icons-react'
-import { notifications } from '@mantine/notifications'
-import { modals } from '@mantine/modals'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+
+import { modals } from '@mantine/modals'
+import { notifications } from '@mantine/notifications'
+import { useListState, useDisclosure } from '@mantine/hooks'
 import {
    Modal,
    ActionIcon,
    Center,
    Container,
    Flex,
-   Loader,
    Pagination,
    Space,
    Title,
@@ -20,7 +20,7 @@ import {
    Button,
 } from '@mantine/core'
 
-import { Transaction } from '@/types'
+import type { Transaction } from '@/types'
 import { IColumn, SortButton, Table, TransactionBulkModal, TransactionModal } from '@/components'
 import { Sort, allEntities, deleteTransaction, transactions, transactionsTotal } from '@/queries'
 
@@ -97,18 +97,18 @@ export default function Home() {
 
    const actionColumn = useMemo(
       () =>
-      ({
-         key: 'actions',
-         label: 'Actions',
-         className: 'text-center',
-         formatter: (_, row) => (
-            <Center>
-               <ActionIcon color="red" size="sm" onClick={() => confirmDeleteDialog(row.id)}>
-                  <IconTrash size={14} />
-               </ActionIcon>
-            </Center>
-         ),
-      } as IColumn<Transaction>),
+         ({
+            key: 'actions',
+            label: 'Actions',
+            className: 'text-center',
+            formatter: (_, row) => (
+               <Center>
+                  <ActionIcon color="red" size="sm" onClick={() => confirmDeleteDialog(row.id)}>
+                     <IconTrash size={14} />
+                  </ActionIcon>
+               </Center>
+            ),
+         } as IColumn<Transaction>),
       []
    )
 

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
-import { UseListStateHandlers } from '@mantine/hooks'
 import { IconArrowsSort, IconCheck, IconSortAscending, IconSortDescending, IconX } from '@tabler/icons-react'
+
+import { UseListStateHandlers } from '@mantine/hooks'
 import { ActionIcon, Button, Flex, HoverCard, SegmentedControl, Select, Stack, Center } from '@mantine/core'
 
 import { Sort } from '@/queries'

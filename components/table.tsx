@@ -1,7 +1,6 @@
 import { ScrollArea, Skeleton, Table as UITable } from '@mantine/core'
 
 import { Entity } from '@/types'
-import { useMemo } from 'react'
 
 type FormatterValueArg = string | number | null
 export interface IColumn<T> {

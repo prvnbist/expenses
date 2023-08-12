@@ -2,11 +2,12 @@ import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
 import { MantineProvider } from '@mantine/core'
 import { ModalsProvider } from '@mantine/modals'
-import { useSessionStorage } from '@mantine/hooks';
+import { useSessionStorage } from '@mantine/hooks'
 import { Notifications } from '@mantine/notifications'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import '@/styles/globals.css'
 
@@ -16,7 +17,7 @@ export default function App(props: AppProps) {
    const { Component, pageProps } = props
 
    const router = useRouter()
-   const [value] = useSessionStorage({ key: 'password', defaultValue: '', getInitialValueInEffect: false });
+   const [value] = useSessionStorage({ key: 'password', defaultValue: '', getInitialValueInEffect: false })
 
    useEffect(() => {
       if (router.pathname === '/login') {

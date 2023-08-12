@@ -1,51 +1,18 @@
 import dayjs from 'dayjs'
 import { FC, useMemo } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { useForm } from '@mantine/form'
 import { DatePickerInput } from '@mantine/dates'
 import { notifications } from '@mantine/notifications'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { TextInput, NumberInput, SegmentedControl, Select, Stack, Button } from '@mantine/core'
 
 import { addTransaction } from '@/queries'
-
-type Account = {
-   id: string
-   title: string
-   type: never
-}
-
-type PaymentMethod = {
-   id: string
-   title: string
-   type: never
-}
-
-type Category = {
-   id: string
-   title: string
-   type: 'expense' | 'income'
-}
-
-type Group = {
-   id: string
-   title: string
-   type: never
-}
+import type { Account, Category, Group, PaymentMethod, TransactionRow } from '@/types'
 
 type TransactionModalProps = {
    close: () => void
    entities: Array<{ title: string; list: Account[] | PaymentMethod[] | Category[] | Group[] }>
-}
-
-export type TransactionRow = {
-   title: string
-   amount: number
-   date: Date
-   type: 'expense' | 'income'
-   account_id?: string | null
-   category_id?: string | null
-   payment_method_id?: string | null
-   group_id?: string | null
 }
 
 export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = [] }) => {

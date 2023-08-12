@@ -1,9 +1,8 @@
 import dayjs from 'dayjs'
-import Papa from 'papaparse'
 import { v4 as uuidv4 } from 'uuid'
-import { FC, useMemo, useState } from 'react'
+import { FC, useMemo } from 'react'
+import { IconCheck, IconTrash } from '@tabler/icons-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { IconCheck, IconTrash, IconUpload } from '@tabler/icons-react'
 
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
@@ -12,8 +11,7 @@ import { notifications } from '@mantine/notifications'
 import {
    ActionIcon,
    Button,
-   FileInput,
-   Group,
+   Group as GroupUI,
    Modal,
    NumberInput,
    SegmentedControl,
@@ -25,47 +23,13 @@ import {
 
 import { useMap } from '@/hooks'
 import { addTransactions } from '@/queries'
+import type { Account, Category, Entities, Group, PaymentMethod, TransactionRow, TransactionType } from '@/types'
 
-type Account = {
-   id: string
-   title: string
-   type: never
-}
-
-type PaymentMethod = {
-   id: string
-   title: string
-   type: never
-}
-
-type Category = {
-   id: string
-   title: string
-   type: 'expense' | 'income'
-}
-
-type Group = {
-   id: string
-   title: string
-   type: never
-}
+import UploadModal from './uploadModal'
 
 type TransactionBulkModalProps = {
    close: () => void
    entities: Array<{ title: string; list: Account[] | PaymentMethod[] | Category[] | Group[] }>
-}
-
-type TransactionType = 'expense' | 'income'
-
-type TransactionRow = {
-   title: string
-   amount: number
-   date: Date
-   type: TransactionType
-   account_id: string | null
-   category_id: string | null
-   payment_method_id: string | null
-   group_id: string | null
 }
 
 const INITIAL_FORM_STATE = {
@@ -77,83 +41,6 @@ const INITIAL_FORM_STATE = {
    payment_method_id: null,
    account_id: null,
    group_id: null,
-}
-
-type Entities = {
-   accounts: Array<{ value: string; label: string }>
-   categories: Array<{ value: string; label: string; group: string }>
-   paymentMethods: Array<{ value: string; label: string }>
-}
-
-const transformCSV = (csv: any, entities: Entities): TransactionRow[] => {
-   const data = csv.data
-
-   return data.map((datum: any) => {
-      datum.amount = datum.type === 'income' ? datum.credit : datum.debit
-      datum.amount = parseFloat(datum.amount.replace('₹', '').replace(/,/g, ''))
-
-      datum.date = new Date(datum.date)
-
-      datum.category_id =
-         entities.categories.find(category => {
-            return category.label === datum.category && category.group === datum.type
-         })?.value || null
-
-      datum.payment_method_id =
-         entities.paymentMethods.find(payment_method => {
-            return payment_method.label === datum.payment_method
-         })?.value || null
-
-      datum.account_id = entities.accounts.find(account => account.label === datum.account)?.value || null
-
-      datum.note = datum.note || null
-
-      delete datum.credit
-      delete datum.debit
-      delete datum.category
-      delete datum.payment_method
-      delete datum.account
-
-      return datum
-   })
-}
-
-const UploadModal = ({ entities, onUpload }: { onUpload: (data: TransactionRow[]) => void; entities: Entities }) => {
-   const [file, setFile] = useState<File | null>(null)
-
-   const upload = () => {
-      if (file) {
-         const reader = new FileReader()
-
-         reader.onloadend = ({ target }) => {
-            if (target && target.result) {
-               // @ts-ignore
-               const csv = Papa.parse(target.result, { header: true })
-               const data = transformCSV(csv, entities)
-
-               onUpload(data)
-            }
-         }
-
-         reader.readAsText(file)
-      }
-   }
-   return (
-      <div>
-         <FileInput
-            placeholder="Select csv file"
-            radius="md"
-            withAsterisk
-            accept="text/csv"
-            value={file}
-            onChange={setFile}
-         />
-         <Space h={16} />
-         <Button color="green" radius="md" fullWidth leftIcon={<IconUpload size={16} />} onClick={upload}>
-            Upload
-         </Button>
-      </div>
-   )
 }
 
 export const TransactionBulkModal: FC<TransactionBulkModalProps> = ({ close, entities = [] }) => {
@@ -203,7 +90,7 @@ export const TransactionBulkModal: FC<TransactionBulkModalProps> = ({ close, ent
 
    return (
       <>
-         <Group>
+         <GroupUI>
             <Button
                variant="light"
                color="grape"
@@ -235,7 +122,7 @@ export const TransactionBulkModal: FC<TransactionBulkModalProps> = ({ close, ent
             >
                Reset
             </Button>
-         </Group>
+         </GroupUI>
          <Space h={13} />
          <Table withBorder withColumnBorders striped>
             <thead>
@@ -385,7 +272,7 @@ const Row = ({
             />
          </td>
          <td width="80px">
-            <Group spacing="sm" w="100%">
+            <GroupUI spacing="sm" w="100%">
                <ActionIcon
                   size="xs"
                   color="green"
@@ -402,7 +289,7 @@ const Row = ({
                <ActionIcon size="xs" color="red" variant="subtle" onClick={onRemove}>
                   <IconTrash size={16} />
                </ActionIcon>
-            </Group>
+            </GroupUI>
          </td>
       </tr>
    )
