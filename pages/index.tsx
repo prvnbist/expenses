@@ -17,10 +17,11 @@ import {
    Title,
    ScrollArea,
    Text,
+   Button,
 } from '@mantine/core'
 
 import { Transaction } from '@/types'
-import { IColumn, SortButton, Table, TransactionModal } from '@/components'
+import { IColumn, SortButton, Table, TransactionBulkModal, TransactionModal } from '@/components'
 import { Sort, allEntities, deleteTransaction, transactions, transactionsTotal } from '@/queries'
 
 const columns = [
@@ -49,6 +50,7 @@ const columns = [
 export default function Home() {
    const queryClient = useQueryClient()
    const [opened, { open, close }] = useDisclosure(false)
+   const [openedBulkModal, { open: openBulkModal, close: closeBulkModal }] = useDisclosure(false)
 
    const [sorts, handlers] = useListState<Sort>([
       { value: 'date', direction: 'DESC' },
@@ -82,13 +84,16 @@ export default function Home() {
       },
    })
 
-   const confirmDeleteDialog = useCallback((id: string) =>
-      modals.openConfirmModal({
-         title: 'Delete Transaction',
-         children: <Text size="sm">Are you sure you want to delete this transaction</Text>,
-         labels: { confirm: 'Confirm', cancel: 'Cancel' },
-         onConfirm: () => deleteTransactionMutation.mutate(id),
-      }), [])
+   const confirmDeleteDialog = useCallback(
+      (id: string) =>
+         modals.openConfirmModal({
+            title: 'Delete Transaction',
+            children: <Text size="sm">Are you sure you want to delete this transaction</Text>,
+            labels: { confirm: 'Confirm', cancel: 'Cancel' },
+            onConfirm: () => deleteTransactionMutation.mutate(id),
+         }),
+      []
+   )
 
    const actionColumn = useMemo(
       () =>
@@ -114,6 +119,16 @@ export default function Home() {
             <ActionIcon color="yellow" radius="md" variant="light" onClick={open}>
                <IconPlus size={18} />
             </ActionIcon>
+            <Button
+               size="xs"
+               leftIcon={<IconPlus size={18} />}
+               color="yellow"
+               radius="md"
+               variant="subtle"
+               onClick={openBulkModal}
+            >
+               Bulk Insert
+            </Button>
          </Flex>
          <Space h="md" />
          <SortButton {...{ sorts, handlers, columns: [...columns, actionColumn] }} />
@@ -134,6 +149,16 @@ export default function Home() {
          </Center>
          <Modal opened={opened} onClose={close} title="Add Transaction" scrollAreaComponent={ScrollArea.Autosize}>
             <TransactionModal entities={entities} close={close} />
+         </Modal>
+         <Modal
+            fullScreen
+            withinPortal
+            title="Add Transaction"
+            opened={openedBulkModal}
+            onClose={closeBulkModal}
+            scrollAreaComponent={ScrollArea.Autosize}
+         >
+            <TransactionBulkModal entities={entities} close={closeBulkModal} />
          </Modal>
       </Container>
    )

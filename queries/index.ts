@@ -45,6 +45,24 @@ export const addTransaction = async (values: TransactionRow) => {
    return { data, error }
 }
 
+export const addTransactions = async (items: TransactionRow[]) => {
+   const rows = items.map(item => {
+      const _item = { ...item }
+      if (!_item.account_id) delete _item.account_id
+      if (!_item.category_id) delete _item.category_id
+      if (!_item.payment_method_id) delete _item.payment_method_id
+      return {
+         ..._item,
+         date: dayjs(_item.date).format('YYYY-MM-DD'),
+         amount: Math.ceil(_item.amount * 100),
+      }
+   })
+
+   const { data, error } = await supabase.from('transaction').insert(rows).select()
+
+   return { data, error }
+}
+
 export const deleteTransaction = async (id: string) => {
    const { error } = await supabase.from('transaction').delete().eq('id', id)
    return { error }
