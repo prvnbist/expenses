@@ -19,10 +19,13 @@ import {
    ScrollArea,
    Text,
    Button,
+   Group,
+   HoverCard,
+   MultiSelect,
 } from '@mantine/core'
 
 import { useIsMounted } from '@/hooks'
-import type { Transaction } from '@/types'
+import type { Account, Category, Entities, PaymentMethod, Transaction } from '@/types'
 import { IColumn, SortButton, Table, TransactionBulkModal, TransactionModal } from '@/components'
 import { Sort, allEntities, deleteTransaction, transactions, transactionsTotal } from '@/queries'
 
@@ -64,24 +67,40 @@ export default function Home() {
       }
    }, [isMounted, router.query])
 
-   const [sorts, handlers] = useListState<Sort>([
+   const [sorts, sortHandlers] = useListState<Sort>([
       { value: 'date', direction: 'DESC' },
       { value: 'title', direction: 'ASC' },
    ])
 
+   const [filterCategories, setFilterCategories] = useState<string[]>([])
+   const [filterAccounts, setFilterAccounts] = useState<string[]>([])
+   const [filterPaymentMethods, setFilterPaymentMethods] = useState<string[]>([])
+
    const [page, setPage] = useState(1)
 
    const { data, isLoading } = useQuery({
-      queryKey: ['transactions', sorts, page],
-      queryFn: () => transactions({ sorts, page }),
+      queryKey: ['transactions', sorts, page, filterCategories, filterAccounts, filterPaymentMethods],
+      queryFn: () =>
+         transactions({
+            sorts,
+            page,
+            categories: filterCategories,
+            accounts: filterAccounts,
+            paymentMethods: filterPaymentMethods,
+         }),
    })
 
    const { data: { count = 0 } = {} } = useQuery({
-      queryKey: ['transactionsTotal'],
-      queryFn: transactionsTotal,
+      queryKey: ['transactionsTotal', filterCategories, filterAccounts, filterPaymentMethods],
+      queryFn: () =>
+         transactionsTotal({
+            categories: filterCategories,
+            accounts: filterAccounts,
+            paymentMethods: filterPaymentMethods,
+         }),
    })
 
-   const { data: { data: entities = {} } = {}, isLoading: isEntitiesLoading } = useQuery({
+   const { data: { data: entities } = {}, isLoading: isEntitiesLoading } = useQuery({
       queryKey: ['entities'],
       queryFn: allEntities,
    })
@@ -152,7 +171,31 @@ export default function Home() {
             </Button>
          </Flex>
          <Space h="md" />
-         <SortButton {...{ sorts, handlers, columns: [...columns, actionColumn] }} />
+         <Group>
+            <SortButton {...{ sorts, handlers: sortHandlers, columns: [...columns, actionColumn] }} />
+            {!isEntitiesLoading && (
+               <>
+                  <FilterEntityButton
+                     label="Category"
+                     value={filterCategories}
+                     onChange={setFilterCategories}
+                     list={entities?.categories ?? []}
+                  />
+                  <FilterEntityButton
+                     label="Account"
+                     value={filterAccounts}
+                     onChange={setFilterAccounts}
+                     list={entities?.accounts ?? []}
+                  />
+                  <FilterEntityButton
+                     label="Payment Method"
+                     value={filterPaymentMethods}
+                     onChange={setFilterPaymentMethods}
+                     list={entities?.payment_methods ?? []}
+                  />
+               </>
+            )}
+         </Group>
          <Space h="sm" />
          <Table<Transaction> loading={isLoading} columns={[...columns, actionColumn]} data={data?.data ?? []} />
          <Space h="sm" />
@@ -179,7 +222,7 @@ export default function Home() {
                   scrollAreaComponent={ScrollArea.Autosize}
                   title={`${router.query?.id ? 'Update' : 'Add'} Transaction`}
                >
-                  <TransactionModal entities={entities} close={close} />
+                  <TransactionModal entities={entities as Entities} close={close} />
                </Modal>
                <Modal
                   fullScreen
@@ -188,10 +231,44 @@ export default function Home() {
                   opened={openedBulkModal}
                   onClose={() => closeBulkModal()}
                >
-                  <TransactionBulkModal entities={entities} close={closeBulkModal} />
+                  <TransactionBulkModal entities={entities as Entities} close={closeBulkModal} />
                </Modal>
             </>
          )}
       </Container>
+   )
+}
+
+const FilterEntityButton = ({
+   label,
+   value,
+   onChange,
+   list = [],
+}: {
+   label: string
+   value: string[]
+   list: Category[] | Account[] | PaymentMethod[]
+   onChange: (values: string[]) => void
+}) => {
+   console.log(list)
+   return (
+      <HoverCard shadow="md" position="bottom-start">
+         <HoverCard.Target>
+            <Button size="xs" variant="light" color="gray" leftIcon={<IconPlus size={16} />}>
+               {label} ({value.length})
+            </Button>
+         </HoverCard.Target>
+         <HoverCard.Dropdown>
+            <MultiSelect
+               maw="320px"
+               miw="320px"
+               clearable
+               data={list}
+               value={value}
+               onChange={onChange}
+               placeholder="Select item"
+            />
+         </HoverCard.Dropdown>
+      </HoverCard>
    )
 }

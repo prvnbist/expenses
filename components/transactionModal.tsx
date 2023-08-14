@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
+import { FC, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { FC, useEffect, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { useForm } from '@mantine/form'
@@ -9,11 +9,11 @@ import { notifications } from '@mantine/notifications'
 import { TextInput, NumberInput, SegmentedControl, Select, Stack, Button, LoadingOverlay, Box } from '@mantine/core'
 
 import { transaction, upsertTransaction } from '@/queries'
-import type { Account, Category, Group, PaymentMethod, TransactionRow, TransactionType } from '@/types'
+import type { Entities, TransactionRow, TransactionType } from '@/types'
 
 type TransactionModalProps = {
    close: () => void
-   entities: Array<{ title: string; list: Account[] | PaymentMethod[] | Category[] | Group[] }>
+   entities: Entities
 }
 
 const INITIAL_STATE = {
@@ -62,33 +62,6 @@ export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = 
          payment_method_id: data.payment_method_id,
       })
    }, [data, error])
-
-   const { categories, accounts, paymentMethods, groups } = useMemo(() => {
-      const categoriesList = entities.find(entity => entity.title === 'categories')?.list ?? []
-      const paymentMethodsList = entities.find(entity => entity.title === 'payment_methods')?.list ?? []
-      const accountsList = entities.find(entity => entity.title === 'accounts')?.list ?? []
-      const groupsList = entities.find(entity => entity.title === 'groups')?.list ?? []
-
-      return {
-         categories: categoriesList.map(item => ({
-            value: item.id,
-            label: item.title,
-            group: item.type,
-         })),
-         paymentMethods: paymentMethodsList.map(item => ({
-            value: item.id,
-            label: item.title,
-         })),
-         accounts: accountsList.map(item => ({
-            value: item.id,
-            label: item.title,
-         })),
-         groups: groupsList.map(item => ({
-            value: item.id,
-            label: item.title,
-         })),
-      }
-   }, [entities])
 
    const upsertTransactionMutation = useMutation({
       mutationFn: (values: TransactionRow) => upsertTransaction(values),
@@ -139,7 +112,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = 
                   clearable
                   searchable
                   label="Category"
-                  data={categories}
+                  data={(entities as Entities)?.categories}
                   placeholder="Select a category"
                   {...form.getInputProps('category_id')}
                />
@@ -147,7 +120,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = 
                   clearable
                   searchable
                   label="Payment Method"
-                  data={paymentMethods}
+                  data={(entities as Entities)?.payment_methods}
                   placeholder="Select a payment method"
                   {...form.getInputProps('payment_method_id')}
                />
@@ -155,7 +128,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = 
                   clearable
                   searchable
                   label="Account"
-                  data={accounts}
+                  data={(entities as Entities)?.accounts}
                   placeholder="Select an account"
                   {...form.getInputProps('account_id')}
                />
@@ -163,7 +136,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = 
                   clearable
                   searchable
                   label="Groups"
-                  data={groups}
+                  data={(entities as Entities)?.groups}
                   placeholder="Select a group"
                   {...form.getInputProps('group_id')}
                />

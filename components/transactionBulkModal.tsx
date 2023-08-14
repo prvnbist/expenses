@@ -24,13 +24,13 @@ import {
 
 import { useMap } from '@/hooks'
 import { addTransactions } from '@/queries'
-import type { Account, Category, Entities, Group, PaymentMethod, TransactionRow, TransactionType } from '@/types'
+import type { Entities, TransactionRow, TransactionType } from '@/types'
 
 import UploadModal from './uploadModal'
 
 type TransactionBulkModalProps = {
    close: () => void
-   entities: Array<{ title: string; list: Account[] | PaymentMethod[] | Category[] | Group[] }>
+   entities: Entities
 }
 
 const INITIAL_FORM_STATE = {
@@ -49,28 +49,6 @@ export const TransactionBulkModal: FC<TransactionBulkModalProps> = ({ close, ent
    const [openedUploadModal, { open: openUploadModal, close: closeUploadModal }] = useDisclosure(false)
 
    const [rows, handlers] = useMap<string, TransactionRow>([[uuidv4(), INITIAL_FORM_STATE]])
-
-   const { categories, accounts, paymentMethods } = useMemo(() => {
-      const categoriesList = entities.find(entity => entity.title === 'categories')?.list ?? []
-      const paymentMethodsList = entities.find(entity => entity.title === 'payment_methods')?.list ?? []
-      const accountsList = entities.find(entity => entity.title === 'accounts')?.list ?? []
-
-      return {
-         categories: categoriesList.map(item => ({
-            value: item.id,
-            label: item.title,
-            group: item.type,
-         })),
-         paymentMethods: paymentMethodsList.map(item => ({
-            value: item.id,
-            label: item.title,
-         })),
-         accounts: accountsList.map(item => ({
-            value: item.id,
-            label: item.title,
-         })),
-      }
-   }, [entities])
 
    const addTransactionsMutation = useMutation({
       mutationFn: (items: TransactionRow[]) => addTransactions(items),
@@ -144,7 +122,7 @@ export const TransactionBulkModal: FC<TransactionBulkModalProps> = ({ close, ent
                      <Row
                         key={id}
                         data={row}
-                        {...{ categories, accounts, paymentMethods }}
+                        entities={entities as Entities}
                         onSave={data => onRowSave(data, id)}
                         onRemove={() => handlers.remove(id)}
                      />
@@ -164,7 +142,7 @@ export const TransactionBulkModal: FC<TransactionBulkModalProps> = ({ close, ent
             }}
          >
             <UploadModal
-               entities={{ categories, accounts, paymentMethods }}
+               entities={entities as Entities}
                onUpload={data => {
                   handlers.setAll(data.map(datum => [uuidv4(), datum]))
                   closeUploadModal()
@@ -179,16 +157,12 @@ const Row = ({
    data,
    onSave,
    onRemove,
-   accounts,
-   categories,
-   paymentMethods,
+   entities,
 }: {
+   entities: Entities
    data: TransactionRow
    onRemove: () => void
-   accounts: Entities['accounts']
-   categories: Entities['categories']
    onSave: (values: TransactionRow) => void
-   paymentMethods: Entities['paymentMethods']
 }) => {
    const form = useForm<TransactionRow>({
       initialValues: data,
@@ -248,7 +222,7 @@ const Row = ({
                searchable
                withinPortal
                variant="unstyled"
-               data={categories}
+               data={entities.categories}
                placeholder="Select a category"
                {...form.getInputProps('category_id')}
             />
@@ -260,7 +234,7 @@ const Row = ({
                searchable
                withinPortal
                variant="unstyled"
-               data={paymentMethods}
+               data={entities.payment_methods}
                placeholder="Select a payment method"
                {...form.getInputProps('payment_method_id')}
             />
@@ -271,7 +245,7 @@ const Row = ({
                clearable
                searchable
                withinPortal
-               data={accounts}
+               data={entities.accounts}
                variant="unstyled"
                placeholder="Select an account"
                {...form.getInputProps('account_id')}

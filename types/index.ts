@@ -32,33 +32,34 @@ export type TransactionRow = {
 }
 
 export type Account = {
-   id: string
-   title: string
-   type: never
+   value: string
+   label: string
+   group: never
 }
 
 export type PaymentMethod = {
-   id: string
-   title: string
-   type: never
+   value: string
+   label: string
+   group: never
 }
 
 export type Category = {
-   id: string
-   title: string
-   type: 'expense' | 'income'
+   value: string
+   label: string
+   group: TransactionType
 }
 
 export type Group = {
-   id: string
-   title: string
-   type: never
+   value: string
+   label: string
+   group: never
 }
 
 export type Entities = {
-   accounts: Array<{ value: string; label: string }>
-   categories: Array<{ value: string; label: string; group: string }>
-   paymentMethods: Array<{ value: string; label: string }>
+   accounts: Account[]
+   categories: Category[]
+   payment_methods: PaymentMethod[]
+   groups: Group[]
 }
 
 export type Entity = Transaction

@@ -21,7 +21,7 @@ const transformCSV = (csv: any, entities: Entities): TransactionRow[] => {
          })?.value || null
 
       datum.payment_method_id =
-         entities.paymentMethods.find(payment_method => {
+         entities.payment_methods.find(payment_method => {
             return payment_method.label === datum.payment_method
          })?.value || null
 
