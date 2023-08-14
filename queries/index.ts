@@ -31,16 +31,24 @@ export const transactionsTotal = async () => {
    return { count, error }
 }
 
+export const transaction = async ({ id }: { id: string }) => {
+   const { data, error } = await supabase.from('transactions').select('*').eq('public_id', id)
+   if (!data || data?.length === 0) {
+      return { data: null, error }
+   }
+   return { data: data[0], error }
+}
+
 export const allEntities = async () => {
    const { data, error } = await supabase.rpc('entities')
 
    return { data, error }
 }
 
-export const addTransaction = async (values: TransactionRow) => {
+export const upsertTransaction = async (values: TransactionRow) => {
    const row = [{ ...values, date: dayjs(values.date).format('YYYY-MM-DD'), amount: Math.ceil(values.amount * 100) }]
 
-   const { data, error } = await supabase.from('transaction').insert(row).select()
+   const { data, error } = await supabase.from('transaction').upsert(row).select()
 
    return { data, error }
 }

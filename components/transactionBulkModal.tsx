@@ -245,6 +245,7 @@ const Row = ({
             <Select
                size="xs"
                clearable
+               searchable
                withinPortal
                variant="unstyled"
                data={categories}
@@ -256,6 +257,7 @@ const Row = ({
             <Select
                size="xs"
                clearable
+               searchable
                withinPortal
                variant="unstyled"
                data={paymentMethods}
@@ -267,6 +269,7 @@ const Row = ({
             <Select
                size="xs"
                clearable
+               searchable
                withinPortal
                data={accounts}
                variant="unstyled"

@@ -4,6 +4,7 @@ export type Transaction = {
    date: string
    title: string
    amount: number
+   public_id: string
    user_id: string | null
    group: string | null
    group_id: string | null
@@ -19,6 +20,7 @@ export type Transaction = {
 export type TransactionType = 'expense' | 'income'
 
 export type TransactionRow = {
+   id?: string
    title: string
    amount: number
    date: Date

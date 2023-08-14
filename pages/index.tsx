@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
-import { useState, useMemo, useCallback } from 'react'
-import { IconPlus, IconTrash } from '@tabler/icons-react'
+import { useRouter } from 'next/router'
+import { useState, useMemo, useCallback, useEffect } from 'react'
+import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { modals } from '@mantine/modals'
@@ -20,6 +21,7 @@ import {
    Button,
 } from '@mantine/core'
 
+import { useIsMounted } from '@/hooks'
 import type { Transaction } from '@/types'
 import { IColumn, SortButton, Table, TransactionBulkModal, TransactionModal } from '@/components'
 import { Sort, allEntities, deleteTransaction, transactions, transactionsTotal } from '@/queries'
@@ -48,9 +50,19 @@ const columns = [
 ] as IColumn<Transaction>[]
 
 export default function Home() {
+   const router = useRouter()
    const queryClient = useQueryClient()
    const [opened, { open, close }] = useDisclosure(false)
    const [openedBulkModal, { open: openBulkModal, close: closeBulkModal }] = useDisclosure(false)
+
+   const isMounted = useIsMounted()
+
+   useEffect(() => {
+      if (isMounted()) {
+         const id = router.query?.id
+         if (id) open()
+      }
+   }, [isMounted, router.query])
 
    const [sorts, handlers] = useListState<Sort>([
       { value: 'date', direction: 'DESC' },
@@ -69,7 +81,7 @@ export default function Home() {
       queryFn: transactionsTotal,
    })
 
-   const { data: { data: entities = {} } = {} } = useQuery({
+   const { data: { data: entities = {} } = {}, isLoading: isEntitiesLoading } = useQuery({
       queryKey: ['entities'],
       queryFn: allEntities,
    })
@@ -103,6 +115,15 @@ export default function Home() {
             className: 'text-center',
             formatter: (_, row) => (
                <Center>
+                  <ActionIcon
+                     color="blue"
+                     size="sm"
+                     onClick={() => {
+                        router.push(`/?id=${row.public_id}`)
+                     }}
+                  >
+                     <IconPencil size={14} />
+                  </ActionIcon>
                   <ActionIcon color="red" size="sm" onClick={() => confirmDeleteDialog(row.id)}>
                      <IconTrash size={14} />
                   </ActionIcon>
@@ -147,12 +168,30 @@ export default function Home() {
                withEdges
             />
          </Center>
-         <Modal opened={opened} onClose={close} title="Add Transaction" scrollAreaComponent={ScrollArea.Autosize}>
-            <TransactionModal entities={entities} close={close} />
-         </Modal>
-         <Modal fullScreen withinPortal title="Add Transaction" opened={openedBulkModal} onClose={closeBulkModal}>
-            <TransactionBulkModal entities={entities} close={closeBulkModal} />
-         </Modal>
+         {!isEntitiesLoading && (
+            <>
+               <Modal
+                  opened={opened}
+                  onClose={() => {
+                     router.push('/')
+                     close()
+                  }}
+                  scrollAreaComponent={ScrollArea.Autosize}
+                  title={`${router.query?.id ? 'Update' : 'Add'} Transaction`}
+               >
+                  <TransactionModal entities={entities} close={close} />
+               </Modal>
+               <Modal
+                  fullScreen
+                  withinPortal
+                  title="Add Transaction"
+                  opened={openedBulkModal}
+                  onClose={() => closeBulkModal()}
+               >
+                  <TransactionBulkModal entities={entities} close={closeBulkModal} />
+               </Modal>
+            </>
+         )}
       </Container>
    )
 }
