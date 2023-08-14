@@ -150,14 +150,7 @@ export default function Home() {
          <Modal opened={opened} onClose={close} title="Add Transaction" scrollAreaComponent={ScrollArea.Autosize}>
             <TransactionModal entities={entities} close={close} />
          </Modal>
-         <Modal
-            fullScreen
-            withinPortal
-            title="Add Transaction"
-            opened={openedBulkModal}
-            onClose={closeBulkModal}
-            scrollAreaComponent={ScrollArea.Autosize}
-         >
+         <Modal fullScreen withinPortal title="Add Transaction" opened={openedBulkModal} onClose={closeBulkModal}>
             <TransactionBulkModal entities={entities} close={closeBulkModal} />
          </Modal>
       </Container>

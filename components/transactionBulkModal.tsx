@@ -14,6 +14,7 @@ import {
    Group as GroupUI,
    Modal,
    NumberInput,
+   ScrollArea,
    SegmentedControl,
    Select,
    Space,
@@ -124,31 +125,33 @@ export const TransactionBulkModal: FC<TransactionBulkModalProps> = ({ close, ent
             </Button>
          </GroupUI>
          <Space h={13} />
-         <Table withBorder withColumnBorders striped>
-            <thead>
-               <tr>
-                  <th>Title</th>
-                  <th>Amount</th>
-                  <th>Date</th>
-                  <th>Type</th>
-                  <th>Category</th>
-                  <th>Payment Method</th>
-                  <th>Account</th>
-                  <th className="text-center">Action</th>
-               </tr>
-            </thead>
-            <tbody>
-               {[...rows.entries()].map(([id, row]) => (
-                  <Row
-                     key={id}
-                     data={row}
-                     {...{ categories, accounts, paymentMethods }}
-                     onSave={data => onRowSave(data, id)}
-                     onRemove={() => handlers.remove(id)}
-                  />
-               ))}
-            </tbody>
-         </Table>
+         <ScrollArea offsetScrollbars>
+            <Table withBorder withColumnBorders striped>
+               <thead>
+                  <tr>
+                     <th>Title</th>
+                     <th>Amount</th>
+                     <th>Date</th>
+                     <th>Type</th>
+                     <th>Category</th>
+                     <th>Payment Method</th>
+                     <th>Account</th>
+                     <th className="text-center">Action</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {[...rows.entries()].map(([id, row]) => (
+                     <Row
+                        key={id}
+                        data={row}
+                        {...{ categories, accounts, paymentMethods }}
+                        onSave={data => onRowSave(data, id)}
+                        onRemove={() => handlers.remove(id)}
+                     />
+                  ))}
+               </tbody>
+            </Table>
+         </ScrollArea>
          <Modal
             opened={openedUploadModal}
             onClose={closeUploadModal}
@@ -197,7 +200,7 @@ const Row = ({
 
    return (
       <tr>
-         <td>
+         <td style={{ minWidth: '180px' }}>
             <TextInput
                placeholder="Enter the title"
                size="xs"
@@ -206,7 +209,7 @@ const Row = ({
                {...form.getInputProps('title')}
             />
          </td>
-         <td width="140px">
+         <td style={{ minWidth: '140px' }}>
             <NumberInput
                size="xs"
                hideControls
@@ -238,7 +241,7 @@ const Row = ({
                {...form.getInputProps('type')}
             />
          </td>
-         <td>
+         <td style={{ minWidth: '160px' }}>
             <Select
                size="xs"
                clearable
@@ -249,7 +252,7 @@ const Row = ({
                {...form.getInputProps('category_id')}
             />
          </td>
-         <td>
+         <td style={{ minWidth: '160px' }}>
             <Select
                size="xs"
                clearable
@@ -260,7 +263,7 @@ const Row = ({
                {...form.getInputProps('payment_method_id')}
             />
          </td>
-         <td>
+         <td style={{ minWidth: '160px' }}>
             <Select
                size="xs"
                clearable
@@ -271,7 +274,7 @@ const Row = ({
                {...form.getInputProps('account_id')}
             />
          </td>
-         <td width="80px">
+         <td style={{ minWidth: '80px' }}>
             <GroupUI spacing="sm" w="100%">
                <ActionIcon
                   size="xs"
