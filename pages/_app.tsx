@@ -10,6 +10,7 @@ import { useSessionStorage } from '@mantine/hooks'
 import { Notifications } from '@mantine/notifications'
 
 import '@/styles/globals.css'
+import { GlobalProvider } from '@/state'
 
 const queryClient = new QueryClient()
 
@@ -48,7 +49,9 @@ export default function App(props: AppProps) {
             <Notifications />
             <ModalsProvider>
                <QueryClientProvider client={queryClient}>
-                  <Component {...pageProps} />
+                  <GlobalProvider>
+                     <Component {...pageProps} />
+                  </GlobalProvider>
                </QueryClientProvider>
             </ModalsProvider>
          </MantineProvider>

@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { ScrollArea, Skeleton, Table as UITable } from '@mantine/core'
 
 import { Entity } from '@/types'
@@ -16,30 +17,34 @@ interface TableProps<T> {
    loading: boolean
 }
 
-const Loader = () => (
-   <UITable striped withBorder>
-      <thead>
-         <tr>
-            {[1, 2, 3, 4, 5].map(item => (
-               <th key={item}>
-                  <Skeleton height={8} width={`${Math.floor(Math.random() * 80) + 20}%`} radius="xl" />
-               </th>
-            ))}
-         </tr>
-      </thead>
-      <tbody>
-         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => (
-            <tr key={i}>
-               {[1, 2, 3, 4, 5].map(j => (
-                  <td key={j}>
-                     <Skeleton height={8} width={`${Math.floor(Math.random() * 80) + 20}%`} radius="xl" />
-                  </td>
+const Loader = () =>
+   useMemo(
+      () => (
+         <UITable striped withBorder>
+            <thead>
+               <tr>
+                  {[1, 2, 3, 4, 5].map(item => (
+                     <th key={item}>
+                        <Skeleton height={8} width={`${Math.floor(Math.random() * 80) + 20}%`} radius="xl" />
+                     </th>
+                  ))}
+               </tr>
+            </thead>
+            <tbody>
+               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => (
+                  <tr key={i}>
+                     {[1, 2, 3, 4, 5].map(j => (
+                        <td key={j}>
+                           <Skeleton height={8} width={`${Math.floor(Math.random() * 80) + 20}%`} radius="xl" />
+                        </td>
+                     ))}
+                  </tr>
                ))}
-            </tr>
-         ))}
-      </tbody>
-   </UITable>
-)
+            </tbody>
+         </UITable>
+      ),
+      []
+   )
 
 export const Table = <T extends Entity>({ loading, columns = [], data = [] }: TableProps<T>) => {
    if (loading) return <Loader />

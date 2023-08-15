@@ -4,6 +4,7 @@ import { IconUpload } from '@tabler/icons-react'
 
 import { Button, FileInput, Space } from '@mantine/core'
 
+import { useGlobalState } from '@/state'
 import type { Entities, TransactionRow } from '@/types'
 
 const transformCSV = (csv: any, entities: Entities): TransactionRow[] => {
@@ -39,7 +40,9 @@ const transformCSV = (csv: any, entities: Entities): TransactionRow[] => {
    })
 }
 
-const UploadModal = ({ entities, onUpload }: { onUpload: (data: TransactionRow[]) => void; entities: Entities }) => {
+const UploadModal = ({ onUpload }: { onUpload: (data: TransactionRow[]) => void }) => {
+   const { entities } = useGlobalState()
+
    const [file, setFile] = useState<File | null>(null)
 
    const upload = () => {

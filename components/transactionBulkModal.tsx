@@ -1,6 +1,5 @@
 import dayjs from 'dayjs'
 import { v4 as uuidv4 } from 'uuid'
-import { FC, useMemo } from 'react'
 import { IconCheck, IconTrash } from '@tabler/icons-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -23,15 +22,11 @@ import {
 } from '@mantine/core'
 
 import { useMap } from '@/hooks'
+import { useGlobalState } from '@/state'
 import { addTransactions } from '@/queries'
 import type { Entities, TransactionRow, TransactionType } from '@/types'
 
 import UploadModal from './uploadModal'
-
-type TransactionBulkModalProps = {
-   close: () => void
-   entities: Entities
-}
 
 const INITIAL_FORM_STATE = {
    title: '',
@@ -44,8 +39,10 @@ const INITIAL_FORM_STATE = {
    group_id: null,
 }
 
-export const TransactionBulkModal: FC<TransactionBulkModalProps> = ({ close, entities = [] }) => {
+export const TransactionBulkModal = ({ close }: { close: () => void }) => {
    const queryClient = useQueryClient()
+   const { entities } = useGlobalState()
+
    const [openedUploadModal, { open: openUploadModal, close: closeUploadModal }] = useDisclosure(false)
 
    const [rows, handlers] = useMap<string, TransactionRow>([[uuidv4(), INITIAL_FORM_STATE]])
@@ -122,7 +119,7 @@ export const TransactionBulkModal: FC<TransactionBulkModalProps> = ({ close, ent
                      <Row
                         key={id}
                         data={row}
-                        entities={entities as Entities}
+                        entities={entities}
                         onSave={data => onRowSave(data, id)}
                         onRemove={() => handlers.remove(id)}
                      />
@@ -142,7 +139,6 @@ export const TransactionBulkModal: FC<TransactionBulkModalProps> = ({ close, ent
             }}
          >
             <UploadModal
-               entities={entities as Entities}
                onUpload={data => {
                   handlers.setAll(data.map(datum => [uuidv4(), datum]))
                   closeUploadModal()

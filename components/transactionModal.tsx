@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { FC, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
@@ -8,13 +8,9 @@ import { DatePickerInput } from '@mantine/dates'
 import { notifications } from '@mantine/notifications'
 import { TextInput, NumberInput, SegmentedControl, Select, Stack, Button, LoadingOverlay, Box } from '@mantine/core'
 
+import { useGlobalState } from '@/state'
 import { transaction, upsertTransaction } from '@/queries'
-import type { Entities, TransactionRow, TransactionType } from '@/types'
-
-type TransactionModalProps = {
-   close: () => void
-   entities: Entities
-}
+import type { TransactionRow, TransactionType } from '@/types'
 
 const INITIAL_STATE = {
    title: '',
@@ -27,9 +23,10 @@ const INITIAL_STATE = {
    group_id: null,
 }
 
-export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = [] }) => {
+export const TransactionModal = ({ close }: { close: () => void }) => {
    const router = useRouter()
    const queryClient = useQueryClient()
+   const { entities } = useGlobalState()
 
    const operation = router.query.id ? 'UPDATE' : 'INSERT'
 
@@ -112,7 +109,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = 
                   clearable
                   searchable
                   label="Category"
-                  data={(entities as Entities)?.categories}
+                  data={entities.categories}
                   placeholder="Select a category"
                   {...form.getInputProps('category_id')}
                />
@@ -120,7 +117,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = 
                   clearable
                   searchable
                   label="Payment Method"
-                  data={(entities as Entities)?.payment_methods}
+                  data={entities.payment_methods}
                   placeholder="Select a payment method"
                   {...form.getInputProps('payment_method_id')}
                />
@@ -128,7 +125,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = 
                   clearable
                   searchable
                   label="Account"
-                  data={(entities as Entities)?.accounts}
+                  data={entities.accounts}
                   placeholder="Select an account"
                   {...form.getInputProps('account_id')}
                />
@@ -136,7 +133,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ close, entities = 
                   clearable
                   searchable
                   label="Groups"
-                  data={(entities as Entities)?.groups}
+                  data={entities.groups}
                   placeholder="Select a group"
                   {...form.getInputProps('group_id')}
                />

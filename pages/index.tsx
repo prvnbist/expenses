@@ -26,6 +26,7 @@ import {
 } from '@mantine/core'
 
 import { useIsMounted } from '@/hooks'
+import { useGlobalState } from '@/state'
 import type { Account, Category, Entities, PaymentMethod, Transaction, TransactionType } from '@/types'
 import { IColumn, SortButton, Table, TransactionBulkModal, TransactionModal } from '@/components'
 import { Sort, allEntities, deleteTransaction, transactions, transactionsTotal } from '@/queries'
@@ -107,11 +108,6 @@ export default function Home() {
             accounts: filterAccounts,
             paymentMethods: filterPaymentMethods,
          }),
-   })
-
-   const { data: { data: entities } = {}, isLoading: isEntitiesLoading } = useQuery({
-      queryKey: ['entities'],
-      queryFn: allEntities,
    })
 
    const deleteTransactionMutation = useMutation({
@@ -205,28 +201,24 @@ export default function Home() {
                   },
                })}
             />
-            {!isEntitiesLoading && (
-               <>
-                  <FilterEntityButton
-                     label="Category"
-                     value={filterCategories}
-                     onChange={setFilterCategories}
-                     list={entities?.categories ?? []}
-                  />
-                  <FilterEntityButton
-                     label="Account"
-                     value={filterAccounts}
-                     onChange={setFilterAccounts}
-                     list={entities?.accounts ?? []}
-                  />
-                  <FilterEntityButton
-                     label="Payment Method"
-                     value={filterPaymentMethods}
-                     onChange={setFilterPaymentMethods}
-                     list={entities?.payment_methods ?? []}
-                  />
-               </>
-            )}
+            <FilterEntityButton
+               listKey="categories"
+               label="Category"
+               value={filterCategories}
+               onChange={setFilterCategories}
+            />
+            <FilterEntityButton
+               listKey="accounts"
+               label="Account"
+               value={filterAccounts}
+               onChange={setFilterAccounts}
+            />
+            <FilterEntityButton
+               listKey="payment_methods"
+               label="Payment Method"
+               value={filterPaymentMethods}
+               onChange={setFilterPaymentMethods}
+            />
          </Group>
          <Space h="sm" />
          <Table<Transaction> loading={isLoading} columns={[...columns, actionColumn]} data={data?.data ?? []} />
@@ -243,30 +235,26 @@ export default function Home() {
                withEdges
             />
          </Center>
-         {!isEntitiesLoading && (
-            <>
-               <Modal
-                  opened={opened}
-                  onClose={() => {
-                     router.push('/')
-                     close()
-                  }}
-                  scrollAreaComponent={ScrollArea.Autosize}
-                  title={`${router.query?.id ? 'Update' : 'Add'} Transaction`}
-               >
-                  <TransactionModal entities={entities as Entities} close={close} />
-               </Modal>
-               <Modal
-                  fullScreen
-                  withinPortal
-                  title="Add Transaction"
-                  opened={openedBulkModal}
-                  onClose={() => closeBulkModal()}
-               >
-                  <TransactionBulkModal entities={entities as Entities} close={closeBulkModal} />
-               </Modal>
-            </>
-         )}
+         <Modal
+            opened={opened}
+            onClose={() => {
+               router.push('/')
+               close()
+            }}
+            scrollAreaComponent={ScrollArea.Autosize}
+            title={`${router.query?.id ? 'Update' : 'Add'} Transaction`}
+         >
+            <TransactionModal close={close} />
+         </Modal>
+         <Modal
+            fullScreen
+            withinPortal
+            title="Add Transaction"
+            opened={openedBulkModal}
+            onClose={() => closeBulkModal()}
+         >
+            <TransactionBulkModal close={closeBulkModal} />
+         </Modal>
       </Container>
    )
 }
@@ -275,13 +263,14 @@ const FilterEntityButton = ({
    label,
    value,
    onChange,
-   list = [],
+   listKey,
 }: {
    label: string
    value: string[]
-   list: Category[] | Account[] | PaymentMethod[]
+   listKey: keyof Entities
    onChange: (values: string[]) => void
 }) => {
+   const { entities } = useGlobalState()
    return (
       <HoverCard shadow="md" position="bottom-start">
          <HoverCard.Target>
@@ -294,7 +283,7 @@ const FilterEntityButton = ({
                maw="320px"
                miw="320px"
                clearable
-               data={list}
+               data={entities[listKey]}
                value={value}
                onChange={onChange}
                placeholder="Select item"
