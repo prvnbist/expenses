@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 
 import supabase from '@/libs/supabase'
-import type { Entities, TransactionRow } from '@/types'
+import type { Entities, TransactionRow, TransactionType } from '@/types'
 
 export type Sort = {
    value: string
@@ -15,12 +15,14 @@ export type TransactionArgs = {
    categories: string[]
    accounts: string[]
    paymentMethods: string[]
+   type: 'all' | TransactionType
 }
 
 export const transactions = async ({
    sorts = [],
    limit = 10,
    page = 1,
+   type = 'all',
    categories = [],
    accounts = [],
    paymentMethods = [],
@@ -39,6 +41,10 @@ export const transactions = async ({
       query.in('payment_method_id', paymentMethods)
    }
 
+   if (type !== 'all') {
+      query.eq('type', type)
+   }
+
    if (sorts.length > 0) {
       sorts.forEach(item => query.order(item.value, { ascending: item.direction === 'ASC' }))
    }
@@ -49,6 +55,7 @@ export const transactions = async ({
 }
 
 export const transactionsTotal = async ({
+   type = 'all',
    categories = [],
    accounts = [],
    paymentMethods = [],
@@ -56,6 +63,7 @@ export const transactionsTotal = async ({
    categories: string[]
    accounts: string[]
    paymentMethods: string[]
+   type: 'all' | TransactionType
 }) => {
    const query = supabase.from('transactions').select('*', { count: 'exact', head: true })
 
@@ -69,6 +77,10 @@ export const transactionsTotal = async ({
 
    if (paymentMethods.length > 0) {
       query.in('payment_method_id', paymentMethods)
+   }
+
+   if (type !== 'all') {
+      query.eq('type', type)
    }
 
    const { count, error } = await query
@@ -91,13 +103,11 @@ export const allEntities = async () => {
          ? Object.fromEntries(
               data.map((datum: any) => [
                  datum.title,
-                 datum.list
-                    ? datum.list.map((item: any) => ({
-                         value: item.id,
-                         label: item.title,
-                         ...(item.type && { group: item.type }),
-                      }))
-                    : [],
+                 (datum.list ?? []).map((item: any) => ({
+                    value: item.id,
+                    label: item.title,
+                    ...(item.type && { group: item.type }),
+                 })),
               ])
            )
          : { categories: [], payment_methods: [], accounts: [], groups: [] }

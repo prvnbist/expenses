@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { useRouter } from 'next/router'
 import { useState, useMemo, useCallback, useEffect } from 'react'
-import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react'
+import { IconPencil, IconPlus, IconSelector, IconTrash } from '@tabler/icons-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { modals } from '@mantine/modals'
@@ -22,10 +22,11 @@ import {
    Group,
    HoverCard,
    MultiSelect,
+   Select,
 } from '@mantine/core'
 
 import { useIsMounted } from '@/hooks'
-import type { Account, Category, Entities, PaymentMethod, Transaction } from '@/types'
+import type { Account, Category, Entities, PaymentMethod, Transaction, TransactionType } from '@/types'
 import { IColumn, SortButton, Table, TransactionBulkModal, TransactionModal } from '@/components'
 import { Sort, allEntities, deleteTransaction, transactions, transactionsTotal } from '@/queries'
 
@@ -76,24 +77,28 @@ export default function Home() {
    const [filterAccounts, setFilterAccounts] = useState<string[]>([])
    const [filterPaymentMethods, setFilterPaymentMethods] = useState<string[]>([])
 
+   const [type, setType] = useState<'all' | TransactionType>('all')
+
    const [page, setPage] = useState(1)
 
    const { data, isLoading } = useQuery({
-      queryKey: ['transactions', sorts, page, filterCategories, filterAccounts, filterPaymentMethods],
+      queryKey: ['transactions', sorts, page, type, filterCategories, filterAccounts, filterPaymentMethods],
       queryFn: () =>
          transactions({
             sorts,
             page,
-            categories: filterCategories,
+            type,
             accounts: filterAccounts,
+            categories: filterCategories,
             paymentMethods: filterPaymentMethods,
          }),
    })
 
    const { data: { count = 0 } = {} } = useQuery({
-      queryKey: ['transactionsTotal', filterCategories, filterAccounts, filterPaymentMethods],
+      queryKey: ['transactionsTotal', type, filterCategories, filterAccounts, filterPaymentMethods],
       queryFn: () =>
          transactionsTotal({
+            type,
             categories: filterCategories,
             accounts: filterAccounts,
             paymentMethods: filterPaymentMethods,
@@ -173,6 +178,29 @@ export default function Home() {
          <Space h="md" />
          <Group>
             <SortButton {...{ sorts, handlers: sortHandlers, columns: [...columns, actionColumn] }} />
+            <Select
+               size="xs"
+               maw="120px"
+               value={type}
+               placeholder="Select type"
+               onChange={(value: 'all' | TransactionType) => setType(value)}
+               data={[
+                  { value: 'all', label: 'All' },
+                  { value: 'expense', label: 'Expense' },
+                  { value: 'income', label: 'Income' },
+               ]}
+               rightSection={<IconSelector size="1rem" />}
+               styles={() => ({
+                  input: {
+                     border: 'none',
+                     color: '#fff',
+                     backgroundColor: '#1f2225',
+                  },
+                  rightSection: {
+                     color: '#fff',
+                  },
+               })}
+            />
             {!isEntitiesLoading && (
                <>
                   <FilterEntityButton
@@ -250,7 +278,6 @@ const FilterEntityButton = ({
    list: Category[] | Account[] | PaymentMethod[]
    onChange: (values: string[]) => void
 }) => {
-   console.log(list)
    return (
       <HoverCard shadow="md" position="bottom-start">
          <HoverCard.Target>
