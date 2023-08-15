@@ -36,11 +36,15 @@ const columns = [
       key: 'amount',
       label: 'Amount',
       className: 'text-right',
-      formatter: (value: number) =>
-         (value / 100).toLocaleString('en-IN', {
-            style: 'currency',
-            currency: 'INR',
-         }),
+      formatter: (value: number, row) => (
+         <Text fw={500} style={{ fontVariantNumeric: 'tabular-nums' }}>
+            {row.type === 'expense' ? '- ' : '+ '}
+            {(value / 100).toLocaleString('en-IN', {
+               style: 'currency',
+               currency: 'INR',
+            })}
+         </Text>
+      ),
    },
    {
       key: 'date',
