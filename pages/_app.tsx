@@ -6,19 +6,25 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { MantineProvider } from '@mantine/core'
 import { ModalsProvider } from '@mantine/modals'
-import { useSessionStorage } from '@mantine/hooks'
+import { useLocalStorage } from '@mantine/hooks'
 import { Notifications } from '@mantine/notifications'
 
 import '@/styles/globals.css'
 import { GlobalProvider } from '@/state'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+   defaultOptions: {
+      queries: {
+         refetchOnWindowFocus: false,
+      },
+   },
+})
 
 export default function App(props: AppProps) {
    const { Component, pageProps } = props
 
    const router = useRouter()
-   const [value] = useSessionStorage({ key: 'password', defaultValue: '', getInitialValueInEffect: false })
+   const [value] = useLocalStorage({ key: 'password', defaultValue: '', getInitialValueInEffect: false })
 
    useEffect(() => {
       if (router.pathname === '/login') {

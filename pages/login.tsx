@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 
-import { useSessionStorage } from '@mantine/hooks'
+import { useLocalStorage } from '@mantine/hooks'
 import { Button, Container, Flex, PasswordInput, Space, Title, useMantineTheme } from '@mantine/core'
 
 export default function Login() {
@@ -9,7 +9,7 @@ export default function Login() {
    const theme = useMantineTheme()
    const [error, setError] = useState('')
    const [password, setPassword] = useState('')
-   const [, setValue] = useSessionStorage({ key: 'password', defaultValue: '' })
+   const [, setValue] = useLocalStorage({ key: 'password', defaultValue: '' })
 
    const onSubmit = () => {
       if (process.env.APP_PASSWORD === password.trim()) {
